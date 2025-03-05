@@ -1,0 +1,109 @@
+$theme: #fb6340;
+$theme2: #ff212e;
+$yellow: #ffff4e;
+$green: green;
+$red: red;
+$light-blue: #69adfc;
+
+
+.min-height-300 {
+    min-height: 300px !important;
+} 
+.bg-primary-cu{
+    background-color: $theme !important;
+} 
+.position-absolute {
+    position: absolute;
+}
+.position-relative {
+    position: relative;
+}
+.position-fixed {
+    position: fixed;
+}
+
+.pr-0 {
+    padding-right: 0px !important;
+}
+
+.pl-0 {
+    padding-right: 0px;
+}
+
+.w-25 {
+    width: 25%;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.w-75 {
+    width: 75%;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.position-top {
+    top: 0;
+}
+
+.position-right {
+    right: 0;
+}
+
+.position-bottom {
+    bottom: 0;
+}
+
+.position-left {
+    left: 0;
+}
+
+.position-top-left {
+    top: 0;
+    left: 0;
+}
+
+.position-top-right {
+    top: 0;
+    right: 0;
+}
+
+.profile-menu .MuiMenu-paper {
+    right: 20px;
+    left: auto !important;
+    top: 70px !important;
+}
+
+.sitebar-adjustment .MuiDrawer-paper{
+    margin-top: 0px !important;
+}
+
+.profile-menu .MuiMenu-paper li {
+    padding: 10px 30px;
+}
+
+.stu-pieChart {
+    margin: auto;
+}
+
+.registration-container .MuiGrid-container{
+    height: 90%;
+}
+
+.registration-container .MuiGrid-item {
+    height: 100%;
+}
+
+.registration-container .registration-form{
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.registration-container .registration-form::-webkit-scrollbar {
+    display: none;
+}
