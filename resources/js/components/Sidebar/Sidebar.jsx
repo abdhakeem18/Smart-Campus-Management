@@ -79,7 +79,7 @@ export default function Sidebar({ setOpen, open, scrolled }) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-console.log(scrolled);
+    
     return (
         <Drawer variant="permanent" open={open} className={`cu-SideBar ${scrolled ? "sitebar-adjustment" : ""}`}>
             <DrawerHeader>

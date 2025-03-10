@@ -3,7 +3,7 @@ import { Button, Typography, Box } from "@mui/material";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import Auth from "@/layouts/Auth";
 
-const ForgetPassword = () => {
+const VerifyEmail = () => {
     const [otp, setOtp] = useState("");
     const [loader, setLoader] = useState(false);
     const [nextButton, setNextButton] = useState(true);
@@ -34,6 +34,9 @@ const ForgetPassword = () => {
             type={"verify-email"}
             content={
                 <>
+                    <Typography variant="body1" mb={2} textAlign="center">
+                        Enter OTP
+                    </Typography>
                     <MuiOtpInput
                         value={otp}
                         onComplete={validateOTP}
@@ -41,6 +44,7 @@ const ForgetPassword = () => {
                         TextFieldsProps={{ size: "small" }}
                         length={6}
                     />
+
                     <Box textAlign="center" mt={2} mb={2}>
                         <Button
                             variant="contained"
@@ -58,4 +62,4 @@ const ForgetPassword = () => {
     );
 };
 
-export default ForgetPassword;
+export default VerifyEmail;

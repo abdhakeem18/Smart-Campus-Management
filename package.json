@@ -29,6 +29,7 @@
         "chart.js": "^4.4.8",
         "classnames": "^2.5.1",
         "framer-motion": "^12.4.7",
+        "mui-one-time-password-input": "^3.0.2",
         "react": "^19.0.0",
         "react-chartjs-2": "^5.3.0",
         "react-dom": "^19.0.0",
