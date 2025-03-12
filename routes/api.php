@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,9 +32,6 @@ Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode'])
 // Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 // Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user']);
 
-Route::middleware(['auth:sanctum', 'verified','is_admin'])->group(function () {
-    Route::get('/profile', function() {
-        return response()->json(['user' => auth()->user()]);
-    });
-    Route::get('/create/user', '');
+Route::prefix('admin')->middleware(['auth:sanctum', 'verified', 'is_admin'])->group(function () {
+    Route::resource('user', UserController::class);
 });

@@ -2,17 +2,32 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Api\BaseController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
+use App\Repository\UserRepository;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
+    protected $userService;
+    protected $userRepository;
+
+    public function __construct(UserService $userService,UserRepository $userRepository)
+    {
+        $this->userService = $userService; 
+        $this->userRepository = $userRepository;
+
+    }
+
     public function index()
     {
-        //
+        $result = $this->userRepository->getAllUsers();
+        return $this->sendSuccess($result, 'successfully Fetched Users.');
     }
 
     /**
@@ -20,15 +35,16 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+       
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
-        //
+        $result = $this->userRepository->createUser($request);
+        return $this->sendSuccess($result, 'User created successfully.');
     }
 
     /**
@@ -36,7 +52,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $result = $this->userRepository->getUserById($id);
+        return $this->sendSuccess($result, 'successfully Fetched Users.');
     }
 
     /**
@@ -50,9 +67,10 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request,$id)
     {
-        //
+        $result = $this->userRepository->updateUser($request, $id);
+        return $this->sendSuccess($result, 'User Updated successfully.');
     }
 
     /**
@@ -60,6 +78,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $result = $this->userRepository->deleteUser($id);
+        return $this->sendSuccess($result, 'User Deleted successfully.');
     }
 }

@@ -18,56 +18,35 @@ use Illuminate\Support\Facades\Mail;
 class UserService{
 
     protected $userRepository;
-    protected $code;
-    protected $mailService;
 
-    public function __construct(MailService $mailService,UserRepository $userRepository,)
+    public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
-        $this->code = VerificationCodeGenerateService::code();
-        $this->mailService = $mailService;
-
     }
 
-    public function storeuser(Request $request)
+    public function storeUser(Request $request,$code = null)
     {
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:6|confirmed',
-            ]);
-            $user = $this->userRepository->createUser($request,$this->code);
-            $this->mailService->sendEmail("Your email verification code is: $this->code", $user->email,'Email Verification Code');
-            return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        $user = $this->userRepository->createUser($request,$code);
+        return $user;
     }
 
-  
-    public function sendEmailUserVerificationCode(Request $request)
+
+    public function sendEmailUserVerificationCode($email,$code)
     {
-        $user = $this->userRepository->findUserByEmail($request);
-        if (!$user) {
-            return response()->json(['error' => 'User not found.'], 404);
-        }
+        $user = $this->userRepository->findUserByValue($email);
 
-        if ($user->email_verified_at) {
-            return response()->json(['message' => 'Email already verified.'], 400);
-        }
+        if (!$user) return null;
 
-        $this->userRepository->userVerifyCodeUpdate($user,$this->code);
+        if ($user->email_verified_at) return $user;
 
-        $this->mailService->sendEmail("Your email verification code is: $this->code", $user->email,'Email Verification Code');
-
-        return response()->json(['message' => 'Verification code resent successfully.']);
+        $this->userRepository->userVerifyCodeUpdate($user,$code);
+        return $user;
     }
 
     public function userVerify(Request $request)
     {
-        $user = $this->userRepository->findUserByCode($request->code);
 
+        $user = $this->userRepository->findUserByValue($request->email,$request->code);
         if (!$user) {
             return response()->json(['error' => 'Invalid verification code.'], 400);
         }
@@ -76,11 +55,22 @@ class UserService{
             return response()->json(['error' => 'Expired verification code.'], 400);
         }
 
-        $this->userRepository->userVerifyCodeUpdate($user,$this->code,true);
+        $this->userRepository->userVerifyCodeUpdate($user,$request->code,true);
 
         return  response()->json(['message' => 'Email verified successfully.']);
     }
 
+    public function createValidator($request){
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
 
 

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Api\BaseController;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Services\AuthService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-class AuthController extends Controller
+class AuthController extends BaseController
 {
     protected $authService;
 
@@ -18,9 +21,13 @@ class AuthController extends Controller
         return $this->authService = $authService;
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        return $this->authService->register($request);
+        $result = $this->authService->register($request);
+        if (isset($result['success']) && $result['success'] === false) {
+            return $this->sendError($result['message'], 500, $result['data']);
+        }
+        return $this->sendSuccess($result, 'Register successfully.');
     }
 
     public function login(Request $request)
@@ -45,6 +52,6 @@ class AuthController extends Controller
 
     public function resendVerificationCode(Request $request)
     {
-        return $this->authService->resendVerificationCode($request);
+        return $this->authService->resendVerificationCode($request->email);
     }
 }
