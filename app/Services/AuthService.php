@@ -42,9 +42,7 @@ class AuthService extends BaseService{
     {
         try {
             if (!Auth::attempt($request->only('email', 'password'))) {
-                throw ValidationException::withMessages([
-                    'email' => ['Invalid credentials'],
-                ]);
+                return $this->sendError('Invalid credentials',401,["data" => 'Invalid credentials']);
             }
             $user = Auth::user();
             $token = $user->createToken('auth-token')->plainTextToken;
@@ -72,7 +70,9 @@ class AuthService extends BaseService{
 
     public function verify(Request $request)
     {
-        return $this->userService->userVerify($request);
+        $result = $this->userService->userVerify($request);
+        $this->mailService->sendEmail("Thank Your Email Verified Succuessfully", $result->email,'Email Verification Code');
+        return $result;
     }
 
     public function resendVerificationCode($email)

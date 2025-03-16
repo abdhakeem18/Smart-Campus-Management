@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Base64Image;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -12,9 +13,10 @@ class RegisterRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'nic' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'mobile' => 'required|string|min:10|max:15',
-            'image' => 'nullable|string',
+            'image' => ['nullable','string',new Base64Image()],
             'role_id' => 'required|exists:roles,id',
         ];
     }

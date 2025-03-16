@@ -7,6 +7,9 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Throwable;
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Handler extends ExceptionHandler
 {
     /**
@@ -55,5 +58,20 @@ class Handler extends ExceptionHandler
             'message' => 'Unauthenticated. Please log in again.',
             'data' => null
         ], JsonResponse::HTTP_UNAUTHORIZED);
+    }
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof NotFoundHttpException) {
+            return response()->json([
+                'success' => false,
+                'message' => 'The requested route could not be found.',
+                'data' => null,
+            ], 404);
+        }
+    }
+
+    private function getStatusCode(Throwable $exception)
+    {
+        return method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500;
     }
 }
