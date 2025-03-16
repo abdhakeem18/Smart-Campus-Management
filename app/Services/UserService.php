@@ -2,20 +2,12 @@
 
 
 namespace App\Services;
-
-use App\Http\Requests\RegisterRequest;
-use App\Mail\VerificationMail;
-use App\Models\User;
 use App\Repository\UserRepository;
-use Carbon\Carbon;
+use App\Services\Api\BaseService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Mail;
 
-class UserService{
+
+class UserService extends BaseService{
 
     protected $userRepository;
 
@@ -26,38 +18,33 @@ class UserService{
 
     public function storeUser(Request $request,$code = null)
     {
-        $user = $this->userRepository->createUser($request,$code);
+        $user = $this->userRepository->store($request,$code);
         return $user;
     }
 
 
     public function sendEmailUserVerificationCode($email,$code)
     {
-        $user = $this->userRepository->findUserByValue($email);
-
-        if (!$user) return null;
-
-        if ($user->email_verified_at) return $user;
-
-        $this->userRepository->userVerifyCodeUpdate($user,$code);
+        $user = $this->userRepository->findByValue($email);
+        $this->userRepository->VerifyCodeUpdate($user,$code);
         return $user;
     }
 
     public function userVerify(Request $request)
     {
 
-        $user = $this->userRepository->findUserByValue($request->email,$request->code);
+        $user = $this->userRepository->findByValue(auth()->user()->email,$request->code);
         if (!$user) {
-            return response()->json(['error' => 'Invalid verification code.'], 400);
+            return $this->sendError('Invalid verification code.', 403, ["code" => $request->code]);
         }
 
         if ($user->expires_at < now()) {
-            return response()->json(['error' => 'Expired verification code.'], 400);
+            return $this->sendError('Expired verification code.', 403, ["code" => $request->code]);
         }
 
-        $this->userRepository->userVerifyCodeUpdate($user,$request->code,true);
-
-        return  response()->json(['message' => 'Email verified successfully.']);
+        $this->userRepository->VerifyCodeUpdate($user,$request->code,true);
+        
+        return  $this->sendSuccess($user,'Email verified successfully.');
     }
 
     public function createValidator($request){
@@ -68,10 +55,20 @@ class UserService{
                 'password' => 'required|string|min:6|confirmed',
             ]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return $this->sendError("Somethig Went Wrong ..", 500, $e->getMessage());
         }
     }
 
+    public function userPasswordReset(Request $request, $userId)
+    {
 
+        $user = $this->userRepository->getById($userId);
+        if (!$user) {
+            return $user;
+        }
+        $user->password =  bcrypt($request->password);
+        $user->save();
+        return  $user;
+    }
 
 }

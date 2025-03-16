@@ -6,27 +6,29 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Repository\UserRepository;
+use App\Services\MailService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\URL;
 
 class UserController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
-    protected $userService;
-    protected $userRepository;
+    protected $service;
+    protected $repository;
 
-    public function __construct(UserService $userService,UserRepository $userRepository)
+    public function __construct(MailService $service,UserRepository $repository)
     {
-        $this->userService = $userService; 
-        $this->userRepository = $userRepository;
-
+        $this->repository = $repository;
+        $this->service = $service;
     }
 
     public function index()
     {
-        $result = $this->userRepository->getAllUsers();
+        $result = $this->repository->getAll();
         return $this->sendSuccess($result, 'successfully Fetched Users.');
     }
 
@@ -43,16 +45,22 @@ class UserController extends BaseController
      */
     public function store(RegisterRequest $request)
     {
-        $result = $this->userRepository->createUser($request);
+        $result = $this->repository->store($request);
+        $time = now()->addDay(1);
+        $dataToEncrypt = $result->email . ',' . $result->id. ',' .$time;
+        $encryptedData = Crypt::encryptString($dataToEncrypt);
+        $resetPasswordUrl = url('reset-password?token=' . $encryptedData);
+        $this->service->sendEmail($resetPasswordUrl, $request->email, 'Reset Password');
         return $this->sendSuccess($result, 'User created successfully.');
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $result = $this->userRepository->getUserById($id);
+        $result = $this->repository->getById($id);
         return $this->sendSuccess($result, 'successfully Fetched Users.');
     }
 
@@ -69,7 +77,7 @@ class UserController extends BaseController
      */
     public function update(Request $request,$id)
     {
-        $result = $this->userRepository->updateUser($request, $id);
+        $result = $this->repository->update($request, $id);
         return $this->sendSuccess($result, 'User Updated successfully.');
     }
 
@@ -78,7 +86,12 @@ class UserController extends BaseController
      */
     public function destroy(string $id)
     {
-        $result = $this->userRepository->deleteUser($id);
+        $result = $this->repository->delete($id);
+        if(!$result){
+            return $this->sendError('User Not Found ..', 500, ["error" => null]);
+        }
         return $this->sendSuccess($result, 'User Deleted successfully.');
     }
+
+    
 }

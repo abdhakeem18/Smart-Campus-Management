@@ -2,19 +2,13 @@
 
 
 namespace App\Services;
-
-use App\Http\Requests\RegisterRequest;
-use App\Mail\VerificationMail;
-use App\Models\User;
-use Carbon\Carbon;
+use App\Services\Api\BaseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Mail;
 
-class AuthService{
+
+class AuthService extends BaseService{
     protected $userService;
     protected $mailService;
     protected $code;
@@ -54,13 +48,13 @@ class AuthService{
             }
             $user = Auth::user();
             $token = $user->createToken('auth-token')->plainTextToken;
+            $user['token'] =$token; 
+            return $this->sendSuccess($user,'Logged IN successfully.');
 
-            return response()->json([
-                'user' => $user,
-                'token' => $token,
-            ]);
+            return response()->json();
+
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return $this->sendError(null, 500, $e->getMessage());
         }
     }
 
@@ -68,7 +62,7 @@ class AuthService{
     {
         $request->user()->tokens()->delete();
 
-        return response()->json(['message' => 'Logged out successfully']);
+        return $this->sendSuccess($request,'Logged out successfully.');
     }
 
     public function user(Request $request)
@@ -84,26 +78,30 @@ class AuthService{
     public function resendVerificationCode($email)
     {
         try{
-            $user = $this->userService->sendEmailUserVerificationCode($email,$this->code);
+            $result = $this->userService->sendEmailUserVerificationCode($email,$this->code);
 
-            if (!$user) {
-                return response()->json(['error' => 'User not found.'], 404);
+            if (!$result) {
+                return $this->sendError('User not found.', 500, $result);
             }
 
-            if ($user->email_verified_at) {
-                return response()->json(['message' => 'Email already verified.'], 400);
+            if ($result->email_verified_at) {
+                return  $this->sendSuccess($result,'Email already verified.');
             }
 
-            $this->mailService->sendEmail("Your email verification code is: $this->code", $user->email,'Email Verification Code');
+            $this->mailService->sendEmail("Your email verification code is: $this->code", $result->email,'Email Verification Code');
 
-            return response()->json(['message' => 'Verification code resent successfully.']);
+            return $this->sendSuccess($result,'Verification code resent successfully..');
 
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return $this->sendError(null, 500, $e->getMessage());
+
         }
     }
 
-
+    public function resetPassword(Request $request, $userId)
+    {
+        return $this->userService->userPasswordReset($request, $userId);
+    }
 
 
 }

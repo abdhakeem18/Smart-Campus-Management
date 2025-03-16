@@ -19,7 +19,11 @@ return new class extends Migration
             $table->string('password');
             $table->string('verification_code')->nullable();
             $table->dateTime('expires_at')->nullable();
-            $table->integer('is_admin')->default(0);
+            $table->unsignedBigInteger('role_id')->default(1);
+            $table->string('mobile')->nullable();
+            $table->string('image')->nullable();
+            $table->integer('is_active')->default(0);
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->timestamps();
         });
     }
