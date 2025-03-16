@@ -44,7 +44,7 @@ class StudentController extends BaseController
     public function store(StoreStudentRequest $request)
     {
         $result = $this->repository->store($request);
-        return  $this->sendSuccess($result,'Course Created successfully.');
+        return  $this->sendSuccess($result,'Student Created successfully.');
     }
 
     /**
