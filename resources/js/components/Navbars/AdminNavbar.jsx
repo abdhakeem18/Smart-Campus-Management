@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
     styled,
-    useTheme,
     Toolbar,
     Typography,
     List,
@@ -9,19 +8,38 @@ import {
     IconButton,
     Box,
     InputBase,
-    Menu,
-    MenuItem,
+    AppBar as MuiAppBar,
+    SwipeableDrawer,
+    ListItemButton,
+    ListItemText,
+    Card,
+    CardContent,
+    Avatar,
+    Button,
+    useTheme,
+    ListItemIcon,
+    Divider,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import MuiAppBar from "@mui/material/AppBar";
+
+import {
+    Menu as MenuIcon,
+    Search as SearchIcon,
+    Person,
+    Logout,
+} from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
 const Navbar = ({ setOpen, open, scrolled }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
+    const [state, setState] = useState({
+        right: false,
+    });
+    const anchor = "right";
+    const theme = useTheme();
 
-    const drawerWidth = 260;
+    const drawerWidth = 280;
+
     const title = "dashbord";
     const AppBar = styled(MuiAppBar, {
         shouldForwardProp: (prop) => prop !== "open",
@@ -55,16 +73,20 @@ const Navbar = ({ setOpen, open, scrolled }) => {
         setOpen(true);
     };
 
-    const handleProfileClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleProfileClose = () => {
-        setAnchorEl(null);
-    };
-
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
+    };
+
+    const toggleDrawer = (anchor, open) => (event) => {
+        if (
+            event &&
+            event.type === "keydown" &&
+            (event.key === "Tab" || event.key === "Shift")
+        ) {
+            return;
+        }
+
+        setState({ ...state, [anchor]: open });
     };
 
     return (
@@ -72,7 +94,15 @@ const Navbar = ({ setOpen, open, scrolled }) => {
             position="fixed"
             open={open}
             className="cu-SideBar"
-            sx={scrolled ? {backgroundColor: "#fff", boxShadow: "var(--Paper-shadow)", marginTop: "0px"} : ""}
+            sx={
+                scrolled
+                    ? {
+                          backgroundColor: "#fff",
+                          boxShadow: "var(--Paper-shadow)",
+                          marginTop: "0px",
+                      }
+                    : ""
+            }
         >
             <Toolbar>
                 <IconButton
@@ -183,7 +213,7 @@ const Navbar = ({ setOpen, open, scrolled }) => {
                 {/* Profile Dropdown */}
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                     <IconButton
-                        onClick={handleProfileClick}
+                        onClick={toggleDrawer(anchor, true)}
                         color="inherit"
                         aria-label="profile"
                     >
@@ -198,22 +228,89 @@ const Navbar = ({ setOpen, open, scrolled }) => {
                             }}
                         />
                     </IconButton>
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleProfileClose}
-                        className={"profile-menu"}
-                    >
-                        <MenuItem onClick={handleProfileClose}>
-                            Profile
-                        </MenuItem>
-                        <MenuItem onClick={handleProfileClose}>
-                            Settings
-                        </MenuItem>
-                        <MenuItem onClick={handleProfileClose}>Logout</MenuItem>
-                    </Menu>
                 </Box>
             </Toolbar>
+
+            <div>
+                <React.Fragment key={anchor}>
+                    <SwipeableDrawer
+                        anchor={anchor}
+                        className="right-drawer"
+                        open={state[anchor]}
+                        onClose={toggleDrawer(anchor, false)}
+                        onOpen={toggleDrawer(anchor, true)}
+                    >
+                        <Box
+                            sx={{
+                                width: drawerWidth,
+                            }}
+                            role="presentation"
+                            onClick={toggleDrawer(anchor, false)}
+                            onKeyDown={toggleDrawer(anchor, false)}
+                        >
+                            <List>
+                                <ListItem key={"profile-card"}>
+                                    <Card sx={{ display: "flex" }}>
+                                        <Avatar
+                                            alt="Travis Howard"
+                                            src="/static/images/avatar/2.jpg"
+                                        />
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                            }}
+                                        >
+                                            <CardContent
+                                                sx={{
+                                                    flex: "1 0 auto",
+                                                    padding: "0px 0px 0px 10px",
+                                                }}
+                                            >
+                                                <Typography
+                                                    component="div"
+                                                    variant="h5"
+                                                >
+                                                    Live From Space
+                                                </Typography>
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    component="div"
+                                                    sx={{
+                                                        color: "text.secondary",
+                                                    }}
+                                                >
+                                                    Mac Miller
+                                                </Typography>
+                                            </CardContent>
+                                        </Box>
+                                    </Card>
+                                </ListItem>
+
+                                <ListItem key={"profile"} disablePadding>
+                                    <ListItemButton>
+                                        <ListItemIcon>
+                                            <Person />
+                                        </ListItemIcon>
+                                        <ListItemText primary={"profile"} />
+                                    </ListItemButton>
+                                </ListItem>
+
+                                <ListItem>
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        fullWidth
+                                        sx={{marginTop: "20px"}}
+                                    >
+                                        Logout
+                                    </Button>
+                                </ListItem>
+                            </List>
+                        </Box>
+                    </SwipeableDrawer>
+                </React.Fragment>
+            </div>
         </AppBar>
     );
 };

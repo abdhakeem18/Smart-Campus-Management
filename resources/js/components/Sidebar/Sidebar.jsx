@@ -1,19 +1,42 @@
 import { React, useState, useEffect } from "react";
-import { styled, useTheme } from "@mui/material/styles";
-import MuiDrawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import {
+    styled,
+    useTheme,
+    Drawer as MuiDrawer,
+    List,
+    Divider,
+    IconButton,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+} from "@mui/material";
+
+import {
+    Dashboard,
+    Event,
+    Schedule,
+    People,
+    School,
+    AssignmentTurnedIn,
+    BarChart,
+    Settings,
+    ChevronLeft
+  } from "@mui/icons-material";
 
 export default function Sidebar({ setOpen, open, scrolled }) {
     const drawerWidth = 240;
+
+    const menuList = [
+        { name: "Dashboard", icon: <Dashboard /> },
+        { name: "Events", icon: <Event /> },
+        { name: "Schedules", icon: <Schedule /> },
+        { name: "Users", icon: <People /> },
+        { name: "Course", icon: <School /> },
+        { name: "Attendance Tracking", icon: <AssignmentTurnedIn /> },
+        { name: "Reports & Analytics", icon: <BarChart /> },
+        { name: "System Settings", icon: <Settings /> },
+      ];
 
     const openedMixin = (theme) => ({
         width: drawerWidth,
@@ -79,77 +102,73 @@ export default function Sidebar({ setOpen, open, scrolled }) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    
+
     return (
-        <Drawer variant="permanent" open={open} className={`cu-SideBar ${scrolled ? "sitebar-adjustment" : ""}`}>
+        <Drawer
+            variant="permanent"
+            open={open}
+            className={`cu-SideBar ${scrolled ? "sitebar-adjustment" : ""}`}
+        >
             <DrawerHeader>
                 <IconButton onClick={handleDrawerClose}>
-                    {open ? (
-                        <ChevronLeftIcon />
-                    ) : ""}
+                    {open ? <ChevronLeft /> : ""}
                 </IconButton>
             </DrawerHeader>
             <Divider />
             <List>
-                {["Inbox", "Starred", "Send email", "Drafts"].map(
-                    (text, index) => (
-                        <ListItem
-                            key={text}
-                            disablePadding
-                            sx={{ display: "block" }}
+                {menuList.map((menuItem, index) => (
+                    <ListItem
+                        key={index}
+                        disablePadding
+                        sx={{ display: "block" }}
+                    >
+                        <ListItemButton
+                            sx={[
+                                {
+                                    minHeight: 48,
+                                    px: 2.5,
+                                },
+                                open
+                                    ? {
+                                          justifyContent: "initial",
+                                      }
+                                    : {
+                                          justifyContent: "center",
+                                      },
+                            ]}
                         >
-                            <ListItemButton
+                            <ListItemIcon
                                 sx={[
                                     {
-                                        minHeight: 48,
-                                        px: 2.5,
+                                        minWidth: 0,
+                                        justifyContent: "center",
                                     },
                                     open
                                         ? {
-                                              justifyContent: "initial",
+                                              mr: 3,
                                           }
                                         : {
-                                              justifyContent: "center",
+                                              mr: "auto",
                                           },
                                 ]}
                             >
-                                <ListItemIcon
-                                    sx={[
-                                        {
-                                            minWidth: 0,
-                                            justifyContent: "center",
-                                        },
-                                        open
-                                            ? {
-                                                  mr: 3,
-                                              }
-                                            : {
-                                                  mr: "auto",
-                                              },
-                                    ]}
-                                >
-                                    {index % 2 === 0 ? (
-                                        <InboxIcon />
-                                    ) : (
-                                        <MailIcon />
-                                    )}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={text}
-                                    sx={[
-                                        open
-                                            ? {
-                                                  opacity: 1,
-                                              }
-                                            : {
-                                                  opacity: 0,
-                                              },
-                                    ]}
-                                />
-                            </ListItemButton>
-                        </ListItem>
-                    ),
-                )}
+                                {menuItem.icon}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={menuItem.name}
+                                sx={[
+                                    open
+                                        ? {
+                                              opacity: 1,
+                                          }
+                                        : {
+                                              opacity: 0,
+                                          },
+                                ]}
+                            />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
             </List>
         </Drawer>
     );

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,10 +24,10 @@ Route::get('/dashboard', function () {
     return view('index');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile.view');
 
-require __DIR__.'/auth.php';
+Route::get('/events', [EventController::class, 'index'])->name('event.view');
+
+Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
+
+require __DIR__ . '/auth.php';

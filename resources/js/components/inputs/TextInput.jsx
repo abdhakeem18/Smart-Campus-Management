@@ -12,6 +12,7 @@ function TextInput({
   getValue,
   variant,
   size,
+  classes,
   disabled,
   multiline,
   rows,
@@ -35,6 +36,7 @@ function TextInput({
   }, [value]);
 
   const handleInputChange = async (event) => {
+
     if (type === "file") {
       const file = event.target.files[0];
       const File = await convertFileToBase64(file);
@@ -47,21 +49,17 @@ function TextInput({
       return;
     }
     const value = event.target.value;
-    // Clear the previous timeout
+
     if (typingTimeout) {
       clearTimeout(typingTimeout);
     }
 
-    // Set a new timeout to wait for the user to finish typing
     const newTypingTimeout = setTimeout(() => {
-      // Do something with the final input value
       getValue(value);
-    }, 1000); // Adjust the delay as needed (e.g., 1000ms = 1 second)
+    }, 1000);
 
-    // Update the timeout state
     setTypingTimeout(newTypingTimeout);
 
-    // Update the input value
     setInputValue(value);
   };
 
@@ -78,10 +76,11 @@ function TextInput({
     <>
       {contactUs ?
         type != "file" && <label className="fw-bold mb-1">{label}{required && "*:"}</label>
-        : <label className="input-label">{label}</label>
+        : ""
       }
       <TextField
         id={`text-input${label}`}
+        label={label}
         variant="outlined"
         size={size ?? "small"}
         placeholder={placeholder}
@@ -89,6 +88,7 @@ function TextInput({
         inputRef={fileInputRef}
         value={inputValue}
         onBlur={onBlur}
+        className={classes}
         onChange={handleInputChange}
         error={error}
         helperText={errorMsg}
@@ -96,9 +96,6 @@ function TextInput({
         multiline={multiline ?? false}
         rows={rows}
         disabled={disabled ?? false}
-        InputLabelProps={{
-          shrink: true,
-        }}
       />
     </>
   );
