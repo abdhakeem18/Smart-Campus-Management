@@ -17,7 +17,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->string('verification_code')->nullable();
+            $table->dateTime('expires_at')->nullable();
+            $table->unsignedBigInteger('role_id')->default(1);
+            $table->string('mobile')->nullable();
+            $table->string('image')->nullable();
+            $table->integer('is_active')->default(0);
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->timestamps();
         });
     }
