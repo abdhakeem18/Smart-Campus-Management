@@ -7,30 +7,55 @@ import Login from "@/pages/auth/login";
 import Register from "@/pages/auth/register";
 import VerifyEmail from "@/pages/auth/verify-email";
 import ForgetPassword from "@/pages/auth/forget-password";
-import ResetPassword from "./pages/auth/reset-password";
+import ResetPassword from "@/pages/auth/reset-password";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AppContext from "@/config/AppContext";
 
 function App() {
-    return (
-        <>  
-            <main className="main-content border-radius-lg">
-                <Routes>
-                    {/* Page collection */}
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/schedule" element={<SchedulePage />} />
-                    {/* <Route path="/profile" element={<Profile />} /> */}
+    const [contextData, setContextData] = useState();
 
-                    {/* Auth Collection */}
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/verify-email" element={<VerifyEmail />} />
-                    <Route path="/forgot-password" element={<ForgetPassword />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
-                </Routes>
-            </main>
+    useEffect(() => {
+        const defaultContextValue = {
+            userDetails: [],
+        };
+
+        if (window.localStorage.getItem("user-data")) {
+            defaultContextValue = JSON.parse(
+                window.localStorage.getItem("user-data"),
+            );
+        }
+
+        setContextData(defaultContextValue);
+    }, []);
+
+    return (
+        <>
+            <AppContext.Provider value={[contextData, setContextData]}>
+                <main className="main-content border-radius-lg">
+                    <Routes>
+                        {/* Page collection */}
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/schedule" element={<SchedulePage />} />
+                        {/* <Route path="/profile" element={<Profile />} /> */}
+
+                        {/* Auth Collection */}
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/verify-email" element={<VerifyEmail />} />
+                        <Route
+                            path="/forgot-password"
+                            element={<ForgetPassword />}
+                        />
+                        <Route
+                            path="/reset-password"
+                            element={<ResetPassword />}
+                        />
+                    </Routes>
+                </main>
+            </AppContext.Provider>
         </>
     );
 }

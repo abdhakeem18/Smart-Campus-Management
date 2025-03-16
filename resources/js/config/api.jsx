@@ -1,23 +1,19 @@
 import axios from "axios";
-import { showModel } from "../components/common/helper";
-import { useNavigate } from "react-router-dom";
-
-const navigate = useNavigate();
 
 const baseURLs = {
-    admin: process.env.ENDPOINT,
-    staff: process.env.ENDPOINT_STAFF,
-    student: process.env.ENDPOINT_STUDENT,
+    auth: import.meta.env.VITE_ENDPOINT_AUTH,
+    admin: import.meta.env.VITE_ENDPOINT_ADMIN,
+    staff: import.meta.env.VITE_ENDPOINT_STAFF,
+    student: import.meta.env.VITE_ENDPOINT_STUDENT,
 };
 
-const API = (version, showLoginModal = true) => {
+const API = (version) => {
     const APICALL = axios.create({
         baseURL: baseURLs[version],
         headers: {
             "Content-Type": "application/json",
         },
     });
-
     // Add a request interceptor
     APICALL.interceptors.request.use(
         (config) => {
@@ -34,10 +30,7 @@ const API = (version, showLoginModal = true) => {
         async (error) => {
             // // console.log("error", error);
             if (error.response?.status === 401) {
-                // localStorage.clear();
-                if (showLoginModal) {
-                    navigate("/login");
-                }
+                pageNavigation("/login");
                 return Promise.reject(error.response?.data);
             }
 

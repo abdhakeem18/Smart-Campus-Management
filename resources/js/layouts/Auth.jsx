@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import {
     Container,
     Grid,
@@ -8,16 +8,27 @@ import {
     Typography,
     Box,
 } from "@mui/material";
+import AppContext from "../config/AppContext";
 
 const Auth = (props) => {
+    const [contextData, setContextData] = useContext(AppContext);
     const { content, type, rightSection = true } = props;
 
+    window.localStorage.setItem("user-data", JSON.stringify(contextData));
+
     return (
-        <Container maxWidth="md" sx={{ marginTop: "5%" }} className={`${type}-container`}>
+        <Container
+            maxWidth="md"
+            sx={{ marginTop: "5%" }}
+            className={`${type}-container`}
+        >
             <Grid container spacing={2} justifyContent="center">
                 {/* Left Section */}
                 <Grid item xs={12} md={6}>
-                    <Card sx={{ p: 3, boxShadow: 3 }} className={`${type}-form`}>
+                    <Card
+                        sx={{ p: 3, boxShadow: 3 }}
+                        className={`${type}-form`}
+                    >
                         <Box textAlign="center">
                             <CardMedia
                                 component="img"
@@ -69,7 +80,9 @@ const Auth = (props) => {
                             </Box>
                         </Card>
                     </Grid>
-                ) : ""}
+                ) : (
+                    ""
+                )}
             </Grid>
         </Container>
     );
