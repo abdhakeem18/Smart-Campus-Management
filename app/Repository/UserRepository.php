@@ -37,6 +37,7 @@ class UserRepository{
         $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'nic' => $request->nic,
                 'password' => bcrypt($request->password),
                 'verification_code' => $code ? md5($code) : null,
                 'expires_at' => now()->addMinutes(15),

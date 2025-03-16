@@ -41,7 +41,8 @@ class UserService extends BaseService{
         if ($user->expires_at < now()) {
             return $this->sendError('Expired verification code.', 403, ["code" => $request->code]);
         }
-
+        $resgister_number = 'E0000001';
+        
         $this->userRepository->VerifyCodeUpdate($user,$request->code,true);
         
         return  $this->sendSuccess($user,'Email verified successfully.');

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Student\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,14 +30,18 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::resource('roles', RoleController::class);
 Route::post('reset-password/{token}', [AuthController::class,'resetPassword']);
+Route::post('/verify', [AuthController::class, 'verify']);
+Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
 
-
-Route::prefix('user')->middleware(['auth:sanctum','is_user'])->group(function () {
+Route::prefix('student')->middleware(['auth:sanctum','is_user'])->group(function () {
     Route::post('/verify', [AuthController::class, 'verify']);
     Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
+    Route::post('/course-registration', [StudentController::class, 'store']);
 });
 
 Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->group(function () {
+    Route::post('/verify', [AuthController::class, 'verify']);
+    Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
 });
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'verified', 'is_admin'])->group(function () {
