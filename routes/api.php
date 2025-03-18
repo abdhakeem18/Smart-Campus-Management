@@ -28,10 +28,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::resource('roles', RoleController::class);
-Route::post('reset-password/{token}', [AuthController::class,'resetPassword']);
+Route::resource('/roles', RoleController::class);
+Route::post('/reset-password/{token}', [AuthController::class,'resetPassword']);
 Route::post('/verify', [AuthController::class, 'verify']);
 Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
+Route::get('/courses', [CourseController::class,'index']);
+Route::get('/student/{id}/courses', [StudentController::class,'courses']);
+
 
 Route::prefix('student')->middleware(['auth:sanctum','is_user'])->group(function () {
     Route::post('/verify', [AuthController::class, 'verify']);
