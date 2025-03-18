@@ -1,57 +1,102 @@
 import React, { useState, useEffect } from "react";
-import { Button, Typography, Box } from "@mui/material";
-import { MuiOtpInput } from "mui-one-time-password-input";
+import { useNavigate, Link } from "react-router-dom";
+import { Button, Box } from "@mui/material";
 import Auth from "@/layouts/Auth";
+import TextInput from "@/components/inputs/TextInput";
+import { useFormik } from "formik";
+import API from "@/config/api";
+import * as Yup from "yup";
+import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 
 const ForgetPassword = () => {
-    const [otp, setOtp] = useState("");
-    const [loader, setLoader] = useState(false);
-    const [nextButton, setNextButton] = useState(true);
+    const navigate = useNavigate();
+    const { apiCall, loading, apiError } = API("auth");
+    const [linkSend, setLinkSend] = useState(false);
 
-    const validateOTP = (value) => {
-        setOtp(value);
+    async function forgetPassSubmit(values) {
+        try {
+            const response = await apiCall(
+                "/send/password/reset",
+                "POST",
+                values,
+            );
 
-        setNextButton(false);
-    };
-
-    const matchIsNumeric = (text) => {
-        const isNumber = typeof text === "number";
-        const isString = typeof text === "string";
-        return (isNumber || (isString && text !== "")) && !isNaN(Number(text));
-    };
-
-    const validateChar = (value, index) => {
-        const result = matchIsNumeric(value);
-        if (result) {
-            setOtp(otp + value);
+            if (response?.success) {
+                setLinkSend(true);
+            }
+        } catch (error) {
+            console.log(apiError);
         }
+    }
 
-        return result;
-    };
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            email: "",
+        },
+
+        validationSchema: Yup.object({
+            email: Yup.string().required("Required"),
+        }),
+
+        onSubmit: async (values) => {
+            await forgetPassSubmit(values);
+        },
+    });
 
     return (
         <Auth
             type={"verify-email"}
             content={
-                <>
-                    <MuiOtpInput
-                        value={otp}
-                        onComplete={validateOTP}
-                        validateChar={validateChar}
-                        TextFieldsProps={{ size: "small" }}
-                        length={6}
-                    />
-                    <Box textAlign="center" mt={2} mb={2}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            disabled={nextButton}
-                        >
-                            verify
-                        </Button>
-                    </Box>
-                </>
+                !linkSend ? (
+                    <>
+                        <Box textAlign="center" mt={2} mb={2}>
+                            <MarkEmailReadIcon
+                                color={"success"}
+                                fontSize={"large"}
+                            />
+                            <h3>OPEN YOUR EMAIL</h3>
+                            <p>
+                                We have sent a password recover instruction to
+                                your email.
+                            </p>
+
+                            <Button
+                                variant="contained"
+                                href="/login"
+                            >
+                                Log in with password
+                            </Button>
+                        </Box>
+                    </>
+                ) : (
+                    <>
+                        <form onSubmit={formik.handleSubmit}>
+                            <TextInput
+                                label="Email"
+                                type="email"
+                                value={formik.values.email || ""}
+                                getValue={(value) =>
+                                    formik.setFieldValue("email", value)
+                                }
+                                error={Boolean(formik.errors.email)}
+                                errorMsg={formik.errors.email}
+                                classes={"mt-2"}
+                            />
+                            <Box textAlign="center" mt={2} mb={2}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    type="submit"
+                                    disabled={loading}
+                                >
+                                    Reset Password
+                                </Button>
+                            </Box>
+                        </form>
+                    </>
+                )
             }
             rightSection={false}
         />

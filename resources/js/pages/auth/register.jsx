@@ -10,29 +10,28 @@ import AppContext from "@/config/AppContext";
 
 const Register = () => {
     const [contextData, setContextData] = useContext(AppContext);
-    const [clicked, setClicked] = useState(false);
+    const [registered, setRegistered] = useState();
     const navigate = useNavigate();
+     const { apiCall, loading, apiError } = API("auth");
 
     async function registerSubmit(values) {
-        setClicked(true);
         try {
             const apiv = API("auth");
-            const response = await apiv.post("/register", values);
+            const response = await apiCall("/register", "POST", values);
 
-            // console.log(response?.data);
-
-            if (response?.data?.success) {
+            if (response?.success) {
                 setContextData((prevState) => ({
                     ...prevState,
-                    user_info: response?.data,
+                    user_info: response.data,
                 }));
-                navigate("/verify-email");
+
+                if (!response?.data?.email_verified_at) {
+                    await navigate("/verify-email");
+                } 
             }
         } catch (error) {
             console.log(error);
         }
-
-        setClicked(false);
     }
 
     const formikSignup = useFormik({
@@ -67,57 +66,58 @@ const Register = () => {
         <Auth
             type={"registration"}
             content={
-                <>
-                    <Typography variant="body1" mb={2}>
-                        Create your account
-                    </Typography>
-                    <form onSubmit={formikSignup.handleSubmit}>
-                        <TextInput
-                            label="Full Name"
-                            value={formikSignup.values.name || ""}
-                            getValue={(value) =>
-                                formikSignup.setFieldValue("name", value)
-                            }
-                            error={Boolean(formikSignup.errors.name)}
-                            errorMsg={formikSignup.errors.name}
-                            classes={"mt-3"}
-                        />
-                        <TextInput
-                            label="Email"
-                            type="email"
-                            value={formikSignup.values.email || ""}
-                            getValue={(value) =>
-                                formikSignup.setFieldValue("email", value)
-                            }
-                            error={Boolean(formikSignup.errors.email)}
-                            errorMsg={formikSignup.errors.email}
-                            classes={"mt-3"}
-                        />
+                registered ? (
+                    <>
+                        <Typography variant="body1" mb={2}>
+                            Create your account
+                        </Typography>
+                        <form onSubmit={formikSignup.handleSubmit}>
+                            <TextInput
+                                label="Full Name"
+                                value={formikSignup.values.name || ""}
+                                getValue={(value) =>
+                                    formikSignup.setFieldValue("name", value)
+                                }
+                                error={Boolean(formikSignup.errors.name)}
+                                errorMsg={formikSignup.errors.name}
+                                classes={"mt-3"}
+                            />
+                            <TextInput
+                                label="Email"
+                                type="email"
+                                value={formikSignup.values.email || ""}
+                                getValue={(value) =>
+                                    formikSignup.setFieldValue("email", value)
+                                }
+                                error={Boolean(formikSignup.errors.email)}
+                                errorMsg={formikSignup.errors.email}
+                                classes={"mt-3"}
+                            />
 
-                        <TextInput
-                            label="Phone Number"
-                            type="number"
-                            value={formikSignup.values.mobile || ""}
-                            getValue={(value) =>
-                                formikSignup.setFieldValue("mobile", value)
-                            }
-                            error={Boolean(formikSignup.errors.mobile)}
-                            errorMsg={formikSignup.errors.mobile}
-                            classes={"mt-3"}
-                        />
+                            <TextInput
+                                label="Phone Number"
+                                type="number"
+                                value={formikSignup.values.mobile || ""}
+                                getValue={(value) =>
+                                    formikSignup.setFieldValue("mobile", value)
+                                }
+                                error={Boolean(formikSignup.errors.mobile)}
+                                errorMsg={formikSignup.errors.mobile}
+                                classes={"mt-3"}
+                            />
 
-                        <TextInput
-                            label="NIC"
-                            value={formikSignup.values.nic || ""}
-                            getValue={(value) =>
-                                formikSignup.setFieldValue("nic", value)
-                            }
-                            error={Boolean(formikSignup.errors.nic)}
-                            errorMsg={formikSignup.errors.nic}
-                            classes={"mt-3"}
-                        />
+                            <TextInput
+                                label="NIC"
+                                value={formikSignup.values.nic || ""}
+                                getValue={(value) =>
+                                    formikSignup.setFieldValue("nic", value)
+                                }
+                                error={Boolean(formikSignup.errors.nic)}
+                                errorMsg={formikSignup.errors.nic}
+                                classes={"mt-3"}
+                            />
 
-                        {/* <TextInput
+                            {/* <TextInput
                             // label="Date of Birth"
                             type="date"
                             value={formikSignup.values.dob || ""}
@@ -129,61 +129,74 @@ const Register = () => {
                             classes={"mt-3"}
                         /> */}
 
-                        <TextInput
-                            label="password"
-                            type="password"
-                            value={formikSignup.values.password || ""}
-                            getValue={(value) =>
-                                formikSignup.setFieldValue("password", value)
-                            }
-                            error={Boolean(formikSignup.errors.password)}
-                            errorMsg={formikSignup.errors.password}
-                            classes={"mt-3"}
-                        />
+                            <TextInput
+                                label="password"
+                                type="password"
+                                value={formikSignup.values.password || ""}
+                                getValue={(value) =>
+                                    formikSignup.setFieldValue(
+                                        "password",
+                                        value,
+                                    )
+                                }
+                                error={Boolean(formikSignup.errors.password)}
+                                errorMsg={formikSignup.errors.password}
+                                classes={"mt-3"}
+                            />
 
-                        <TextInput
-                            label="Confirm Password"
-                            type="password"
-                            value={
-                                formikSignup.values.password_confirmation || ""
-                            }
-                            getValue={(value) =>
-                                formikSignup.setFieldValue(
-                                    "password_confirmation",
-                                    value,
-                                )
-                            }
-                            error={Boolean(
-                                formikSignup.errors.password_confirmation,
-                            )}
-                            errorMsg={formikSignup.errors.password_confirmation}
-                            classes={"mt-3"}
-                        />
+                            <TextInput
+                                label="Confirm Password"
+                                type="password"
+                                value={
+                                    formikSignup.values.password_confirmation ||
+                                    ""
+                                }
+                                getValue={(value) =>
+                                    formikSignup.setFieldValue(
+                                        "password_confirmation",
+                                        value,
+                                    )
+                                }
+                                error={Boolean(
+                                    formikSignup.errors.password_confirmation,
+                                )}
+                                errorMsg={
+                                    formikSignup.errors.password_confirmation
+                                }
+                                classes={"mt-3"}
+                            />
 
-                        <Box textAlign="center" mt={2} mb={2}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                fullWidth
-                                disabled={clicked}
+                            <Box textAlign="center" mt={2} mb={2}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                    fullWidth
+                                    disabled={loading}
+                                >
+                                    Sign Up
+                                </Button>
+                            </Box>
+                        </form>
+                        <Box
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            gap={1}
+                        >
+                            <Typography>Already have an account?</Typography>
+                            <Link
+                                to={"/login"}
+                                variant="outlined"
+                                color="error"
                             >
-                                Sign Up
-                            </Button>
+                                Sign In
+                            </Link>
                         </Box>
-                    </form>
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        gap={1}
-                    >
-                        <Typography>Already have an account?</Typography>
-                        <Link to={"/login"} variant="outlined" color="error">
-                            Sign In
-                        </Link>
-                    </Box>
-                </>
+                    </>
+                ) : (
+                    <></>
+                )
             }
         />
     );

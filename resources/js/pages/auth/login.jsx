@@ -1,23 +1,39 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button, Typography, Box } from "@mui/material";
 import TextInput from "@/components/inputs/TextInput";
 import Auth from "@/layouts/Auth";
 import API from "@/config/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import AppContext from "@/config/AppContext";
 
 const Login = () => {
-    const data = [];
+    const [contextData, setContextData] = useContext(AppContext);
+    const navigate = useNavigate();
+    const { apiCall, loading, apiError } = API("auth");
+    const location = useLocation();
+    const errorMessage = location.state?.errorMessage;
 
     async function loginSubmit(values) {
         try {
-            const apiv = API("auth");
-            const response = await apiv.post("/login", values);
+            // const apiv = API("auth");
+            const response = await apiCall("/login", "POST", values);
 
-            console.log(response);
+            if (response?.success) {
+                setContextData((prevState) => ({
+                    ...prevState,
+                    userDetails: response.data,
+                }));
+
+                // if (!response?.data?.email_verified_at) {
+                //     await navigate("/verify-email");
+                // } else if (!response?.data?.course) {
+                //     await navigate("/register");
+                // }
+            }
         } catch (error) {
-            console.log(error);
+            console.log(apiError);
         }
     }
 
@@ -33,9 +49,8 @@ const Login = () => {
             password: Yup.string().required("Required"),
         }),
 
-        onSubmit: (values) => {
-            // console.log("values => ", values);
-            loginSubmit(values);
+        onSubmit: async (values) => {
+            await loginSubmit(values);
         },
     });
 
@@ -78,6 +93,7 @@ const Login = () => {
                                 color="primary"
                                 fullWidth
                                 type="submit"
+                                disabled={loading}
                             >
                                 Sign in
                             </Button>

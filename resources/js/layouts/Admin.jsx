@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { extendTheme, ThemeProvider } from "@mui/material/styles";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import Navbar from "@/components/Navbars/AdminNavbar";
-import Box from "@mui/material/Box";
+import { Box, Container } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
-const AdminLayout = ({ children }) => {
+const AdminLayout = ({ children, dashboard = false }) => {
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -46,8 +46,19 @@ const AdminLayout = ({ children }) => {
 
                 <Navbar setOpen={setOpen} open={open} scrolled={scrolled} />
                 <Sidebar setOpen={setOpen} open={open} scrolled={scrolled} />
-
-                {children}
+                {dashboard ? (
+                    children 
+                ) : (
+                    <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                        <div className="min-height-300 bg-primary-cu position-absolute w-100 position-top-left"></div>
+                        <Container
+                            sx={{ mt: 4, mb: 4 }}
+                            className="calender-container"
+                        >
+                            {children}
+                        </Container>
+                    </Box>
+                )}
             </Box>
         </ThemeProvider>
     );

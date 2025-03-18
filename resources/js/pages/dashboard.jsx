@@ -37,7 +37,7 @@ const Dashboard = () => {
     });
 
     return (
-        <AdminLayout>
+        <AdminLayout dashboard={true}>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
                 <div className="min-height-300 bg-primary-cu position-absolute w-100 position-top-left"></div>

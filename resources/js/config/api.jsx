@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const baseURLs = {
     auth: import.meta.env.VITE_ENDPOINT_AUTH,
@@ -8,38 +10,60 @@ const baseURLs = {
 };
 
 const API = (version) => {
-    const APICALL = axios.create({
-        baseURL: baseURLs[version],
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-    // Add a request interceptor
-    APICALL.interceptors.request.use(
-        (config) => {
-            const user = JSON.parse(localStorage.getItem("user"));
-            if (user)
-                config.headers.Authorization = `Bearer ${user.accessToken}`;
-            return config;
-        },
-        (error) => Promise.reject(error),
-    );
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
-    APICALL.interceptors.response.use(
-        (response) => response,
-        async (error) => {
-            // // console.log("error", error);
+    const apiCall = async (url, method = "GET", data = null) => {
+        setLoading(true);
+        setError(null);
+        const api = axios.create({
+            baseURL: baseURLs[version],
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        // Add a request interceptor
+        api.interceptors.request.use(
+            (config) => {
+                const user = JSON.parse(localStorage.getItem("user"));
+                if (user)
+                    config.headers.Authorization = `Bearer ${user.accessToken}`;
+                return config;
+            },
+            (error) => {
+                setLoading(false);
+                setError(error);
+                return Promise.reject(error);
+            },
+        );
+
+        try {
+            const response = await api({
+                method,
+                url,
+                data,
+            });
+            setLoading(false);
+            return response.data;
+        } catch (error) {
+            setLoading(false);
             if (error.response?.status === 401) {
-                pageNavigation("/login");
-                return Promise.reject(error.response?.data);
+                navigate("/login", {
+                    state: {
+                        errorMessage:
+                            error.response?.data.message ||
+                            "Unauthorized access. Please login.",
+                    },
+                });
+            } else {
+                setError(error.response?.data || error.message);
             }
+        }
+    };
 
-            if (error.response?.status !== 401) {
-                return Promise.reject(error.response?.data);
-            }
-        },
-    );
-
-    return APICALL;
+    return { apiCall, loading, error };
 };
+
 export default API;
