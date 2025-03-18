@@ -12,9 +12,9 @@ import {
 import CommonTable from "@/components/tables/CommonTable";
 // import API from "../../../config/api";
 // import { json } from "react-router-dom";
-// import ModalComponent from "./Modal";
-// import UserForm from "./user-form";
-// import UserUpdateForm from "./user-update-form";
+import ModalComponent from "./components/Modal";
+import UserForm from "./components/user-form";
+import UserUpdateForm from "./components/user-update-form";
 
 //MUI Icons
 import PriceChangeRoundedIcon from "@mui/icons-material/PriceChangeRounded";
@@ -97,10 +97,10 @@ const Users = () => {
     return (
         <AdminLayout>
             <Paper
-                className="shipment-table"
+                className="user-table border-4"
                 sx={{ width: "100%", overflow: "hidden", boxShadow: 0 }}
             >
-                <div className="mb-3 text-end">
+                <div className="m-3 text-end">
                     <Button
                         variant="contained"
                         onClick={() =>
@@ -110,60 +110,60 @@ const Users = () => {
                         Create User
                     </Button>
                 </div>
-                
-                    <CommonTable
-                        columns={columns}
-                        rows={users}
-                        handleEdit={(data) =>
-                            showModal(
-                                `Update user - ${data.name}`,
-                                data,
-                                "update-user",
-                            )
-                        }
-                    >
-                        <>
-                            <Tooltip title="Topup">
-                                <IconButton
-                                    onClick={() =>
-                                        showModal(`Topup`, {}, "top-up")
-                                    }
-                                >
-                                    <PriceChangeRoundedIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </>
-                    </CommonTable>
-                
+
+                <CommonTable
+                    columns={columns}
+                    rows={users}
+                    handleEdit={(data) =>
+                        showModal(
+                            `Update user - ${data.name}`,
+                            data,
+                            "update-user",
+                        )
+                    }
+                >
+                    <>
+                        <Tooltip title="Topup">
+                            <IconButton
+                                onClick={() => showModal(`Topup`, {}, "top-up")}
+                            >
+                                <PriceChangeRoundedIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </>
+                </CommonTable>
             </Paper>
 
-            {/* <ModalComponent
-        formTitle={modalOptions.title}
-        open={modalOptions.open}
-        closeModal={resetModalOptions}
-      >
-        {modalOptions.formName === "create-user" ? (
-          <UserForm
-            data={modalOptions.data}
-            closeModal={resetModalOptions}
-            handleUser={(user) => setUsers([user, ...users])}
-            btnLabel={modalOptions.data?.id ? "Update" : "Add"}
-          />
-        ) : null}
+            <ModalComponent
+                formTitle={modalOptions.title}
+                open={modalOptions.open}
+                closeModal={resetModalOptions}
+            >
+                {modalOptions.formName === "create-user" ? (
+                    <UserForm
+                        data={modalOptions.data}
+                        closeModal={resetModalOptions}
+                        handleUser={(user) => setUsers([user, ...users])}
+                        btnLabel={modalOptions.data?.id ? "Update" : "Add"}
+                    />
+                ) : null}
 
-        {modalOptions.formName === "update-user" ? (
-          <UserUpdateForm
-            data={modalOptions.data}
-            handleUser={(user) => setUsers([user, ...users])}
-            btnLabel={modalOptions.data?.id ? "Update" : "Add"}
-            editUser={editUser}
-          />
-        ) : null}
+                {modalOptions.formName === "update-user" ? (
+                    <UserUpdateForm
+                        data={modalOptions.data}
+                        handleUser={(user) => setUsers([user, ...users])}
+                        btnLabel={modalOptions.data?.id ? "Update" : "Add"}
+                        editUser={editUser}
+                    />
+                ) : null}
 
-        {modalOptions.formName === "top-up" ? (
-          <TopupForm setUser={setUser} closeModal={resetModalOptions} />
-        ) : null}
-      </ModalComponent> */}
+                {modalOptions.formName === "top-up" ? (
+                    <TopupForm
+                        setUser={setUser}
+                        closeModal={resetModalOptions}
+                    />
+                ) : null}
+            </ModalComponent>
         </AdminLayout>
     );
 };

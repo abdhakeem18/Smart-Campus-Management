@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import AdminLayout from "@/layouts/Admin";
-
-import { Container, Box } from "@mui/material";
-import FullCalendarView from "../components/FullCalendar";
-import EventDialog from "../components/dialog/EventDialog";
-import BasicModal from "../components/modals/BasicModal";
+import FullCalendarView from "@/components/FullCalendar";
+import EventDialog from "@/components/dialog/EventDialog";
+import BasicModal from "@/components/modals/BasicModal";
 
 export default function SchedulePage() {
     const [selectedEvent, setSelectedEvent] = useState(null);
