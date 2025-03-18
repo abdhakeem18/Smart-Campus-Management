@@ -10,24 +10,29 @@ import AppContext from "@/config/AppContext";
 
 const Register = () => {
     const [contextData, setContextData] = useContext(AppContext);
-    const [registered, setRegistered] = useState();
+    const [registered, setRegistered] = useState(false);
     const navigate = useNavigate();
-     const { apiCall, loading, apiError } = API("auth");
+    const { apiCall, loading, apiError } = API("auth");
 
     async function registerSubmit(values) {
         try {
-            const apiv = API("auth");
             const response = await apiCall("/register", "POST", values);
 
             if (response?.success) {
-                setContextData((prevState) => ({
-                    ...prevState,
-                    user_info: response.data,
-                }));
 
-                if (!response?.data?.email_verified_at) {
-                    await navigate("/verify-email");
-                } 
+                const response = await apiCall("/courses", "GET");
+
+                console.log(' => ', response);
+                // setContextData((prevState) => ({
+                //     ...prevState,
+                //     user_info: response.data,
+                // }));
+
+
+
+                // if (!response?.data?.email_verified_at) {
+                //     await navigate("/verify-email");
+                // }
             }
         } catch (error) {
             console.log(error);
@@ -66,7 +71,7 @@ const Register = () => {
         <Auth
             type={"registration"}
             content={
-                registered ? (
+                !registered ? (
                     <>
                         <Typography variant="body1" mb={2}>
                             Create your account

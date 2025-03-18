@@ -8,184 +8,122 @@ import TextInput from "@/components/inputs/TextInput";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 
 const UserForm = (props) => {
-  const { closeModal, handleUser, btnLabel, data } = props;
-  const [loading, setLoading] = useState(false);
+    const { closeModal, btnLabel, data } = props;
+    const { apiCall, loading, apiError } = API("auth");
 
-  async function handleSubmit(values) {
-    try {
-      setLoading(true);
+    async function handleSubmit(values) {
+        try {
+            const response = await apiCall("/register", "POST", values);
 
-      const payload = {
-        ...values,
-      };
+            if (response?.success) {
+                console.log(response?.message);
+            }
 
-      // console.log(`payload => `, payload);
-
-      const apiv = API("v2");
-      const res = await apiv.post("/users", payload);
-      handleUser(res.data);
-
-      setTimeout(() => {
-        setLoading(false);
-        closeModal();
-      }, 2000);
-    } catch (error) {
-      // console.log(`error => `, error);
-      setLoading(false);
+            setTimeout(() => {
+                closeModal();
+            }, 2000);
+        } catch (error) {
+            console.log(error);
+        }
     }
-  }
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      fullName: "",
-      company: "",
-      phone: "",
-      country: "",
-      city: "",
-      zipcode: "",
-    },
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            name: "",
+            email: "",
+            password: "",
+            password_confirmation: "",
+            mobile: "",
+            role_id: 3,
+            nic: "",
+            image: "",
+        },
 
-    validationSchema: Yup.object({
-      username: Yup.string().required("Username is required"),
-      email: Yup.string().required("Email is required"),
-      password: Yup.string().required("Password is reequired"),
-      confirmPassword: Yup.string().required("Confirm password is required"),
-      fullName: Yup.string().required("Full name is required"),
-    }),
+        validationSchema: Yup.object({
+            name: Yup.string().required("Required"),
+            email: Yup.string().required("Required"),
+            mobile: Yup.string().required("Required"),
+            nic: Yup.string().required("Required"),
+            password: Yup.string().required("Required"),
+            password_confirmation: Yup.string().required("Required"),
+        }),
 
-    onSubmit: (values) => {
-      // console.log(`values => `, values);
-      if (data?.id) editUser({ ...values, id: data.id });
-      else handleSubmit(values);
-    },
-  });
+        onSubmit: (values) => {
+            handleSubmit(values);
+        },
+    });
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return (
+        <form onSubmit={formik.handleSubmit}>
+            <TextInput
+                label="Full Name"
+                value={formik.values.name || ""}
+                getValue={(value) => formik.setFieldValue("name", value)}
+                error={Boolean(formik.errors.name)}
+                errorMsg={formik.errors.name}
+                classes={"mt-3"}
+            />
+            <TextInput
+                label="Email"
+                type="email"
+                value={formik.values.email || ""}
+                getValue={(value) => formik.setFieldValue("email", value)}
+                error={Boolean(formik.errors.email)}
+                errorMsg={formik.errors.email}
+                classes={"mt-3"}
+            />
 
-  // console.log(`error => `, formik.errors);
+            <TextInput
+                label="Phone Number"
+                type="number"
+                value={formik.values.mobile || ""}
+                getValue={(value) => formik.setFieldValue("mobile", value)}
+                error={Boolean(formik.errors.mobile)}
+                errorMsg={formik.errors.mobile}
+                classes={"mt-3"}
+            />
 
-  return (
-    <form onSubmit={formik.handleSubmit}>
-      <div className="d-flex gap-2">
-        <div className="mb-3 w-100">
-          <TextInput
-            label="Username"
-            value={formik.values.username}
-            getValue={(value) => formik.setFieldValue("username", value)}
-            error={Boolean(formik.errors.username)}
-            errorMsg={formik.errors.username}
-          />
-        </div>
-        <div className="mb-3 w-100">
-          <TextInput
-            label="Email"
-            type="email"
-            value={formik.values.email}
-            getValue={(value) => formik.setFieldValue("email", value)}
-            error={Boolean(formik.errors.email)}
-            errorMsg={formik.errors.email}
-          />
-        </div>
-      </div>
-      <div className="d-flex gap-2">
-        <div className="mb-3 w-100">
-          <TextInput
-            label="Password"
-            type="password"
-            value={formik.values.password}
-            getValue={(value) => formik.setFieldValue("password", value)}
-            error={Boolean(formik.errors.password)}
-            errorMsg={formik.errors.password}
-          />
-        </div>
-        <div className="mb-3 w-100">
-          <TextInput
-            label="Confirm Password"
-            type="password"
-            value={formik.values.confirmPassword}
-            getValue={(value) => formik.setFieldValue("confirmPassword", value)}
-            error={Boolean(formik.errors.confirmPassword)}
-            errorMsg={formik.errors.confirmPassword}
-          />
-        </div>
-      </div>
-      <div className="d-flex gap-2">
-        <div className="mb-3 w-100">
-          <TextInput
-            label="Full Name"
-            value={formik.values.fullName}
-            getValue={(value) => formik.setFieldValue("fullName", value)}
-            error={Boolean(formik.errors.fullName)}
-            errorMsg={formik.errors.fullName}
-          />
-        </div>
-        <div className="mb-3 w-100">
-          <TextInput
-            label="Company"
-            value={formik.values.company}
-            getValue={(value) => formik.setFieldValue("company", value)}
-            error={Boolean(formik.errors.company)}
-            errorMsg={formik.errors.company}
-          />
-        </div>
-      </div>
-      <div className="d-flex gap-2">
-        <div className="mb-3 w-100">
-          <TextInput
-            label="Phone"
-            value={formik.values.phone}
-            getValue={(value) => formik.setFieldValue("phone", value)}
-            error={Boolean(formik.errors.phone)}
-            errorMsg={formik.errors.phone}
-          />
-        </div>
+            <TextInput
+                label="NIC"
+                value={formik.values.nic || ""}
+                getValue={(value) => formik.setFieldValue("nic", value)}
+                error={Boolean(formik.errors.nic)}
+                errorMsg={formik.errors.nic}
+                classes={"mt-3"}
+            />
 
-        <div className="mb-3 w-100">
-          <TextInput
-            label="City"
-            value={formik.values.city}
-            getValue={(value) => formik.setFieldValue("city", value)}
-            error={Boolean(formik.errors.city)}
-            errorMsg={formik.errors.city}
-          />
-        </div>
-      </div>
-      <div className="d-flex gap-2">
-        <div className="mb-3 w-100">
-          <TextInput
-            label="Country"
-            value={formik.values.country}
-            getValue={(value) => formik.setFieldValue("country", value)}
-            error={Boolean(formik.errors.country)}
-            errorMsg={formik.errors.country}
-          />
-        </div>
-        <div className="mb-3 w-100">
-          <TextInput
-            label="ZIP Code"
-            value={formik.values.zipcode}
-            getValue={(value) => formik.setFieldValue("zipcode", value)}
-            error={Boolean(formik.errors.zipcode)}
-            errorMsg={formik.errors.zipcode}
-          />
-        </div>
-      </div>
+            <TextInput
+                label="password"
+                type="password"
+                value={formik.values.password || ""}
+                getValue={(value) => formik.setFieldValue("password", value)}
+                error={Boolean(formik.errors.password)}
+                errorMsg={formik.errors.password}
+                classes={"mt-3"}
+            />
 
-      <br />
-      <LoadingButtonComponent
-        label={btnLabel}
-        variant="contained"
-        loading={loading}
-      />
-    </form>
-  );
+            <TextInput
+                label="Confirm Password"
+                type="password"
+                value={formik.values.password_confirmation || ""}
+                getValue={(value) =>
+                    formik.setFieldValue("password_confirmation", value)
+                }
+                error={Boolean(formik.errors.password_confirmation)}
+                errorMsg={formik.errors.password_confirmation}
+                classes={"mt-3"}
+            />
+
+            <br />
+            <LoadingButtonComponent
+                label={btnLabel}
+                variant="contained"
+                loading={loading}
+                cls={"my-3"}
+            />
+        </form>
+    );
 };
 
 export default UserForm;

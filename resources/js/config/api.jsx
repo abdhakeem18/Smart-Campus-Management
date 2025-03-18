@@ -27,9 +27,9 @@ const API = (version) => {
         // Add a request interceptor
         api.interceptors.request.use(
             (config) => {
-                const user = JSON.parse(localStorage.getItem("user"));
+                const user = JSON.parse(localStorage.getItem("userDetails"));
                 if (user)
-                    config.headers.Authorization = `Bearer ${user.accessToken}`;
+                    config.headers.Authorization = `Bearer ${user.token}`;
                 return config;
             },
             (error) => {

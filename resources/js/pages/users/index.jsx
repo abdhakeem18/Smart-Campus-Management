@@ -10,7 +10,7 @@ import {
     Box,
 } from "@mui/material";
 import CommonTable from "@/components/tables/CommonTable";
-// import API from "../../../config/api";
+import API from "@/config/api";
 // import { json } from "react-router-dom";
 import ModalComponent from "./components/Modal";
 import UserForm from "./components/user-form";
@@ -52,47 +52,47 @@ const Users = () => {
         });
     };
 
-    const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState([]);
+    const { apiCall, loading, apiError } = API("admin");
 
-    //   async function fetchUsers() {
-    //     setLoading(true);
-    //     const apiv = API("v2");
-    //     const res = await apiv.get("/users");
+    async function fetchUsers() {
+      
+        const res = await apiCall("/users");
+        console.log("=>" , res);
 
-    //     // Wait for both the fetch promise and a 2 second timeout
-    //     const results = await Promise.all([
-    //       res,
-    //       new Promise((resolve) => setTimeout(resolve, 1500)),
-    //     ]);
+        
+        const results = await Promise.all([
+            res,
+            new Promise((resolve) => setTimeout(resolve, 1500)),
+        ]);
 
-    //     setUsers(res.data);
-    //     setLoading(false);
-    //   }
+        setUsers(res.data);
+    }
 
-    //   useEffect(() => {
-    //     fetchUsers();
+    useEffect(() => {
+        fetchUsers();
 
-    //     return () => {
-    //       fetchUsers();
-    //     };
-    //   }, []);
+        return () => {
+            fetchUsers();
+        };
 
-    //   const editUser = async (user) => {
+    }, []);
+
+    // const editUser = async (user) => {
     //     // console.log("user => ", user);
     //     const apiv = API("v2");
     //     await apiv.put("/users/" + user.id, user);
 
     //     const updatedUsers = users.map((usr) => {
-    //       if (usr.id === user.id) {
-    //         return { ...usr, ...user };
-    //       }
-    //       return usr;
+    //         if (usr.id === user.id) {
+    //             return { ...usr, ...user };
+    //         }
+    //         return usr;
     //     });
 
     //     setUsers(updatedUsers);
     //     resetModalOptions();
-    //   };
+    // };
 
     return (
         <AdminLayout>
@@ -143,7 +143,6 @@ const Users = () => {
                     <UserForm
                         data={modalOptions.data}
                         closeModal={resetModalOptions}
-                        handleUser={(user) => setUsers([user, ...users])}
                         btnLabel={modalOptions.data?.id ? "Update" : "Add"}
                     />
                 ) : null}
