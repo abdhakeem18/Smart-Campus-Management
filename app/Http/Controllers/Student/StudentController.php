@@ -78,4 +78,12 @@ class StudentController extends BaseController
     {
         //
     }
+
+    public function courses($id)
+    {
+       $result=$this->service->getStudentCourseDetails($id);
+       return  $this->sendSuccess($result,'Course Created successfully.');
+
+    }
+
 }

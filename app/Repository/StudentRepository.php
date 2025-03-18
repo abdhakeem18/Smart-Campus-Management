@@ -62,4 +62,10 @@ class StudentRepository {
         return str_pad($newNumber, $length, '0', STR_PAD_LEFT);
     }
 
+    public function findById($id)
+    {
+        $data = Student::find($id);
+        return $data;
+    }
+
 }

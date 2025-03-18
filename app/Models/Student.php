@@ -15,4 +15,9 @@ class Student extends Model
         'nic_document',
         'document',
     ];
+
+    public function courses(){
+        return $this->hasMany(Course::class, 'id', 'course_id');
+    }
+
 }
