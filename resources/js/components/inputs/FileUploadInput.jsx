@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
     Button,
     Typography,
-    Box,
     Avatar,
     Stack,
     Grid,
     Card,
-    CardContent,
 } from "@mui/material";
-import { Extension } from "@mui/icons-material";
 
 const FileUploadInput = ({
     type,

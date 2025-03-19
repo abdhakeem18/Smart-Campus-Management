@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Typography, Box } from "@mui/material";
+import { Button, Typography, Box, Alert } from "@mui/material";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import Auth from "@/layouts/Auth";
 import AppContext from "@/config/AppContext";
@@ -12,7 +12,8 @@ const VerifyEmail = () => {
     const [contextData, setContextData] = useContext(AppContext);
     const [otp, setOtp] = useState("");
     const [next, setNext] = useState(false);
-    const { apiCall, loading, apiError } = API(
+    const [success, setSuccess] = useState("");
+    const { apiCall, loading, error } = API(
         contextData?.roles[contextData?.userDetails?.role_id],
     );
 
@@ -26,17 +27,19 @@ const VerifyEmail = () => {
     };
 
     async function verifyOTP() {
-        try {
-            const response = await apiCall("/verify", "POST", { code: otp });
+        setSuccess("");
 
-            if (response?.success) {
+        const response = await apiCall("/verify", "POST", { code: otp });
+
+        if (response?.success) {
+            setSuccess(response?.message);
+
+            setTimeout(() => {
                 setContextData((prevState) => ({
                     ...prevState,
                     step: !response?.data?.courses ? "register" : "next",
                 }));
-            }
-        } catch (error) {
-            console.log(error);
+            }, 3000);
         }
     }
 
@@ -48,10 +51,12 @@ const VerifyEmail = () => {
 
     const resendOTP = async () => {
         try {
+            setSuccess("");
+
             const response = await apiCall("/resend/verify", "POST", []);
 
             if (response?.success) {
-                console.log(response.message);
+                setSuccess(response?.message);
             }
         } catch (error) {
             console.log(error);
@@ -101,16 +106,21 @@ const VerifyEmail = () => {
                         />
 
                         <Box textAlign="center" mt={2} mb={2}>
-                            <Typography
-                                variant="body2"
+                            <Button
+                                variant="outlined"
                                 color="primary"
                                 mt={2}
                                 courser="pointer"
                                 onClick={resendOTP}
+                                disabled={loading}
                             >
                                 Resend OTP
-                            </Typography>
+                            </Button>
                         </Box>
+                        {success && <Alert severity="success">{success}</Alert>}
+                        {error && (
+                            <Alert severity="error">{error?.message}</Alert>
+                        )}
                     </>
                 )
             }

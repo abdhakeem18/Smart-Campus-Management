@@ -41,12 +41,17 @@ function App() {
 
     function redirectTo(path) {
         navigate(path);
+        setContextData((prevState) => ({
+            ...prevState,
+            step: "",
+        }));
     }
 
     return (
         <>
             <AppContext.Provider value={[contextData, setContextData]}>
                 <main className="main-content border-radius-lg">
+                    {contextData?.step === "next" && redirectTo("/")}
                     <Routes>
                         {/* Page collection */}
                         <>
@@ -62,11 +67,15 @@ function App() {
                         {/* <Route path="/profile" element={<Profile />} /> */}
 
                         {/* Auth Collection */}
-                        {contextData?.step === "verify" && <Route path="/login" element={<VerifyEmail />} />}
-                        {contextData?.step === "register" && <Route path="/login" element={<CourseRegister />} />}
+                        {contextData?.step === "verify" && (
+                            <Route path="/login" element={<VerifyEmail />} />
+                        )}
+                        {contextData?.step === "register" && (
+                            <Route path="/login" element={<CourseRegister />} />
+                        )}
+
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        
                         <Route
                             path="/forgot-password"
                             element={<ForgetPassword />}
@@ -76,7 +85,6 @@ function App() {
                             element={<ResetPassword />}
                         />
                     </Routes>
-                 
                 </main>
             </AppContext.Provider>
         </>
