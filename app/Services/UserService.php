@@ -26,6 +26,13 @@ class UserService extends BaseService{
     public function sendEmailUserVerificationCode($email,$code)
     {
         $user = $this->userRepository->findByValue($email);
+        if (!$user) {
+            return null;
+        }
+        if ($user->email_verified_at != null) {
+            $user->verfied = true;
+            return $user;
+        }
         $this->userRepository->VerifyCodeUpdate($user,$code);
         return $user;
     }
@@ -46,6 +53,11 @@ class UserService extends BaseService{
             $user->verfied = true;
             return $user;
         }
+        if ($user->verification_code  != md5($request->code)) {
+            $user->codeverify = true;
+            return $user;
+        }
+
         $resgister_number = 'E0000001';
         
         $this->userRepository->VerifyCodeUpdate($user,$request->code,true);
