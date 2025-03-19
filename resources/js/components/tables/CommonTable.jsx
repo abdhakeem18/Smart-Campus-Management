@@ -25,28 +25,6 @@ import {
     MoreVert as MoreVertIcon,
 } from "@mui/icons-material";
 
-// Dummy data
-const dummyData = [
-    { id: 1, name: "John Doe", status: "In progress", role: "Admin" },
-    { id: 2, name: "Jane Smith", status: "Completed", role: "User" },
-    { id: 3, name: "Alice Johnson", status: "Pending", role: "User" },
-    { id: 4, name: "Bob Brown", status: "Processing", role: "Admin" },
-    { id: 5, name: "Charlie Davis", status: "Accepted", role: "User" },
-    { id: 6, name: "Eve White", status: "Cancel", role: "User" },
-    { id: 7, name: "Frank Wilson", status: "In progress", role: "Admin" },
-    { id: 8, name: "Grace Lee", status: "Completed", role: "User" },
-    { id: 9, name: "Hank Green", status: "Pending", role: "User" },
-    { id: 10, name: "Ivy Hall", status: "Processing", role: "Admin" },
-];
-
-// Columns
-const columns = [
-    { id: "name", label: "Name", minWidth: 150 },
-    { id: "status", label: "Status", minWidth: 100 },
-    { id: "role", label: "Role", minWidth: 100 },
-    { id: "action", label: "Action", maxWidth: 100, align: "right" },
-];
-
 // Custom styled Paper component
 const StyledPaper = styled(Paper)(({ theme }) => ({
     width: "100%",
@@ -143,7 +121,7 @@ function TablePaginationActions(props) {
     );
 }
 
-export default function CommonTable() {
+export default function CommonTable({rows, columns}) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -175,7 +153,7 @@ export default function CommonTable() {
     // Handle actions (Edit, Delete, View)
     const handleAction = (action) => {
         if (selectedRow) {
-            alert(`You clicked ${action} for ${selectedRow.name}`);
+            alert(`You clicked ${action} for ${selectedRow.id}`);
         }
         handleActionClose();
     };
@@ -183,10 +161,6 @@ export default function CommonTable() {
     // Function to get color based on status
     const getColor = (status) => {
         switch (status) {
-            case "In progress":
-                return "primary";
-            case "Completed":
-                return "success";
             case "Pending":
                 return "warning";
             case "Processing":
@@ -218,7 +192,7 @@ export default function CommonTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {dummyData
+                        {rows
                             .slice(
                                 page * rowsPerPage,
                                 page * rowsPerPage + rowsPerPage,
@@ -272,7 +246,7 @@ export default function CommonTable() {
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25]}
                                 colSpan={columns.length}
-                                count={dummyData.length}
+                                count={rows.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 onPageChange={handleChangePage}

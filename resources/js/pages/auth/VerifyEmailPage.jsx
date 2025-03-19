@@ -37,7 +37,7 @@ const VerifyEmail = () => {
             setTimeout(() => {
                 setContextData((prevState) => ({
                     ...prevState,
-                    step: !response?.data?.courses ? "register" : "next",
+                    step: !response?.data?.students ? "register" : "next",
                 }));
             }, 3000);
         }

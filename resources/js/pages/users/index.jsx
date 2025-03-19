@@ -18,13 +18,17 @@ import UserUpdateForm from "./components/UserUpdateForm";
 
 //MUI Icons
 import PriceChangeRoundedIcon from "@mui/icons-material/PriceChangeRounded";
+import { Email } from "@mui/icons-material";
 // import TopupForm from "../profile/components/TopupForm";
 
 const columns = [
     { id: "id", label: "ID", minWidth: 100 },
-    { id: "username", label: "Username", minWidth: 100 },
     { id: "fullName", label: "Full Name", minWidth: 100 },
     { id: "email", label: "Email", minWidth: 100 },
+    { id: "role", label: "Role", minWidth: 100 },
+    { id: "status", label: "Status", minWidth: 100 },
+    { id: "action", label: "Action", maxWidth: 100, align: "right" }
+
 ];
 
 const Users = () => {
@@ -56,17 +60,22 @@ const Users = () => {
     const { apiCall, loading, apiError } = API("admin");
 
     async function fetchUsers() {
-      
-        const res = await apiCall("/users");
-        console.log("=>" , res);
+        const response = await apiCall("/users");
 
-        
-        const results = await Promise.all([
-            res,
-            new Promise((resolve) => setTimeout(resolve, 1500)),
-        ]);
+        if (response?.success) {
+            let userList = [];
+            (response?.data).map((user) => {
+                userList.push({
+                    id: user?.id,
+                    fullName: user?.name,
+                    email: user?.email,
+                    role: user?.role_id === 3 ? "Student" : user?.role_id === 2 ? "Staff" : "Admin",
+                    status: user?.is_active ? "Accepted" : "Pending" 
+                });
+            });
 
-        setUsers(res.data);
+            setUsers(userList);
+        }
     }
 
     useEffect(() => {
@@ -75,7 +84,6 @@ const Users = () => {
         return () => {
             fetchUsers();
         };
-
     }, []);
 
     // const editUser = async (user) => {

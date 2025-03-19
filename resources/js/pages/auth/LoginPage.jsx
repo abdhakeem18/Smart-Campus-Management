@@ -28,7 +28,7 @@ const Login = () => {
                     ...prevState,
                     userDetails: response.data,
                     courses: courses.data,
-                    step: (!response?.data?.email_verified_at ? "verify" : !response?.data?.courses ? "register" : "next")
+                    step: (!response?.data?.email_verified_at ? "verify" : !response?.data?.students ? "register" : "next")
                 }));
             }
         } catch (error) {
@@ -59,7 +59,7 @@ const Login = () => {
             content={
                 <>
                     <form onSubmit={formikSignin.handleSubmit}>
-                        <Typography variant="body1" mb={2}>
+                        <Typography variant="body1" mb={2} textAlign="center">
                             Please login to your account
                         </Typography>
 
