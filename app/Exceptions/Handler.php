@@ -50,28 +50,22 @@ class Handler extends ExceptionHandler
             //
         });
     }
-    
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        return response()->json([
-            'success' => false,
-            'message' => 'Unauthenticated. Please log in again.',
-            'data' => null
-        ], JsonResponse::HTTP_UNAUTHORIZED);
-    }
-    public function render($request, Throwable $exception)
-    {
-        if ($exception instanceof NotFoundHttpException) {
+        if (! $request->bearerToken()) {
+           
             return response()->json([
                 'success' => false,
-                'message' => 'The requested route could not be found.',
-                'data' => null,
-            ], 404);
+                'message' => 'Unauthenticated. Please log in again.',
+                'data' => null
+            ], 401);
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated. Please log in again.',
+                'data' => null
+            ], JsonResponse::HTTP_UNAUTHORIZED);
         }
-    }
-
-    private function getStatusCode(Throwable $exception)
-    {
-        return method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500;
+      
     }
 }

@@ -72,14 +72,11 @@ class UserRepository{
         return $user;
     }
 
-    public function findByValue($email = null, $code = null)
+    public function findByValue($email = null)
     {
         $query = User::query();
         if ($email) {
             $query->where('email', $email);
-        }
-        if ($code) {
-            $query->where('verification_code', md5($code));
         }
         return $query->first(); 
     }

@@ -35,17 +35,22 @@ class UserService extends BaseService{
 
         $user = $this->userRepository->findByValue(auth()->user()->email,$request->code);
         if (!$user) {
-            return $this->sendError('Invalid verification code.', 403, ["code" => $request->code]);
+            return null;
         }
 
-        if ($user->expires_at < now()) {
-            return $this->sendError('Expired verification code.', 403, ["code" => $request->code]);
+        if ($user->expires_at != null && $user->expires_at < now()) {
+            $user->expired = true;
+            return $user;
+        }
+        if ($user->email_verified_at != null) {
+            $user->verfied = true;
+            return $user;
         }
         $resgister_number = 'E0000001';
         
         $this->userRepository->VerifyCodeUpdate($user,$request->code,true);
         
-        return  $this->sendSuccess($user,'Email verified successfully.');
+        return  $user;
     }
 
     public function createValidator($request){
