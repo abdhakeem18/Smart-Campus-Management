@@ -9,20 +9,32 @@ import API from "@/config/Api";
 import AppContext from "@/config/AppContext";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 import FileUploadInput from "@/components/inputs/FileUploadInput";
+import TextInput from "@/components/inputs/TextInput";
 
 const CourseRegister = () => {
     const [contextData, setContextData] = useContext(AppContext);
     const [registered, setRegistered] = useState(false);
-
-    const navigate = useNavigate();
-    const { apiCall, loading, apiError } = API("auth");
+    const { apiCall, loading, apiError } = API(
+        contextData?.roles[contextData?.userDetails?.role_id],
+    );
 
     async function registerSubmit(values) {
         try {
-            const response = await apiCall("/register", "POST", values);
+            const response = await apiCall(
+                "/course-registration",
+                "POST",
+                values,
+            );
 
             if (response?.success) {
-                await navigate("/login");
+                if (response?.success) {
+                    setContextData((prevState) => ({
+                        ...prevState,
+                        step: "next",
+                    }));
+
+                    navigator("/dashboard");
+                }
             }
         } catch (error) {
             console.log(error);
@@ -32,13 +44,14 @@ const CourseRegister = () => {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            course: "",
+            user_id: contextData?.userDetails?.id,
+            course_id: "",
             document: "",
             nic_document: "",
         },
 
         validationSchema: Yup.object({
-            course: Yup.string().required("Required"),
+            course_id: Yup.string().required("Required"),
             document: Yup.string().required("Required"),
             nic_document: Yup.string().required("Required"),
         }),
@@ -55,19 +68,24 @@ const CourseRegister = () => {
             content={
                 !registered ? (
                     <>
-                        <Typography variant="body1" mb={2} component={"p"} textAlign={"center"}>
+                        <Typography
+                            variant="body1"
+                            mb={2}
+                            component={"p"}
+                            textAlign={"center"}
+                        >
                             Course Registration
                         </Typography>
                         <form onSubmit={formik.handleSubmit}>
                             <SelectInput
                                 label="Select Course"
-                                value={formik.values.course || ""}
+                                value={formik.values.course_id || ""}
                                 getValue={(value) =>
-                                    formik.setFieldValue("course", value)
+                                    formik.setFieldValue("course_id", value)
                                 }
                                 data={contextData?.courses}
-                                error={Boolean(formik.errors.course)}
-                                errorMsg={formik.errors.course}
+                                error={Boolean(formik.errors.course_id)}
+                                errorMsg={formik.errors.course_id}
                                 classes={"my-3"}
                             />
 
@@ -77,10 +95,7 @@ const CourseRegister = () => {
                                     title={"NIC"}
                                     allowedExtension={[
                                         "jpg",
-                                        "jpeg",
                                         "png",
-                                        "gif",
-                                        "webp",
                                     ]}
                                     value={formik.values.nic_document || ""}
                                     getValue={(value) =>
@@ -118,7 +133,6 @@ const CourseRegister = () => {
                                 />
                             </Box>
                         </form>
-                        
                     </>
                 ) : (
                     <></>

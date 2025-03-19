@@ -30,9 +30,10 @@ const VerifyEmail = () => {
             const response = await apiCall("/verify", "POST", { code: otp });
 
             if (response?.success) {
-                if (!contextData?.data?.course) {
-                    await navigate("/course/register");
-                }
+                setContextData((prevState) => ({
+                    ...prevState,
+                    step: !response?.data?.courses ? "register" : "next",
+                }));
             }
         } catch (error) {
             console.log(error);
@@ -67,7 +68,10 @@ const VerifyEmail = () => {
     };
 
     useEffect(() => {
-        if (otp != "" && next) verifyOTP();
+        if (otp != "" && next) {
+            verifyOTP();
+            setNext(false);
+        }
     }, [next]);
 
     return (

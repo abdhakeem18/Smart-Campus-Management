@@ -52,6 +52,7 @@ const API = (version) => {
         } catch (error) {
             setLoading(false);
             if (error.response?.status === 401) {
+                localStorage.removeItem("user-data");
                 navigate("/login", {
                     state: {
                         errorMessage:
