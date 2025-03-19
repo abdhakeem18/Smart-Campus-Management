@@ -3,10 +3,11 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button, Typography, Box } from "@mui/material";
 import TextInput from "@/components/inputs/TextInput";
 import Auth from "@/layouts/Auth";
-import API from "@/config/api";
+import API from "@/config/Api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import AppContext from "@/config/AppContext";
+import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 
 const Login = () => {
     const [contextData, setContextData] = useContext(AppContext);
@@ -21,16 +22,14 @@ const Login = () => {
             const response = await apiCall("/login", "POST", values);
 
             if (response?.success) {
+                const courses = await apiCall("/courses", "GET");
+                
                 setContextData((prevState) => ({
                     ...prevState,
                     userDetails: response.data,
+                    courses: courses.data,
+                    step: (!response?.data?.email_verified_at ? "verify" : !response?.data?.courses ? "register" : "next")
                 }));
-
-                // if (!response?.data?.email_verified_at) {
-                //     await navigate("/verify-email");
-                // } else if (!response?.data?.course) {
-                //     await navigate("/register");
-                // }
             }
         } catch (error) {
             console.log(apiError);
@@ -88,15 +87,13 @@ const Login = () => {
                         />
 
                         <Box textAlign="center" mt={2} mb={2}>
-                            <Button
+                            <LoadingButtonComponent
+                                label={"Sign In"}
                                 variant="contained"
-                                color="primary"
-                                fullWidth
-                                type="submit"
-                                disabled={loading}
-                            >
-                                Sign in
-                            </Button>
+                                loading={loading}
+                                cls={"my-3"}
+                                fullWidth={true}
+                            />
                             <Typography
                                 variant="body2"
                                 color="textSecondary"

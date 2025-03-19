@@ -93,7 +93,7 @@ $light-blue: #69adfc;
     margin: auto;
 }
 
-.registration-container .MuiGrid-container {
+.registration-container .MuiGrid-container, .courses-registration-container .MuiGrid-container {
     height: 600px;
 }
 
@@ -101,13 +101,13 @@ $light-blue: #69adfc;
     height: 100%;
 }
 
-.registration-container .registration-form {
+.registration-container .registration-form, .courses-registration-container .courses-registration-form {
     height: 100%;
     overflow-x: hidden;
     overflow-y: scroll;
 }
 
-.registration-container .registration-form::-webkit-scrollbar {
+.registration-container .registration-form::-webkit-scrollbar, .courses-registration-container .courses-registration-form::-webkit-scrollbar {
     display: none;
 }
 

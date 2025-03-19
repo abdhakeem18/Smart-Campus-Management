@@ -13,8 +13,8 @@ import CommonTable from "@/components/tables/CommonTable";
 import API from "@/config/api";
 // import { json } from "react-router-dom";
 import ModalComponent from "./components/Modal";
-import UserForm from "./components/user-form";
-import UserUpdateForm from "./components/user-update-form";
+import UserForm from "./components/UserForm";
+import UserUpdateForm from "./components/UserUpdateForm";
 
 //MUI Icons
 import PriceChangeRoundedIcon from "@mui/icons-material/PriceChangeRounded";

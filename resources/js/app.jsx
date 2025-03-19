@@ -4,12 +4,14 @@ import Dashboard from "@/pages/dashboard";
 import SchedulePage from "@/pages/Schedule";
 import Users from "@/pages/users";
 
-import Login from "@/pages/auth/login";
+import Login from "@/pages/auth/LoginPage";
 // import Profile from "./pages/profile";
-import Register from "@/pages/auth/register";
-import VerifyEmail from "@/pages/auth/verify-email";
-import ForgetPassword from "@/pages/auth/forget-password";
-import ResetPassword from "@/pages/auth/reset-password";
+import Register from "@/pages/auth/RegisterPage";
+import VerifyEmail from "@/pages/auth/VerifyEmailPage";
+import ForgetPassword from "@/pages/auth/ForgetPassword";
+import ResetPassword from "@/pages/auth/ResetPassword";
+import CourseRegister from "@/pages/auth/CourseRegister";
+
 import {
     BrowserRouter as Router,
     Routes,
@@ -54,18 +56,17 @@ function App() {
                                 path="/schedule"
                                 element={<SchedulePage />}
                             />
-                            <Route
-                                path="/users"
-                                element={<Users />}
-                            />
+                            <Route path="/users" element={<Users />} />
                         </>
 
                         {/* <Route path="/profile" element={<Profile />} /> */}
 
                         {/* Auth Collection */}
+                        {contextData?.step === "verify" && <Route path="/login" element={<VerifyEmail />} />}
+                        {contextData?.step === "register" && <Route path="/login" element={<CourseRegister />} />}
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        <Route path="/verify-email" element={<VerifyEmail />} />
+                        
                         <Route
                             path="/forgot-password"
                             element={<ForgetPassword />}
@@ -75,6 +76,7 @@ function App() {
                             element={<ResetPassword />}
                         />
                     </Routes>
+                 
                 </main>
             </AppContext.Provider>
         </>

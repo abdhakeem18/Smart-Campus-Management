@@ -6,7 +6,7 @@ import TextInput from "@/components/inputs/TextInput";
 import { useFormik } from "formik";
 import API from "@/config/api";
 import * as Yup from "yup";
-import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
 
 const ForgetPassword = () => {
     const navigate = useNavigate();
@@ -51,7 +51,7 @@ const ForgetPassword = () => {
                 !linkSend ? (
                     <>
                         <Box textAlign="center" mt={2} mb={2}>
-                            <MarkEmailReadIcon
+                            <MarkEmailUnreadIcon
                                 color={"success"}
                                 fontSize={"large"}
                             />

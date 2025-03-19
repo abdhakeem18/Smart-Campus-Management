@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 // others
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import API from "@/config/api";
+import API from "@/config/Api";
 import TextInput from "@/components/inputs/TextInput";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 

@@ -27,9 +27,11 @@ const API = (version) => {
         // Add a request interceptor
         api.interceptors.request.use(
             (config) => {
-                const user = JSON.parse(localStorage.getItem("userDetails"));
-                if (user)
-                    config.headers.Authorization = `Bearer ${user.token}`;
+                const user = JSON.parse(window.localStorage.getItem("user-data"));
+
+                if (user && version != "auth"){
+                    config.headers.Authorization = `Bearer ${user.userDetails.token}`;
+                }
                 return config;
             },
             (error) => {

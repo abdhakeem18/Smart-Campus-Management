@@ -5,8 +5,9 @@ import Auth from "@/layouts/Auth";
 import TextInput from "@/components/inputs/TextInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import API from "@/config/api";
+import API from "@/config/Api";
 import AppContext from "@/config/AppContext";
+import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 
 const Register = () => {
     const [contextData, setContextData] = useContext(AppContext);
@@ -19,20 +20,7 @@ const Register = () => {
             const response = await apiCall("/register", "POST", values);
 
             if (response?.success) {
-
-                const response = await apiCall("/courses", "GET");
-
-                console.log(' => ', response);
-                // setContextData((prevState) => ({
-                //     ...prevState,
-                //     user_info: response.data,
-                // }));
-
-
-
-                // if (!response?.data?.email_verified_at) {
-                //     await navigate("/verify-email");
-                // }
+                await navigate("/login");
             }
         } catch (error) {
             console.log(error);
@@ -172,15 +160,13 @@ const Register = () => {
                             />
 
                             <Box textAlign="center" mt={2} mb={2}>
-                                <Button
+                                <LoadingButtonComponent
+                                    label={"Sign Up"}
                                     variant="contained"
-                                    color="primary"
-                                    type="submit"
-                                    fullWidth
-                                    disabled={loading}
-                                >
-                                    Sign Up
-                                </Button>
+                                    loading={loading}
+                                    cls={"my-3"}
+                                    fullWidth={true}
+                                />
                             </Box>
                         </form>
                         <Box
