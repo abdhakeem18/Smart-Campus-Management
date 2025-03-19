@@ -71,8 +71,18 @@ class AuthService extends BaseService{
     public function verify(Request $request)
     {
         $result = $this->userService->userVerify($request);
-        $this->mailService->sendEmail("Thank Your Email Verified Succuessfully", $result->email,'Email Verification Code');
-        return $result;
+        if (!$result) {
+            return $this->sendError('Invalid Code..', 404, ["code" => $request->code]);
+        }
+        if ($result->expired) {
+            return $this->sendError('Expired verification code.', 403, ["code" => $request->code]);
+        }
+        if ($result->verfied) {
+            return $this->sendError('User Already Verified', 403, ["code" => $request->code]);
+        }
+
+        $this->mailService->sendEmail("Thank You Email Verified Succuessfully", $result->email,'Email Verification Code');
+        return $this->sendSuccess($result,'Email verified successfully.');
     }
 
     public function resendVerificationCode($email)
