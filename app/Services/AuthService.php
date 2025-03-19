@@ -45,6 +45,8 @@ class AuthService extends BaseService{
                 return $this->sendError('Invalid credentials',401,["data" => 'Invalid credentials']);
             }
             $user = Auth::user();
+            $user->load(['students.courses']);
+
             $token = $user->createToken('auth-token')->plainTextToken;
             $user['token'] =$token; 
             return $this->sendSuccess($user,'Logged IN successfully.');
