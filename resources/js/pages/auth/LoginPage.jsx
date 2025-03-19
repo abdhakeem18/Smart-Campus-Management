@@ -1,23 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button, Typography, Box } from "@mui/material";
 import TextInput from "@/components/inputs/TextInput";
 import Auth from "@/layouts/Auth";
-import API from "@/config/api";
+import API from "@/config/Api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import AppContext from "@/config/AppContext";
+import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 
 const Login = () => {
-    const data = [];
+    const [contextData, setContextData] = useContext(AppContext);
+    const navigate = useNavigate();
+    const { apiCall, loading, apiError } = API("auth");
+    const location = useLocation();
+    const errorMessage = location.state?.errorMessage;
 
     async function loginSubmit(values) {
         try {
-            const apiv = API("auth");
-            const response = await apiv.post("/login", values);
+            // const apiv = API("auth");
+            const response = await apiCall("/login", "POST", values);
 
-            console.log(response);
+            if (response?.success) {
+                const courses = await apiCall("/courses", "GET");
+                
+                setContextData((prevState) => ({
+                    ...prevState,
+                    userDetails: response.data,
+                    courses: courses.data,
+                    step: (!response?.data?.email_verified_at ? "verify" : !response?.data?.students ? "register" : "next")
+                }));
+            }
         } catch (error) {
-            console.log(error);
+            console.log(apiError);
         }
     }
 
@@ -33,9 +48,8 @@ const Login = () => {
             password: Yup.string().required("Required"),
         }),
 
-        onSubmit: (values) => {
-            // console.log("values => ", values);
-            loginSubmit(values);
+        onSubmit: async (values) => {
+            await loginSubmit(values);
         },
     });
 
@@ -45,7 +59,7 @@ const Login = () => {
             content={
                 <>
                     <form onSubmit={formikSignin.handleSubmit}>
-                        <Typography variant="body1" mb={2}>
+                        <Typography variant="body1" mb={2} textAlign="center">
                             Please login to your account
                         </Typography>
 
@@ -73,14 +87,13 @@ const Login = () => {
                         />
 
                         <Box textAlign="center" mt={2} mb={2}>
-                            <Button
+                            <LoadingButtonComponent
+                                label={"Sign In"}
                                 variant="contained"
-                                color="primary"
-                                fullWidth
-                                type="submit"
-                            >
-                                Sign in
-                            </Button>
+                                loading={loading}
+                                cls={"my-3"}
+                                fullWidth={true}
+                            />
                             <Typography
                                 variant="body2"
                                 color="textSecondary"

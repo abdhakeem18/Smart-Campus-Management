@@ -12,6 +12,9 @@ Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
+    Route::get('course/register', [RegisteredUserController::class, 'create'])
+        ->name('register.course');
+
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
@@ -23,5 +26,4 @@ Route::middleware('guest')->group(function () {
 
     Route::get('verify-email', [VerifyEmailController::class, 'create'])
         ->name('verification.notice');
-
 });

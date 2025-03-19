@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext, useEffect } from "react";
 import {
     Container,
     Grid,
@@ -14,7 +14,9 @@ const Auth = (props) => {
     const [contextData, setContextData] = useContext(AppContext);
     const { content, type, rightSection = true } = props;
 
-    window.localStorage.setItem("user-data", JSON.stringify(contextData));
+    useEffect(() => {
+        if(contextData) window.localStorage.setItem("user-data", JSON.stringify(contextData));
+    }, [contextData]);
 
     return (
         <Container
