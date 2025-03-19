@@ -93,5 +93,11 @@ class UserController extends BaseController
         return $this->sendSuccess($result, 'User Deleted successfully.');
     }
 
+    public function approval(string $id)
+    {
+        $result = $this->repository->userApproval($id);
+        return $this->sendSuccess($result, 'User Approved successfully.');
+    }
+
     
 }

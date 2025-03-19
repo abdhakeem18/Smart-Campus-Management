@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BlockController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Http\Request;
@@ -7,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Student\StudentController;
 
 /*
@@ -45,10 +47,16 @@ Route::prefix('student')->middleware(['auth:sanctum','is_user'])->group(function
 Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->group(function () {
     Route::post('/verify', [AuthController::class, 'verify']);
     Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
+    Route::resource('schedules', ScheduleController::class);
+
 });
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'verified', 'is_admin'])->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('courses', CourseController::class);
     Route::resource('subjects', SubjectController::class);
+    Route::resource('blocks', BlockController::class);
+    Route::resource('schedules', ScheduleController::class);
+    Route::put('/user/approval/{id}', [UserController::class, 'approval']);
+    Route::put('/schecdule/approval/{id}', [ScheduleController::class, 'approval']);
 });
