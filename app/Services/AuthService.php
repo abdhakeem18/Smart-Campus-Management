@@ -72,7 +72,7 @@ class AuthService extends BaseService{
     {
         $result = $this->userService->userVerify($request);
         if (!$result) {
-            return $this->sendError('Invalid Code..', 404, ["code" => $request->code]);
+            return $this->sendError('User Not Found..', 404, ["code" => $request->code]);
         }
         if ($result->expired) {
             return $this->sendError('Expired verification code.', 403, ["code" => $request->code]);
@@ -80,7 +80,10 @@ class AuthService extends BaseService{
         if ($result->verfied) {
             return $this->sendError('User Already Verified', 403, ["code" => $request->code]);
         }
-
+        if ($result->codeverify) {
+            return $this->sendError('Invalid Verification Code..', 403, ["code" => $request->code]);
+        }
+        
         $this->mailService->sendEmail("Thank You Email Verified Succuessfully", $result->email,'Email Verification Code');
         return $this->sendSuccess($result,'Email verified successfully.');
     }
@@ -89,13 +92,12 @@ class AuthService extends BaseService{
     {
         try{
             $result = $this->userService->sendEmailUserVerificationCode($email,$this->code);
-
+           
             if (!$result) {
                 return $this->sendError('User not found.', 500, $result);
             }
-
-            if ($result->email_verified_at) {
-                return  $this->sendSuccess($result,'Email already verified.');
+            if ($result->verfied) {
+                return $this->sendError('User Already Verified', 403, ["code" => $this->code]);
             }
 
             $this->mailService->sendEmail("Your email verification code is: $this->code", $result->email,'Email Verification Code');
