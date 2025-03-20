@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const baseURLs = {
+    web: "http://127.0.0.1:8000/",
     auth: import.meta.env.VITE_ENDPOINT_AUTH,
     admin: import.meta.env.VITE_ENDPOINT_ADMIN,
     staff: import.meta.env.VITE_ENDPOINT_STAFF,
@@ -13,10 +14,16 @@ const API = (version) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const v = version;
 
-    const apiCall = async (url, method = "GET", data = null) => {
+    const apiCall = async (url, method = "GET", data = null, type) => {
         setLoading(true);
         setError(null);
+        if (url === "/login") {
+            version = "web";
+        } else {
+            version = v;
+        }
         const api = axios.create({
             baseURL: baseURLs[version],
             headers: {
@@ -27,9 +34,11 @@ const API = (version) => {
         // Add a request interceptor
         api.interceptors.request.use(
             (config) => {
-                const user = JSON.parse(window.localStorage.getItem("user-data"));
+                const user = JSON.parse(
+                    window.localStorage.getItem("user-data"),
+                );
 
-                if (user && version != "auth"){
+                if (user && version != "auth") {
                     config.headers.Authorization = `Bearer ${user.userDetails.token}`;
                 }
                 return config;

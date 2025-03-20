@@ -5,7 +5,10 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +29,8 @@ Route::get('/dashboard', function () {
     return view('index');
 });
 
+Route::post('/login', [AuthController::class, 'login']);
+
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.view');
 
 Route::get('/events', [EventController::class, 'index'])->name('event.view');
@@ -33,5 +38,16 @@ Route::get('/events', [EventController::class, 'index'])->name('event.view');
 Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
 
 Route::get('/users', [UserController::class, 'view'])->name('users.view');
+
+
+Route::get('/logout', function () {
+    // Log the user out
+    Auth::logout();
+
+    // Optionally invalidate the session
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+
+})->name('logout');
 
 require __DIR__ . '/auth.php';
