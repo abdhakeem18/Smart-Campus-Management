@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Services\AuthService;
+use App\Services\MailService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,10 +17,13 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends BaseController
 {
     protected $authService;
+    protected $service;
 
-    public function __construct(AuthService $authService)
+    public function __construct(MailService $service,AuthService $authService)
     {
-        return $this->authService = $authService;
+        $this->authService = $authService;
+        $this->service = $service;
+
     }
 
     public function register(RegisterRequest $request)
@@ -70,4 +74,19 @@ class AuthController extends BaseController
         return $this->sendSuccess($result, 'Password Reset Successfully..');
 
     }
+
+    public function forgetPassword(Request $request)
+    {
+        $result = User::where('email', $request->email)->first();
+        if (!$result) {
+            return $this->sendError('Invalid Email ..', 500, ["error" => null]);
+        }
+        $time = now()->addDay(1);
+        $dataToEncrypt = $result->email . ',' . $result->id . ',' . $time;
+        $encryptedData = Crypt::encryptString($dataToEncrypt);
+        $resetPasswordUrl = url('reset-password?token=' . $encryptedData);
+        $this->service->sendEmail($resetPasswordUrl, $request->email, 'Reset Password');
+        return $this->sendSuccess($result, 'Reset Password Send To Email Successfully..');
+    }
+
 }
