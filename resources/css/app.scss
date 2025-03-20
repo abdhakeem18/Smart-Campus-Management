@@ -154,3 +154,8 @@ input:-webkit-autofill {
 .date-picker input {
     padding: 8px 14px;
 }
+
+.cu-modal-form {
+    height: 100%;
+    overflow-y: scroll;
+}

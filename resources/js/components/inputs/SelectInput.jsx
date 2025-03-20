@@ -10,7 +10,7 @@ import {
 
 function SelectInput({ error, errorMsg, value, label, getValue, size, data }) {
     const [inputValue, setInputValue] = useState(value || "");
-console.log(data);
+
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {

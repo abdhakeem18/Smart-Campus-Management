@@ -121,7 +121,13 @@ function TablePaginationActions(props) {
     );
 }
 
-export default function CommonTable({rows, columns, handleAction}) {
+export default function CommonTable({
+    rows,
+    columns,
+    handleAction,
+    tableType,
+    extMenuItems,
+}) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -149,7 +155,6 @@ export default function CommonTable({rows, columns, handleAction}) {
         setAnchorEl(null);
         setSelectedRow(null);
     };
-
 
     // Function to get color based on status
     const getColor = (status) => {
@@ -259,17 +264,31 @@ export default function CommonTable({rows, columns, handleAction}) {
                 </Table>
             </TableContainer>
 
-            {/* Action Menu */}
             <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleActionClose}
             >
-                <MenuItem onClick={() => handleAction("Edit", selectedRow)}>Edit</MenuItem>
+                <MenuItem onClick={() => handleAction("Edit", selectedRow)}>
+                    Edit
+                </MenuItem>
                 <MenuItem onClick={() => handleAction("Delete", selectedRow)}>
                     Delete
                 </MenuItem>
-                <MenuItem onClick={() => handleAction("View", selectedRow)}>View</MenuItem>
+                {tableType === "user"
+                    ? extMenuItems.map((value) => {
+                          return (
+                              <MenuItem
+                                  key={value}
+                                  onClick={() =>
+                                      handleAction("value", selectedRow)
+                                  }
+                              >
+                                  {value}
+                              </MenuItem>
+                          );
+                      })
+                    : ""}
             </Menu>
         </StyledPaper>
     );
