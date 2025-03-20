@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import AppContext from "@/config/AppContext";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
+import { Inertia } from '@inertiajs/inertia';
 
 const Login = () => {
     const [contextData, setContextData] = useContext(AppContext);
@@ -23,12 +24,16 @@ const Login = () => {
 
             if (response?.success) {
                 const courses = await apiCall("/courses", "GET");
-                
+
                 setContextData((prevState) => ({
                     ...prevState,
                     userDetails: response.data,
                     courses: courses.data,
-                    step: (!response?.data?.email_verified_at ? "verify" : !response?.data?.students ? "register" : "next")
+                    step: !response?.data?.email_verified_at
+                        ? "verify"
+                        : !response?.data?.students
+                          ? "register"
+                          : "next",
                 }));
             }
         } catch (error) {
@@ -49,7 +54,14 @@ const Login = () => {
         }),
 
         onSubmit: async (values) => {
-            await loginSubmit(values);
+            Inertia.post(
+                "/login",
+                { values },
+                {
+                    onFinish: () => setLoading(false),
+                    onError: (err) => setErrors(err),
+                },
+            );
         },
     });
 

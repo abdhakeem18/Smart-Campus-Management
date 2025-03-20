@@ -10,7 +10,8 @@ import {
     CardContent,
     Divider,
     Box,
-    IconButton,
+    Avatar,
+    Stack,
 } from "@mui/material";
 import { FileDownload, School, AttachFile } from "@mui/icons-material";
 
@@ -25,7 +26,7 @@ const fetchStudentDetails = async () => {
     };
 };
 
-function ProfileView({data}) {
+function ProfileView({ data }) {
     const [isAdmin, setIsAdmin] = useState(true); // Assume admin status (this can be set via context or from login)
     const [studentData, setStudentData] = useState(null);
 
@@ -56,7 +57,7 @@ function ProfileView({data}) {
             </Typography>
         );
     }
-console.log(data);
+    console.log(data);
     return (
         <Box>
             {/* Main Paper */}
@@ -69,55 +70,142 @@ console.log(data);
                 >
                     Student Details
                 </Typography>
-                <Card sx={{ marginBottom: 3, borderRadius: 2 }}>
-                    <CardContent>
-                        <Typography variant="h6" color="textSecondary">
-                            Name: <strong>{data?.name}</strong>
-                        </Typography>
-                        <Typography variant="body1">
-                            Student ID: <strong>{data?.id}</strong>
-                        </Typography>
-                        <Typography variant="body1" color="textSecondary">
-                            Email: <strong>{data?.email}</strong>
-                        </Typography>
-                    </CardContent>
-                </Card>
+                <Grid container spacing={2}>
+                    <Grid item sm={6}>
+                        <Stack alignItems="center">
+                            <Avatar
+                                src={data?.image}
+                                alt="Preview"
+                                sx={{
+                                    width: 150,
+                                    height: 150,
+                                    borderRadius: "12px",
+                                    boxShadow: 3,
+                                }}
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item sm={6}>
+                        <Card sx={{ marginBottom: 3, borderRadius: 2 }}>
+                            <CardContent>
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                >
+                                    <strong>Name: </strong> {data?.name}
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                >
+                                    <strong> Student ID: </strong>
+                                    {data?.students &&
+                                        data?.students[0]["register_num"]}
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                >
+                                    <strong>Email: </strong> {data?.email}
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                >
+                                    <strong>Mobile: </strong>
+                                    {data?.mobile}
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                >
+                                    <strong>NIC: </strong>
+                                    {data?.nic}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
 
                 <Divider sx={{ marginBottom: 2 }} />
 
-                {/* Attachments Section */}
                 <Typography variant="h6" color="primary" gutterBottom>
                     <AttachFile sx={{ marginRight: 1 }} />
                     Attachments
                 </Typography>
                 <Grid container spacing={2}>
-                    {studentData.attachments.map((attachment, index) => (
-                        <Grid item xs={12} sm={6} key={index}>
-                            <Card
-                                sx={{
-                                    borderRadius: 2,
-                                    transition: "transform 0.3s",
-                                    "&:hover": { transform: "scale(1.05)" },
-                                }}
-                            >
-                                <CardContent>
-                                    <Button
-                                        variant="outlined"
-                                        fullWidth
-                                        href={`/attachments/${attachment}`} // Link to download or view the attachment
-                                        target="_blank"
-                                        sx={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                        }}
-                                    >
-                                        <FileDownload sx={{ marginRight: 1 }} />
-                                        {attachment}
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
+                    <Grid item xs={12} sm={6}>
+                        <Card
+                            sx={{
+                                borderRadius: 2,
+                                transition: "transform 0.3s",
+                                "&:hover": { transform: "scale(1.05)" },
+                            }}
+                        >
+                            <CardContent>
+                                <Typography
+                                    variant="body1"
+                                    color="primary"
+                                    gutterBottom
+                                >
+                                    NIC Document
+                                </Typography>
+                                <Button
+                                    variant="outlined"
+                                    fullWidth
+                                    href={`/attachments/${
+                                        data?.students &&
+                                        data?.students[0]["nic_document"]
+                                    }`}
+                                    target="_blank"
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <FileDownload sx={{ marginRight: 1 }} />
+                                    {data?.students &&
+                                        data?.students[0]["nic_document"]}
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Card
+                            sx={{
+                                borderRadius: 2,
+                                transition: "transform 0.3s",
+                                "&:hover": { transform: "scale(1.05)" },
+                            }}
+                        >
+                            <CardContent>
+                                <Typography
+                                    variant="body1"
+                                    color="primary"
+                                    gutterBottom
+                                >
+                                    User Document
+                                </Typography>
+                                <Button
+                                    variant="outlined"
+                                    fullWidth
+                                    href={`/attachments/${
+                                        data?.students &&
+                                        data?.students[0]["document"]
+                                    }`}
+                                    target="_blank"
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <FileDownload sx={{ marginRight: 1 }} />
+                                    {data?.students &&
+                                        data?.students[0]["document"]}
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 </Grid>
 
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
