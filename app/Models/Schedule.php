@@ -19,6 +19,8 @@ class Schedule extends Model
         'course_id',
         'subject_id',
         'block_id',
+        'location',
+        'ecupment_id'
     ];
 
 

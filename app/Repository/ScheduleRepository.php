@@ -3,6 +3,7 @@ namespace App\Repository;
 
 use App\Models\Block;
 use App\Models\Course;
+use App\Models\Message;
 use App\Models\Schedule;
 use Carbon\Carbon;
 
@@ -34,7 +35,15 @@ class ScheduleRepository{
         $data->course_id = $request->course_id;
         $data->subject_id = $request->subject_id;
         $data->block_id = $request->block_id;
+        $data->location = $request->location;
+        $data->equipment_id = $request->equipment_id;
         $data->save();
+
+        $message = new Message();
+        $message->schedule_id = $data->id;   
+        $message->message = $data->description;   
+        $message->save();
+        
         return $data;
     }
 

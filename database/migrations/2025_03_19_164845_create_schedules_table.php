@@ -20,6 +20,8 @@ return new class extends Migration
             $table->time('end_time')->nullable();
             $table->integer('status')->default(0);
             $table->integer('type')->default(0);
+            $table->string('location')->nullable();
+            $table->string('equipment_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('course_id')->nullable();
             $table->unsignedBigInteger('subject_id')->nullable();
