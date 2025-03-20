@@ -5,15 +5,14 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 import { Card, CardContent } from "@mui/material";
 
-const FullCalendarView = ({setSelectedEvent}) => {
-
+const FullCalendarView = ({ setSelectedEvent, setOpen, setSelectedDate }) => {
     const handleEvent = (info) => {
         setSelectedEvent(info.event);
     };
 
     const handleDate = (info) => {
-        console.log("info => ", info);
-        // setEvents();
+        setSelectedDate(info.dateStr);
+        setOpen(true);
     };
 
     const [events, setEvents] = useState([
@@ -82,7 +81,12 @@ const FullCalendarView = ({setSelectedEvent}) => {
                         }}
                         events={events}
                         eventClick={handleEvent}
-                        dateClick={handleDate}
+                        dateClick={(info) => {
+                            if (info.date < new Date().setHours(0, 0, 0, 0)) {
+                                return;
+                            }
+                            handleDate(info);
+                        }}
                         dayMaxEventRows={3}
                         eventContent={(eventInfo) => (
                             <div

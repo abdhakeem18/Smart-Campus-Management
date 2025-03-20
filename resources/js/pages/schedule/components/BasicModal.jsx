@@ -19,29 +19,37 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import TextareaInput from "@/components/inputs/TextareaInput";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
-export default function BasicModal() {
-    const [open, setOpen] = useState(false);
+export default function BasicModal(props) {
+    const { open, setOpen, selectDate } = props;
     const [selectFeilds, setSelectFeilds] = useState("");
     const isMobile = useMediaQuery("(max-width:600px)");
     const data = [];
-    const handleOpen = () => setOpen(true);
+
     const handleClose = () => setOpen(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const selectFeildList = ["type", "block", "course", "subject", "lecturer"];
+    const selectFeildList = [
+        { type: ["reservation", "event", "workspace"] },
+        { block: [] },
+        { course: [] },
+        { subject: [] },
+        { lecturer: [] },
+    ];
 
     function createSelectedFeilds() {
         let feilds = [];
 
-        selectFeildList.map((name, index) => {
+        selectFeildList.map((obj, index) => {
+            const [name, value] = Object.entries(obj)[0];
             feilds.push(
                 <FormControl
                     size="small"
-                    className="col-md-6 col-12 mt-3 px-2"
+                    className="col-md-6 col-12 my-2"
                     key={name}
                 >
                     <InputLabel id={`${name}-select-label`}>{name}</InputLabel>
@@ -53,13 +61,14 @@ export default function BasicModal() {
                         onChange={(e) =>
                             formik.setFieldValue(name, e.target.value)
                         }
+                        className="mx-1"
                     >
-                        <MenuItem value={"1"}>A</MenuItem>
-                        <MenuItem value={"2"}>B</MenuItem>
-                        <MenuItem value={"3"}>C</MenuItem>
+                        {value.map((option, index) => { 
+                           return <MenuItem value={index}>{option}</MenuItem>
+                        })}
                     </Select>
                 </FormControl>,
-                index === 0 ? <div className="col-md-6 col-12"></div> : ""
+                index === 0 ? <div className="col-md-6 col-12"></div> : "",
             );
         });
 
@@ -94,15 +103,14 @@ export default function BasicModal() {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            title: data?.title,
-            description: data?.description,
-            type: data?.password,
-            block: data?.block,
-            course: data?.course,
-            subject: data?.subject,
-            startDate: data?.startDate,
-            endDate: data?.endDate,
-            lecturer: data?.fullName,
+            title: "",
+            description: "",
+            type: "",
+            block: "",
+            course: "",
+            subject: "",
+            startDate: selectDate,
+            lecturer: "",
         },
 
         validationSchema: Yup.object({
@@ -125,10 +133,6 @@ export default function BasicModal() {
 
     return (
         <>
-            <Button variant="contained" onClick={handleOpen}>
-                Create Schedule
-            </Button>
-
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -148,7 +152,7 @@ export default function BasicModal() {
                     <Typography id="modal-title" variant="h6" sx={{ mb: 2 }}>
                         Create New Schedule
                     </Typography>
-                    <form onSubmit={formik.handleSubmit} key={'0'}>
+                    <form onSubmit={formik.handleSubmit} key={"basic-pop"}>
                         <TextInput
                             label="Title"
                             value={formik.values.title || ""}
@@ -157,37 +161,93 @@ export default function BasicModal() {
                             }
                             error={Boolean(formik.errors.title)}
                             errorMsg={formik.errors.title}
-                            classes={"px-2"}
+                            classes={""}
                         />
 
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DemoContainer
-                                components={["MobileDatePicker"]}
+                                components={[
+                                    "MobileDatePicker",
+                                    "TimePicker",
+                                    "TimePicker",
+                                ]}
                                 size="small"
                             >
                                 <div className="row date-picker">
-                                    <div className="col-md-6 col-12 mt-3 px-2">
+                                    <div className="col-md-6 col-12 my-3 px-1">
                                         <DemoItem label="Start Date">
                                             <MobileDatePicker
                                                 defaultValue={dayjs(
-                                                    "2022-04-17",
+                                                    formik?.values?.startDate,
                                                 )}
+                                                minDate={dayjs()}
                                                 sx={{
                                                     padding: "0px",
                                                 }}
                                                 size="small"
+                                                onChange={(newValue) =>
+                                                    formik.setFieldValue(
+                                                        "startDate",
+                                                        newValue,
+                                                    )
+                                                }
                                             />
                                         </DemoItem>
                                     </div>
-                                    <div className="col-md-6 col-12 mt-3 px-2">
-                                        <DemoItem label="End Date">
-                                            <MobileDatePicker
-                                                defaultValue={dayjs(
-                                                    "2022-04-27",
-                                                )}
-                                                size="small"
-                                            />
-                                        </DemoItem>
+                                </div>
+                                <div className="row time-picker">
+                                    <div className="col-md-6 col-12 mb-3 px-1">
+                                        <TimePicker
+                                            label="Start Time"
+                                            size="small"
+                                            value={
+                                                formik?.values?.start_time ||
+                                                null
+                                            }
+                                            onChange={(newValue) => {
+                                                formik.setFieldValue(
+                                                    "start_time",
+                                                    newValue,
+                                                );
+                                                // If End Time is before Start Time, reset it
+                                                if (
+                                                    formik?.values?.end_time &&
+                                                    newValue >
+                                                        formik.values.end_time
+                                                ) {
+                                                    formik.setFieldValue(
+                                                        "end_time",
+                                                        null,
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-12 mb-3 px-1">
+                                        <TimePicker
+                                            label="End Time"
+                                            size="small"
+                                            value={
+                                                formik?.values?.end_time || null
+                                            }
+                                            onChange={(newValue) => {
+                                                if (
+                                                    formik?.values
+                                                        ?.start_time &&
+                                                    newValue <
+                                                        formik.values.start_time
+                                                ) {
+                                                    alert(
+                                                        "End time cannot be earlier than start time!",
+                                                    );
+                                                } else {
+                                                    formik.setFieldValue(
+                                                        "end_time",
+                                                        newValue,
+                                                    );
+                                                }
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </DemoContainer>
@@ -197,7 +257,7 @@ export default function BasicModal() {
                             id="description"
                             label="Description"
                             name="description"
-                            classes={"px-2 mt-3"}
+                            classes={" mt-3"}
                             value={formik.values.description || ""}
                             getValue={(value) =>
                                 formik.setFieldValue("description", value)

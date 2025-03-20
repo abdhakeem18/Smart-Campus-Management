@@ -7,20 +7,18 @@ import {
 import CommonTable from "@/components/tables/CommonTable";
 import API from "@/config/api";
 import ModalComponent from "@/components/modals/Modal";
-import UserForm from "./components/UserForm";
-import UserUpdateForm from "./components/UserUpdateForm";
-import ProfileView from "./components/ProfileView";
+import CourseAddForm from "./components/AddForm";
+import CourseEditForm from "./components/EditForm";
 
 const columns = [
-    { id: "id", label: "ID", minWidth: 100 },
-    { id: "fullName", label: "Full Name", minWidth: 100 },
-    { id: "email", label: "Email", minWidth: 100 },
-    { id: "role", label: "Role", minWidth: 100 },
-    { id: "status", label: "Status", minWidth: 100 },
+    { id: "course_code", label: "ID", minWidth: 100 },
+    { id: "course_name", label: "Name", minWidth: 100 },
+    { id: "start_date", label: "Start Date", minWidth: 100 },
+    { id: "end_date", label: "End Date", minWidth: 100 },
     { id: "action", label: "Action", maxWidth: 100, align: "right" },
 ];
 
-const Users = () => {
+const Courses = () => {
     const [modalOptions, setModalOptions] = useState({
         open: false,
         title: "",
@@ -44,46 +42,40 @@ const Users = () => {
         });
     };
 
-    const [users, setUsers] = useState([]);
-    const [updateUserTable, setUpdateUserTable] = useState(true);
+    const [courses, setCourses] = useState([]);
+    const [updateCourseTable, setUpdateCourseTable] = useState(true);
     const { apiCall, loading, apiError } = API("admin");
 
-    async function fetchUsers() {
-        const response = await apiCall("/users");
+    async function fetchCourses() {
+        const response = await apiCall("/courses");
 
         if (response?.success) {
-            let userList = [];
-            (response?.data).map((user) => {
-                userList.push({
-                    id: user?.id,
-                    fullName: user?.name,
-                    email: user?.email,
-                    role:
-                        user?.role_id === 3
-                            ? "Student"
-                            : user?.role_id === 2
-                              ? "Staff"
-                              : "Admin",
-                    status: user?.is_active ? "Accepted" : "Pending",
+            let courseList = [];
+            (response?.data).map((course) => {
+                courseList.push({
+                    course_code: course?.course_code,
+                    course_name: course?.course_name,
+                    start_date: course?.start_date,
+                    end_date: course?.end_date,
                 });
             });
+            console.log(courseList);
 
-            setUsers(userList);
+            setCourses(courseList);
         }
     }
 
     useEffect(() => {
-        console.log(updateUserTable);
-        if (updateUserTable) {
-            fetchUsers();
+        if (updateCourseTable) {
+            fetchCourses();
 
-            setUpdateUserTable(false);
+            setUpdateCourseTable(false);
 
             return () => {
-                fetchUsers();
+                fetchCourses();
             };
         }
-    }, [updateUserTable]);
+    }, [updateCourseTable]);
 
     async function handleAction(action, selectedRow) {
         if (action === "Edit" || action === "View") {
@@ -107,19 +99,17 @@ const Users = () => {
                     <Button
                         variant="contained"
                         onClick={() =>
-                            showModal("Create User", {}, "create-user")
+                            showModal("Create Course", {}, "create-course")
                         }
                     >
-                        Create User
+                        Create Course
                     </Button>
                 </div>
-
                 <CommonTable
                     columns={columns}
-                    rows={users}
+                    rows={courses}
                     handleAction={handleAction}
-                    tableType="user"
-                    extMenuItems={["View"]}
+                    tableType="course"
                 ></CommonTable>
             </Paper>
 
@@ -128,34 +118,27 @@ const Users = () => {
                 open={modalOptions.open}
                 closeModal={resetModalOptions}
             >
-                {modalOptions.formName === "create-user" ? (
-                    <UserForm
+                {modalOptions.formName === "create-course" ? (
+                    <CourseAddForm
                         data={modalOptions.data}
                         closeModal={resetModalOptions}
                         btnLabel={modalOptions.data?.id ? "Update" : "Add"}
-                        updateUserTable={setUpdateUserTable}
+                        updateCourseTable={setUpdateCourseTable}
                     />
                 ) : null}
 
-                {modalOptions.formName === "update-user" ? (
+                {/* {modalOptions.formName === "update-user" ? (
                     <UserUpdateForm
                         data={modalOptions.data}
                         closeModal={resetModalOptions}
                         btnLabel={modalOptions.data?.id ? "Update" : "Add"}
-                        updateUserTable={setUpdateUserTable}
+                        updateCourseTable={setUpdateCourseTable}
                     />
-                ) : null}
+                ) : null} */}
 
-                {modalOptions.formName === "user-details" ? (
-                    <ProfileView
-                        data={modalOptions.data}
-                        closeModal={resetModalOptions}
-                        updateUserTable={setUpdateUserTable}
-                    />
-                ) : null}
             </ModalComponent>
         </AdminLayout>
     );
 };
 
-export default Users;
+export default Courses;

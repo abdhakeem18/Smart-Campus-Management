@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
     styled,
     useTheme,
@@ -20,23 +21,20 @@ import {
     School,
     AssignmentTurnedIn,
     BarChart,
-    Settings,
-    ChevronLeft
-  } from "@mui/icons-material";
+    ChevronLeft,
+} from "@mui/icons-material";
 
 export default function Sidebar({ setOpen, open, scrolled }) {
     const drawerWidth = 240;
 
     const menuList = [
-        { name: "Dashboard", icon: <Dashboard /> },
-        { name: "Events", icon: <Event /> },
-        { name: "Schedules", icon: <Schedule /> },
-        { name: "Users", icon: <People /> },
-        { name: "Course", icon: <School /> },
-        { name: "Attendance Tracking", icon: <AssignmentTurnedIn /> },
-        { name: "Reports & Analytics", icon: <BarChart /> },
-        { name: "System Settings", icon: <Settings /> },
-      ];
+        { name: "Dashboard", icon: <Dashboard />, link: "/dashboard" },
+        { name: "Events", icon: <Event />, link: "/events" },
+        { name: "Schedules", icon: <Schedule />, link: "/schedule" },
+        { name: "Users", icon: <People />, link: "/users" },
+        { name: "Courses", icon: <School />, link: "/courses" },
+        { name: "Reports & Analytics", icon: <BarChart />, link: "/reports" },
+    ];
 
     const openedMixin = (theme) => ({
         width: drawerWidth,
@@ -122,51 +120,53 @@ export default function Sidebar({ setOpen, open, scrolled }) {
                         disablePadding
                         sx={{ display: "block" }}
                     >
-                        <ListItemButton
-                            sx={[
-                                {
-                                    minHeight: 48,
-                                    px: 2.5,
-                                },
-                                open
-                                    ? {
-                                          justifyContent: "initial",
-                                      }
-                                    : {
-                                          justifyContent: "center",
-                                      },
-                            ]}
-                        >
-                            <ListItemIcon
+                            <ListItemButton
+                                component={Link}
+                                to={menuItem.link}
                                 sx={[
                                     {
-                                        minWidth: 0,
-                                        justifyContent: "center",
+                                        minHeight: 48,
+                                        px: 2.5,
                                     },
                                     open
                                         ? {
-                                              mr: 3,
+                                              justifyContent: "initial",
                                           }
                                         : {
-                                              mr: "auto",
+                                              justifyContent: "center",
                                           },
                                 ]}
                             >
-                                {menuItem.icon}
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={menuItem.name}
-                                sx={[
-                                    open
-                                        ? {
-                                              opacity: 1,
-                                          }
-                                        : {
-                                              opacity: 0,
-                                          },
-                                ]}
-                            />
-                        </ListItemButton>
+                                <ListItemIcon
+                                    sx={[
+                                        {
+                                            minWidth: 0,
+                                            justifyContent: "center",
+                                        },
+                                        open
+                                            ? {
+                                                  mr: 3,
+                                              }
+                                            : {
+                                                  mr: "auto",
+                                              },
+                                    ]}
+                                >
+                                    {menuItem.icon}
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={menuItem.name}
+                                    sx={[
+                                        open
+                                            ? {
+                                                  opacity: 1,
+                                              }
+                                            : {
+                                                  opacity: 0,
+                                              },
+                                    ]}
+                                />
+                            </ListItemButton>
                     </ListItem>
                 ))}
             </List>
