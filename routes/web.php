@@ -5,6 +5,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Storage;
 
 /*
@@ -25,6 +26,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('index');
 });
+
+Route::post('/login', [AuthController::class, 'login']);
+
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.view');
 
