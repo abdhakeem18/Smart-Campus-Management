@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import AppContext from "@/config/AppContext";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
-import { Inertia } from '@inertiajs/inertia';
+import { Inertia } from "@inertiajs/inertia";
 
 const Login = () => {
     const [contextData, setContextData] = useContext(AppContext);
@@ -54,14 +54,10 @@ const Login = () => {
         }),
 
         onSubmit: async (values) => {
-            Inertia.post(
-                "/login",
-                { values },
-                {
-                    onFinish: () => setLoading(false),
-                    onError: (err) => setErrors(err),
-                },
-            );
+            Inertia.post("/login", values, {
+                onFinish: () => setLoading(false),
+                onError: (err) => setErrors(err),
+            });
         },
     });
 
