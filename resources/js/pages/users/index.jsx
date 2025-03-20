@@ -139,6 +139,8 @@ const Users = () => {
                     columns={columns}
                     rows={users}
                     handleAction={handleAction}
+                    tableType="user"
+                    extMenuItems={["View", "Accepte"]}
                 ></CommonTable>
             </Paper>
 
