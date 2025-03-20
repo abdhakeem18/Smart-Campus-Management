@@ -21,6 +21,7 @@ class UserRepository{
     public function getById($id)
     {
         $user = User::find($id);
+        $user->load(['students.courses.subjects']);
         return $user;
     }
 
@@ -92,7 +93,7 @@ class UserRepository{
             $imageName = $this->storeImage($imageData);
         }
         $user = User::find($id);
-        
+
         if ($user) {
             $user->name = $request->name;
             $user->password = bcrypt($request->password);
