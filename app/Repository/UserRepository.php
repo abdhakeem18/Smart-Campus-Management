@@ -27,53 +27,84 @@ class UserRepository{
     public function store($request,$code = null)
     {
         $imageData = $request->image;
-        $imageName = null;
+
         if ($imageData) {
-            $image = base64_decode($imageData);
-            $imageName = time() . '.jpg'; // Or based on your requirements
-            Storage::put('public/images/profile/' . $imageName, $image);
+            $imageName = $this->storeImage($imageData);
         }
+
         if (auth()->user() && auth()->user()->role_id == 1) {
             $is_active = 1;
         } else {
             $is_active = 0;
         }
 
-        $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'nic' => $request->nic,
-                'password' => bcrypt($request->password),
-                'verification_code' => $code ? md5($code) : null,
-                'expires_at' => now()->addMinutes(15),
-                'image' => $imageName,
-                'mobile' => $request->mobile,
-                'role_id' => $request->role_id,
-               'is_active' => $is_active,
-        ]);
+        $userData = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'nic' => $request->nic,
+            'password' => bcrypt($request->password),
+            'verification_code' => $code ? md5($code) : null,
+            'expires_at' => now()->addMinutes(15),
+            'mobile' => $request->mobile,
+            'role_id' => $request->role_id,
+            'is_active' => $is_active,
+        ];
+        
+        if ($imageName) {
+            $userData['image'] = $imageName;
+        }
+        
+        $user = User::create($userData);
         return $user;
         
+    }
+
+    public function storeImage($imageData){
+        if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
+            $imageData = substr($imageData, strpos($imageData, ',') + 1);
+            $type = strtolower($type[1]); // jpg, png, gif
+    
+            if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
+                throw new \Exception('Invalid image type');
+            }
+    
+            $image = base64_decode($imageData);
+            if ($image === false) {
+                throw new \Exception('Base64 decode failed');
+            }
+    
+            $imageName = time() . '.' . $type;
+            $path = 'public/images/profile/' . $imageName;
+    
+            if (!Storage::put($path, $image)) {
+                throw new \Exception('Failed to save image');
+            }
+            return $imageName;
+        } else {
+            throw new \Exception('Invalid base64 image data');
+        }
     }
 
     public function update($request,$id)
     {
         $imageData = $request->image;
-        $imageName = null;
         if ($imageData) {
-            $image = base64_decode($imageData);
-            $imageName = time() . '.jpg'; // Or based on your requirements
-            Storage::put('public/images/profile/' . $imageName, $image);
+            $imageName = $this->storeImage($imageData);
         }
         $user = User::find($id);
-        // dd($id);
+        
         if ($user) {
             $user->name = $request->name;
             $user->password = bcrypt($request->password);
-            $user->image  = $imageName;
             $user->mobile  = $request->mobile;
             $user->role_id  = $request->role_id;
-            $user->save();
         }
+        if($imageName) {
+            $user->image  = $imageName;
+        }
+
+        $user->save();
+
         return $user;
     }
 
