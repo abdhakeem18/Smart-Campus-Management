@@ -6,14 +6,20 @@ import * as Yup from "yup";
 import API from "@/config/Api";
 import TextInput from "@/components/inputs/TextInput";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
-
+import SelectInput from "@/components/inputs/SelectInput";
 const UserForm = (props) => {
     const { closeModal, btnLabel, data } = props;
-    const { apiCall, loading, apiError } = API("auth");
+    const { apiCall, loading, apiError } = API("admin");
+    const userType = [
+        {id: 1, name: "Admin"},
+        {id: 2, name: "Staff"},
+        {id: 3, name: "Student"}
+    ];
+
 
     async function handleSubmit(values) {
         try {
-            const response = await apiCall("/register", "POST", values);
+            const response = await apiCall("/users", "POST", values);
 
             if (response?.success) {
                 console.log(response?.message);
@@ -35,7 +41,7 @@ const UserForm = (props) => {
             password: "",
             password_confirmation: "",
             mobile: "",
-            role_id: 3,
+            role_id: "",
             nic: "",
             image: "",
         },
@@ -72,6 +78,16 @@ const UserForm = (props) => {
                 error={Boolean(formik.errors.email)}
                 errorMsg={formik.errors.email}
                 classes={"mt-3"}
+            />
+
+            <SelectInput
+                label="User Type"
+                value={formik.values.role_id || ""}
+                getValue={(value) => formik.setFieldValue("role_id", value)}
+                data={userType}
+                error={Boolean(formik.errors.role_id)}
+                errorMsg={formik.errors.role_id}
+                classes={"my-3"}
             />
 
             <TextInput

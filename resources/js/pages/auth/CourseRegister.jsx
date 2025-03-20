@@ -9,7 +9,6 @@ import API from "@/config/Api";
 import AppContext from "@/config/AppContext";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 import FileUploadInput from "@/components/inputs/FileUploadInput";
-import TextInput from "@/components/inputs/TextInput";
 
 const CourseRegister = () => {
     const [contextData, setContextData] = useContext(AppContext);

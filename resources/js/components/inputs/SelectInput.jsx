@@ -10,7 +10,7 @@ import {
 
 function SelectInput({ error, errorMsg, value, label, getValue, size, data }) {
     const [inputValue, setInputValue] = useState(value || "");
-
+console.log(data);
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -26,7 +26,7 @@ function SelectInput({ error, errorMsg, value, label, getValue, size, data }) {
         if (data) {
             return data.map((list) => (
                 <MenuItem key={list["id"]} value={list["id"]}>
-                    {list["course_name"]}
+                    {list["course_name"] ? list["course_name"] : list["name"]}
                 </MenuItem>
             ));
         }

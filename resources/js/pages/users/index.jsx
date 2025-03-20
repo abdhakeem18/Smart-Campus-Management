@@ -27,8 +27,7 @@ const columns = [
     { id: "email", label: "Email", minWidth: 100 },
     { id: "role", label: "Role", minWidth: 100 },
     { id: "status", label: "Status", minWidth: 100 },
-    { id: "action", label: "Action", maxWidth: 100, align: "right" }
-
+    { id: "action", label: "Action", maxWidth: 100, align: "right" },
 ];
 
 const Users = () => {
@@ -69,8 +68,13 @@ const Users = () => {
                     id: user?.id,
                     fullName: user?.name,
                     email: user?.email,
-                    role: user?.role_id === 3 ? "Student" : user?.role_id === 2 ? "Staff" : "Admin",
-                    status: user?.is_active ? "Accepted" : "Pending" 
+                    role:
+                        user?.role_id === 3
+                            ? "Student"
+                            : user?.role_id === 2
+                              ? "Staff"
+                              : "Admin",
+                    status: user?.is_active ? "Accepted" : "Pending",
                 });
             });
 
@@ -85,6 +89,18 @@ const Users = () => {
             fetchUsers();
         };
     }, []);
+
+    async function handleAction(action, selectedRow) {
+        if (action === "Edit" || action === "View") {
+            const response = await apiCall(`/users/${selectedRow.id}`);
+
+            if (response?.success) {
+                if (action === "Edit")
+                    showModal("Update New User", response?.data, "update-user");
+                // showModal("Edit User", response?.data, "edit-user");
+            }
+        }
+    }
 
     // const editUser = async (user) => {
     //     // console.log("user => ", user);
@@ -112,7 +128,7 @@ const Users = () => {
                     <Button
                         variant="contained"
                         onClick={() =>
-                            showModal("Create New User", {}, "create-user")
+                            showModal("Create User Details", {}, "create-user")
                         }
                     >
                         Create User
@@ -122,23 +138,8 @@ const Users = () => {
                 <CommonTable
                     columns={columns}
                     rows={users}
-                    handleEdit={(data) =>
-                        showModal(
-                            `Update user - ${data.name}`,
-                            data,
-                            "update-user",
-                        )
-                    }
+                    handleAction={handleAction}
                 >
-                    <>
-                        <Tooltip title="Topup">
-                            <IconButton
-                                onClick={() => showModal(`Topup`, {}, "top-up")}
-                            >
-                                <PriceChangeRoundedIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </>
                 </CommonTable>
             </Paper>
 
@@ -158,16 +159,8 @@ const Users = () => {
                 {modalOptions.formName === "update-user" ? (
                     <UserUpdateForm
                         data={modalOptions.data}
-                        handleUser={(user) => setUsers([user, ...users])}
-                        btnLabel={modalOptions.data?.id ? "Update" : "Add"}
-                        editUser={editUser}
-                    />
-                ) : null}
-
-                {modalOptions.formName === "top-up" ? (
-                    <TopupForm
-                        setUser={setUser}
                         closeModal={resetModalOptions}
+                        btnLabel={modalOptions.data?.id ? "Update" : "Add"}
                     />
                 ) : null}
             </ModalComponent>

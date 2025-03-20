@@ -121,7 +121,7 @@ function TablePaginationActions(props) {
     );
 }
 
-export default function CommonTable({rows, columns}) {
+export default function CommonTable({rows, columns, handleAction}) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -150,13 +150,6 @@ export default function CommonTable({rows, columns}) {
         setSelectedRow(null);
     };
 
-    // Handle actions (Edit, Delete, View)
-    const handleAction = (action) => {
-        if (selectedRow) {
-            alert(`You clicked ${action} for ${selectedRow.id}`);
-        }
-        handleActionClose();
-    };
 
     // Function to get color based on status
     const getColor = (status) => {
@@ -272,11 +265,11 @@ export default function CommonTable({rows, columns}) {
                 open={Boolean(anchorEl)}
                 onClose={handleActionClose}
             >
-                <MenuItem onClick={() => handleAction("Edit")}>Edit</MenuItem>
-                <MenuItem onClick={() => handleAction("Delete")}>
+                <MenuItem onClick={() => handleAction("Edit", selectedRow)}>Edit</MenuItem>
+                <MenuItem onClick={() => handleAction("Delete", selectedRow)}>
                     Delete
                 </MenuItem>
-                <MenuItem onClick={() => handleAction("View")}>View</MenuItem>
+                <MenuItem onClick={() => handleAction("View", selectedRow)}>View</MenuItem>
             </Menu>
         </StyledPaper>
     );
