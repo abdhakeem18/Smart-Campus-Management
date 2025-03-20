@@ -95,6 +95,16 @@ const UserForm = (props) => {
                 classes={""}
             />
 
+            {/* <SelectInput
+                label="courses"
+                value={formik.values.course || ""}
+                getValue={(value) => formik.setFieldValue("course", value)}
+                data={userType}
+                error={Boolean(formik.errors.course)}
+                errorMsg={formik.errors.course}
+                classes={"my-3"}
+            /> */}
+
             <TextInput
                 label="Phone Number"
                 type="number"

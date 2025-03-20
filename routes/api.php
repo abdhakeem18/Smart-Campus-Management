@@ -44,9 +44,13 @@ Route::prefix('student')->middleware(['auth:sanctum','is_user'])->group(function
     Route::post('/course-registration', [StudentController::class, 'store']);
 });
 
-Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->group(function () {
+Route::prefix('staff')->middleware(['auth:sanctum', 'is_staff'])->group(function () {
     Route::post('/verify', [AuthController::class, 'verify']);
     Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
+});
+
+Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->group(function () {
+
     Route::resource('schedules', ScheduleController::class);
 
 });

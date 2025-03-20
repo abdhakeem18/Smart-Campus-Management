@@ -38,7 +38,7 @@ const VerifyEmail = () => {
             setTimeout(() => {
                 setContextData((prevState) => ({
                     ...prevState,
-                    step: !response?.data?.students ? "register" : "next",
+                    step: !contextData?.userDetails?.students && response?.userDetails?.role_id === 3 ? "register" : "next",
                 }));
             }, 3000);
         }
@@ -104,6 +104,7 @@ const VerifyEmail = () => {
                             validateChar={validateChar}
                             TextFieldsProps={{ size: "small" }}
                             length={6}
+                            autoFocus
                         />
 
                         <Box textAlign="center" mt={2} mb={2}>

@@ -36,7 +36,8 @@ const Login = () => {
                         courses: courses.data,
                         step: !response?.data?.email_verified_at
                             ? "verify"
-                            : !response?.data?.students
+                            : !response?.data?.students &&
+                                response?.data?.role_id === 3
                               ? "register"
                               : "next",
                     }));
@@ -100,7 +101,9 @@ const Login = () => {
 
                         {error && (
                             <>
-                                <Alert severity="error">{errorHandle(error)}</Alert>
+                                <Alert severity="error">
+                                    {errorHandle(error)}
+                                </Alert>
                             </>
                         )}
                         <Box textAlign="center" mt={2} mb={2}>

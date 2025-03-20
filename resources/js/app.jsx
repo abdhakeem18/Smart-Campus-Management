@@ -52,39 +52,41 @@ function App() {
             <AppContext.Provider value={[contextData, setContextData]}>
                 <main className="main-content border-radius-lg">
                     {contextData?.step === "next" && redirectTo("/")}
-                    <Routes>
-                        {/* Page collection */}
-                        <>
-                            <Route path="/" element={<Dashboard />} />
-                            <Route path="/dashboard" element={<Dashboard />} />
+                    {contextData?.step === "verify" ? (
+                        <VerifyEmail />
+                    ) : contextData?.step === "register" ? (
+                        <CourseRegister />
+                    ) : (
+                        <Routes>
+                            {/* Page collection */}
+                            <>
+                                <Route path="/" element={<Dashboard />} />
+                                <Route
+                                    path="/dashboard"
+                                    element={<Dashboard />}
+                                />
+                                <Route
+                                    path="/schedule"
+                                    element={<SchedulePage />}
+                                />
+                                <Route path="/users" element={<Users />} />
+                            </>
+
+                            {/* <Route path="/profile" element={<Profile />} /> */}
+                            {/* Auth Collection */}
+
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/register" element={<Register />} />
                             <Route
-                                path="/schedule"
-                                element={<SchedulePage />}
+                                path="/forgot-password"
+                                element={<ForgetPassword />}
                             />
-                            <Route path="/users" element={<Users />} />
-                        </>
-
-                        {/* <Route path="/profile" element={<Profile />} /> */}
-
-                        {/* Auth Collection */}
-                        {contextData?.step === "verify" && (
-                            <Route path="/login" element={<VerifyEmail />} />
-                        )}
-                        {contextData?.step === "register" && (
-                            <Route path="/login" element={<CourseRegister />} />
-                        )}
-
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route
-                            path="/forgot-password"
-                            element={<ForgetPassword />}
-                        />
-                        <Route
-                            path="/reset-password"
-                            element={<ResetPassword />}
-                        />
-                    </Routes>
+                            <Route
+                                path="/reset-password"
+                                element={<ResetPassword />}
+                            />
+                        </Routes>
+                    )}
                 </main>
             </AppContext.Provider>
         </>

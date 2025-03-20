@@ -148,7 +148,7 @@ export default function BasicModal() {
                     <Typography id="modal-title" variant="h6" sx={{ mb: 2 }}>
                         Create New Schedule
                     </Typography>
-                    <form onSubmit={formik.handleSubmit}>
+                    <form onSubmit={formik.handleSubmit} key={'0'}>
                         <TextInput
                             label="Title"
                             value={formik.values.title || ""}
