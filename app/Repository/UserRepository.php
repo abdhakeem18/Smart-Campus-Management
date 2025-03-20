@@ -33,6 +33,11 @@ class UserRepository{
             $imageName = time() . '.jpg'; // Or based on your requirements
             Storage::put('public/images/profile/' . $imageName, $image);
         }
+        if (auth()->user() && auth()->user()->role_id == 1) {
+            $is_active = 1;
+        } else {
+            $is_active = 0;
+        }
 
         $user = User::create([
                 'name' => $request->name,
@@ -44,7 +49,7 @@ class UserRepository{
                 'image' => $imageName,
                 'mobile' => $request->mobile,
                 'role_id' => $request->role_id,
-                'is_active' => 1,
+               'is_active' => $is_active,
         ]);
         return $user;
         
@@ -101,5 +106,14 @@ class UserRepository{
         if(!$user) return null;
         $user->delete();
         return $user;
+    }
+
+
+    public function userApproval($id)
+    {
+        $data = User::find($id);
+        $data->is_active = 1;
+        $data->save();
+        return $data;
     }
 }
