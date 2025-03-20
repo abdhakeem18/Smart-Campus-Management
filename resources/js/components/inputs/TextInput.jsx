@@ -23,7 +23,6 @@ function TextInput({
   const [typingTimeout, setTypingTimeout] = useState(null);
   const fileInputRef = useRef(null);
   useEffect(() => {
-    // Clear the timeout on component unmount
     return () => {
       if (typingTimeout) {
         clearTimeout(typingTimeout);

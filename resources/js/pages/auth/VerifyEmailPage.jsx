@@ -6,6 +6,7 @@ import Auth from "@/layouts/Auth";
 import AppContext from "@/config/AppContext";
 import API from "@/config/Api";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import { errorHandle } from "@/components/common/helper";
 
 const VerifyEmail = () => {
     const navigate = useNavigate();
@@ -119,7 +120,7 @@ const VerifyEmail = () => {
                         </Box>
                         {success && <Alert severity="success">{success}</Alert>}
                         {error && (
-                            <Alert severity="error">{error?.message}</Alert>
+                            <Alert severity="error">{errorHandle(error)}</Alert>
                         )}
                     </>
                 )

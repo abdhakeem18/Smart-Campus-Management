@@ -61,14 +61,19 @@ const API = (version) => {
         } catch (error) {
             setLoading(false);
             if (error.response?.status === 401) {
-                localStorage.removeItem("user-data");
-                navigate("/login", {
-                    state: {
-                        errorMessage:
-                            error.response?.data.message ||
-                            "Unauthorized access. Please login.",
-                    },
-                });
+                console.log(url);
+                if (url != "/login") {
+                    localStorage.removeItem("user-data");
+                    navigate("/login", {
+                        state: {
+                            errorMessage:
+                                error.response?.data.message ||
+                                "Unauthorized access. Please login.",
+                        },
+                    });
+                } else {
+                    setError(error.response?.data || error.message);
+                }
             } else {
                 setError(error.response?.data || error.message);
             }

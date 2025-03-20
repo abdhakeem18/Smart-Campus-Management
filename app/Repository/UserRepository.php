@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Repository;
 
 use App\Models\User;
@@ -7,7 +8,8 @@ use App\Services\VerificationCodeGenerateService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
-class UserRepository{
+class UserRepository
+{
 
     protected $mailService;
 
@@ -25,10 +27,10 @@ class UserRepository{
         return $user;
     }
 
-    public function store($request,$code = null)
+    public function store($request, $code = null)
     {
         $imageData = $request->image;
-
+        $imageName = null;
         if ($imageData) {
             $imageName = $this->storeImage($imageData);
         }
@@ -50,33 +52,33 @@ class UserRepository{
             'role_id' => $request->role_id,
             'is_active' => $is_active,
         ];
-        
+
         if ($imageName) {
             $userData['image'] = $imageName;
         }
-        
+
         $user = User::create($userData);
         return $user;
-        
     }
 
-    public function storeImage($imageData){
+    public function storeImage($imageData)
+    {
         if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
             $imageData = substr($imageData, strpos($imageData, ',') + 1);
             $type = strtolower($type[1]); // jpg, png, gif
-    
+
             if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
                 throw new \Exception('Invalid image type');
             }
-    
+
             $image = base64_decode($imageData);
             if ($image === false) {
                 throw new \Exception('Base64 decode failed');
             }
-    
+
             $imageName = time() . '.' . $type;
             $path = 'public/images/profile/' . $imageName;
-    
+
             if (!Storage::put($path, $image)) {
                 throw new \Exception('Failed to save image');
             }
@@ -86,7 +88,7 @@ class UserRepository{
         }
     }
 
-    public function update($request,$id)
+    public function update($request, $id)
     {
         $imageData = $request->image;
         if ($imageData) {
@@ -100,7 +102,7 @@ class UserRepository{
             $user->mobile  = $request->mobile;
             $user->role_id  = $request->role_id;
         }
-        if($imageName) {
+        if ($imageName) {
             $user->image  = $imageName;
         }
 
@@ -115,19 +117,19 @@ class UserRepository{
         if ($email) {
             $query->where('email', $email);
         }
-        return $query->first(); 
+        return $query->first();
     }
-    
+
     public function findByCode($code)
     {
         return User::where('verification_code', md5($code))->first();
     }
 
-    public function VerifyCodeUpdate($user,$code,$verify=false)
+    public function VerifyCodeUpdate($user, $code, $verify = false)
     {
         $user->update([
             'email_verified_at' => $verify ? Carbon::now() : null,
-            'verification_code' => $verify ? null : md5($code), 
+            'verification_code' => $verify ? null : md5($code),
             'expires_at' => $verify ? null : now()->addMinutes(15)
         ]);
     }
@@ -135,7 +137,7 @@ class UserRepository{
     public function delete($id)
     {
         $user = User::find($id);
-        if(!$user) return null;
+        if (!$user) return null;
         $user->delete();
         return $user;
     }

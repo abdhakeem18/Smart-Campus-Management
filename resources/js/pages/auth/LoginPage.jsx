@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Button, Typography, Box } from "@mui/material";
+import { Button, Typography, Box, Alert } from "@mui/material";
 import TextInput from "@/components/inputs/TextInput";
 import Auth from "@/layouts/Auth";
 import API from "@/config/Api";
@@ -8,29 +8,39 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import AppContext from "@/config/AppContext";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
-
+import { errorHandle } from "@/components/common/helper";
 
 const Login = () => {
     const [contextData, setContextData] = useContext(AppContext);
     const navigate = useNavigate();
-    const { apiCall, loading, apiError } = API("auth");
+    const { apiCall, loading, error } = API("auth");
     const location = useLocation();
+    const [success, setSuccess] = useState("");
     const errorMessage = location.state?.errorMessage;
 
     async function loginSubmit(values) {
         try {
+            setSuccess("");
             // const apiv = API("auth");
             const response = await apiCall("/login", "POST", values);
 
             if (response?.success) {
                 const courses = await apiCall("/courses", "GET");
-                
-                setContextData((prevState) => ({
-                    ...prevState,
-                    userDetails: response.data,
-                    courses: courses.data,
-                    step: (!response?.data?.email_verified_at ? "verify" : !response?.data?.students ? "register" : "next")
-                }));
+
+                setSuccess(response?.message);
+
+                setTimeout(() => {
+                    setContextData((prevState) => ({
+                        ...prevState,
+                        userDetails: response.data,
+                        courses: courses.data,
+                        step: !response?.data?.email_verified_at
+                            ? "verify"
+                            : !response?.data?.students
+                              ? "register"
+                              : "next",
+                    }));
+                }, 2000);
             }
         } catch (error) {
             console.log(apiError);
@@ -53,7 +63,6 @@ const Login = () => {
             await loginSubmit(values);
         },
     });
-    
 
     return (
         <Auth
@@ -87,7 +96,13 @@ const Login = () => {
                             errorMsg={formikSignin.errors.password}
                             classes={"mt-3"}
                         />
+                        {success && <Alert severity="success">{success}</Alert>}
 
+                        {error && (
+                            <>
+                                <Alert severity="error">{errorHandle(error)}</Alert>
+                            </>
+                        )}
                         <Box textAlign="center" mt={2} mb={2}>
                             <LoadingButtonComponent
                                 label={"Sign In"}

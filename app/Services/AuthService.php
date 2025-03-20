@@ -42,7 +42,7 @@ class AuthService extends BaseService{
     {
         try {
             if (!Auth::attempt($request->only('email', 'password'))) {
-                return $this->sendError('Invalid credentials',401,["data" => 'Invalid credentials']);
+                return $this->sendError('Invalid credentials',401,["Login" => 'Invalid credentials']);
             }
             $user = Auth::user();
             $user->load(['students.courses']);
