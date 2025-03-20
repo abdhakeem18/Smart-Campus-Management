@@ -67,7 +67,8 @@ class CourseController extends BaseController
      */
     public function update(UpdateCourseRequest $request, Course $course)
     {
-        //
+        $result = $this->repository->update($request,$course);
+        return  $this->sendSuccess($result,'Course Updated successfully.');
     }
 
     /**
