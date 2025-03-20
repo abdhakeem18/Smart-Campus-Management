@@ -1,20 +1,15 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "@/layouts/Admin";
-import GroupIcon from "@mui/icons-material/Group";
 import {
     Button,
-    CircularProgress,
-    IconButton,
     Paper,
-    Tooltip,
-    Box,
 } from "@mui/material";
 import CommonTable from "@/components/tables/CommonTable";
 import API from "@/config/api";
-// import { json } from "react-router-dom";
 import ModalComponent from "./components/Modal";
 import UserForm from "./components/UserForm";
 import UserUpdateForm from "./components/UserUpdateForm";
+import ProfileView from "./components/ProfileView";
 
 const columns = [
     { id: "id", label: "ID", minWidth: 100 },
@@ -97,26 +92,10 @@ const Users = () => {
             if (response?.success) {
                 if (action === "Edit")
                     showModal("Update New User", response?.data, "update-user");
-                // showModal("Edit User", response?.data, "edit-user");
+                else showModal("User Details", response?.data, "user-details");
             }
         }
     }
-
-    // const editUser = async (user) => {
-    //     // console.log("user => ", user);
-    //     const apiv = API("v2");
-    //     await apiv.put("/users/" + user.id, user);
-
-    //     const updatedUsers = users.map((usr) => {
-    //         if (usr.id === user.id) {
-    //             return { ...usr, ...user };
-    //         }
-    //         return usr;
-    //     });
-
-    //     setUsers(updatedUsers);
-    //     resetModalOptions();
-    // };
 
     return (
         <AdminLayout>
@@ -128,7 +107,7 @@ const Users = () => {
                     <Button
                         variant="contained"
                         onClick={() =>
-                            showModal("Create User Details", {}, "create-user")
+                            showModal("Create User", {}, "create-user")
                         }
                     >
                         Create User
@@ -140,7 +119,7 @@ const Users = () => {
                     rows={users}
                     handleAction={handleAction}
                     tableType="user"
-                    extMenuItems={["View", "Accepte"]}
+                    extMenuItems={["View"]}
                 ></CommonTable>
             </Paper>
 
@@ -163,6 +142,14 @@ const Users = () => {
                         data={modalOptions.data}
                         closeModal={resetModalOptions}
                         btnLabel={modalOptions.data?.id ? "Update" : "Add"}
+                        updateUserTable={setUpdateUserTable}
+                    />
+                ) : null}
+
+                {modalOptions.formName === "user-details" ? (
+                    <ProfileView
+                        data={modalOptions.data}
+                        closeModal={resetModalOptions}
                         updateUserTable={setUpdateUserTable}
                     />
                 ) : null}

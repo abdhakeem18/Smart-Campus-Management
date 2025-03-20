@@ -281,7 +281,7 @@ export default function CommonTable({
                               <MenuItem
                                   key={value}
                                   onClick={() =>
-                                      handleAction("value", selectedRow)
+                                      handleAction(value, selectedRow)
                                   }
                               >
                                   {value}
