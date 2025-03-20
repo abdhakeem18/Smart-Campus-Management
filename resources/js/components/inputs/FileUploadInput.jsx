@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from "react";
-import {
-    Button,
-    Typography,
-    Avatar,
-    Stack,
-    Grid,
-    Card,
-} from "@mui/material";
+import { Button, Typography, Avatar, Stack, Grid, Card } from "@mui/material";
 
 const FileUploadInput = ({
     type,
     allowedExtension,
+    fileName,
+    previewLink,
     getValue,
     errorMsg,
     title,
 }) => {
-    const [file, setFile] = useState(null);
-    const [preview, setPreview] = useState(null);
+    const [file, setFile] = useState(fileName && { name: fileName });
+    const [preview, setPreview] = useState(previewLink);
     const [error, setError] = useState();
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
