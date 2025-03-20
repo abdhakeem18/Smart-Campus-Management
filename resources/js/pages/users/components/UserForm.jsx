@@ -7,27 +7,31 @@ import API from "@/config/Api";
 import TextInput from "@/components/inputs/TextInput";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 import SelectInput from "@/components/inputs/SelectInput";
-const UserForm = (props) => {
-    const { closeModal, btnLabel, data } = props;
-    const { apiCall, loading, apiError } = API("admin");
-    const userType = [
-        {id: 1, name: "Admin"},
-        {id: 2, name: "Staff"},
-        {id: 3, name: "Student"}
-    ];
+import { Typography, Box, Alert } from "@mui/material";
 
+const UserForm = (props) => {
+    const { closeModal, btnLabel, data, updateUserTable } = props;
+    const { apiCall, loading, error } = API("admin");
+    const [success, setSuccess] = useState("");
+
+    const userType = [
+        { id: 1, name: "Admin" },
+        { id: 2, name: "Staff" },
+        { id: 3, name: "Student" },
+    ];
 
     async function handleSubmit(values) {
         try {
+            setSuccess("");
             const response = await apiCall("/users", "POST", values);
 
             if (response?.success) {
-                console.log(response?.message);
+                setSuccess(response?.message);
+                updateUserTable(true);
+                setTimeout(() => {
+                    closeModal();
+                }, 2000);
             }
-
-            setTimeout(() => {
-                closeModal();
-            }, 2000);
         } catch (error) {
             console.log(error);
         }
@@ -44,6 +48,7 @@ const UserForm = (props) => {
             role_id: "",
             nic: "",
             image: "",
+            is_active: 1,
         },
 
         validationSchema: Yup.object({
@@ -60,15 +65,37 @@ const UserForm = (props) => {
         },
     });
 
+    const errorHandle = () => {
+        return Object.entries(error.data).map(([key, value]) => (
+            <div key={key}>
+                <strong>{key}:</strong>
+                <ul>
+                    {value.map((errorMsg, index) => (
+                        <li key={index}>{errorMsg}</li>
+                    ))}
+                </ul>
+            </div>
+        ));
+    }
+
     return (
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} className="user-form">
+            {success && <Alert severity="success">{success}</Alert>}
+
+            {error && (
+                <>
+                    <Alert severity="error">
+                        {errorHandle()}
+                    </Alert>
+                </>
+            )}
             <TextInput
                 label="Full Name"
                 value={formik.values.name || ""}
                 getValue={(value) => formik.setFieldValue("name", value)}
                 error={Boolean(formik.errors.name)}
                 errorMsg={formik.errors.name}
-                classes={"mt-3"}
+                classes={"mt-4"}
             />
             <TextInput
                 label="Email"
@@ -77,7 +104,7 @@ const UserForm = (props) => {
                 getValue={(value) => formik.setFieldValue("email", value)}
                 error={Boolean(formik.errors.email)}
                 errorMsg={formik.errors.email}
-                classes={"mt-3"}
+                classes={"my-4"}
             />
 
             <SelectInput
@@ -97,7 +124,7 @@ const UserForm = (props) => {
                 getValue={(value) => formik.setFieldValue("mobile", value)}
                 error={Boolean(formik.errors.mobile)}
                 errorMsg={formik.errors.mobile}
-                classes={"mt-3"}
+                classes={"mt-4"}
             />
 
             <TextInput
@@ -106,7 +133,7 @@ const UserForm = (props) => {
                 getValue={(value) => formik.setFieldValue("nic", value)}
                 error={Boolean(formik.errors.nic)}
                 errorMsg={formik.errors.nic}
-                classes={"mt-3"}
+                classes={"mt-4"}
             />
 
             <TextInput
@@ -116,7 +143,7 @@ const UserForm = (props) => {
                 getValue={(value) => formik.setFieldValue("password", value)}
                 error={Boolean(formik.errors.password)}
                 errorMsg={formik.errors.password}
-                classes={"mt-3"}
+                classes={"mt-4"}
             />
 
             <TextInput
@@ -128,16 +155,19 @@ const UserForm = (props) => {
                 }
                 error={Boolean(formik.errors.password_confirmation)}
                 errorMsg={formik.errors.password_confirmation}
-                classes={"mt-3"}
+                classes={"mt-4"}
             />
 
             <br />
-            <LoadingButtonComponent
-                label={btnLabel}
-                variant="contained"
-                loading={loading}
-                cls={"my-3"}
-            />
+            <Box textAlign="center" mt={2} mb={2}>
+                <LoadingButtonComponent
+                    label={btnLabel}
+                    variant="contained"
+                    loading={loading}
+                    cls={"my-3"}
+                    fullWidth={true}
+                />
+            </Box>
         </form>
     );
 };

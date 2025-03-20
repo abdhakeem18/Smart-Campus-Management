@@ -16,11 +16,6 @@ import ModalComponent from "./components/Modal";
 import UserForm from "./components/UserForm";
 import UserUpdateForm from "./components/UserUpdateForm";
 
-//MUI Icons
-import PriceChangeRoundedIcon from "@mui/icons-material/PriceChangeRounded";
-import { Email } from "@mui/icons-material";
-// import TopupForm from "../profile/components/TopupForm";
-
 const columns = [
     { id: "id", label: "ID", minWidth: 100 },
     { id: "fullName", label: "Full Name", minWidth: 100 },
@@ -31,7 +26,6 @@ const columns = [
 ];
 
 const Users = () => {
-    const [user, setUser] = useState("");
     const [modalOptions, setModalOptions] = useState({
         open: false,
         title: "",
@@ -56,6 +50,7 @@ const Users = () => {
     };
 
     const [users, setUsers] = useState([]);
+    const [updateUserTable, setUpdateUserTable] = useState(true);
     const { apiCall, loading, apiError } = API("admin");
 
     async function fetchUsers() {
@@ -83,12 +78,17 @@ const Users = () => {
     }
 
     useEffect(() => {
-        fetchUsers();
-
-        return () => {
+        console.log(updateUserTable);
+        if (updateUserTable) {
             fetchUsers();
-        };
-    }, []);
+
+            setUpdateUserTable(false);
+
+            return () => {
+                fetchUsers();
+            };
+        }
+    }, [updateUserTable]);
 
     async function handleAction(action, selectedRow) {
         if (action === "Edit" || action === "View") {
@@ -139,8 +139,7 @@ const Users = () => {
                     columns={columns}
                     rows={users}
                     handleAction={handleAction}
-                >
-                </CommonTable>
+                ></CommonTable>
             </Paper>
 
             <ModalComponent
@@ -153,6 +152,7 @@ const Users = () => {
                         data={modalOptions.data}
                         closeModal={resetModalOptions}
                         btnLabel={modalOptions.data?.id ? "Update" : "Add"}
+                        updateUserTable={setUpdateUserTable}
                     />
                 ) : null}
 
@@ -161,6 +161,7 @@ const Users = () => {
                         data={modalOptions.data}
                         closeModal={resetModalOptions}
                         btnLabel={modalOptions.data?.id ? "Update" : "Add"}
+                        updateUserTable={setUpdateUserTable}
                     />
                 ) : null}
             </ModalComponent>

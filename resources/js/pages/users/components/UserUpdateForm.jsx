@@ -11,7 +11,7 @@ import { Typography, Box, Alert } from "@mui/material";
 import FileUploadInput from "@/components/inputs/FileUploadInput";
 
 const UserForm = (props) => {
-    const { closeModal, btnLabel, data } = props;
+    const { closeModal, btnLabel, data, updateUserTable } = props;
     const { apiCall, loading, error } = API("admin");
     const [success, setSuccess] = useState("");
 
@@ -31,11 +31,12 @@ const UserForm = (props) => {
 
             if (response?.success) {
                 setSuccess(response?.message);
+                updateUserTable(true);
+                
+                setTimeout(() => {
+                    closeModal();
+                }, 3000);
             }
-
-            setTimeout(() => {
-                closeModal();
-            }, 3000);
         } catch (error) {
             console.log(error);
         }
@@ -64,7 +65,7 @@ const UserForm = (props) => {
     });
 
     return (
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} className="user-form">
             {success && <Alert severity="success">{success}</Alert>}
             {error && <Alert severity="error">{error?.message}</Alert>}
             <TextInput
@@ -121,7 +122,7 @@ const UserForm = (props) => {
             <br />
             <Box textAlign="center" mt={2} mb={2}>
                 <LoadingButtonComponent
-                    label={"Register"}
+                    label={btnLabel}
                     variant="contained"
                     loading={loading}
                     cls={"my-3"}

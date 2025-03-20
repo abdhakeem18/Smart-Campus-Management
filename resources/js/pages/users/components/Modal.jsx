@@ -24,7 +24,7 @@ export default function ModalComponent(props) {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={style} className={"cu-modal-form"}>
         <div className="d-flex align-items-center justify-content-between">
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {formTitle}
