@@ -46,9 +46,9 @@ const ForgetPassword = () => {
 
     return (
         <Auth
-            type={"verify-email"}
+            type={"forget-password"}
             content={
-                !linkSend ? (
+                linkSend ? (
                     <>
                         <Box textAlign="center" mt={2} mb={2}>
                             <MarkEmailUnreadIcon

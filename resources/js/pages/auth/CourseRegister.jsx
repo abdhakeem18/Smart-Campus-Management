@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Alert } from "@mui/material";
 import Auth from "@/layouts/Auth";
 import SelectInput from "@/components/inputs/SelectInput";
 import { useFormik } from "formik";
@@ -9,16 +9,19 @@ import API from "@/config/Api";
 import AppContext from "@/config/AppContext";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 import FileUploadInput from "@/components/inputs/FileUploadInput";
+import { errorHandle } from "@/components/common/helper";
 
 const CourseRegister = () => {
     const [contextData, setContextData] = useContext(AppContext);
     const [registered, setRegistered] = useState(false);
+    const [success, setSuccess] = useState("");
     const { apiCall, loading, apiError } = API(
         contextData?.roles[contextData?.userDetails?.role_id],
     );
 
     async function registerSubmit(values) {
         try {
+            setSuccess("");
             const response = await apiCall(
                 "/course-registration",
                 "POST",
@@ -26,14 +29,14 @@ const CourseRegister = () => {
             );
 
             if (response?.success) {
-                if (response?.success) {
-                    setContextData((prevState) => ({
-                        ...prevState,
-                        step: "next",
-                    }));
-
+                setSuccess(response?.message);
+                setContextData((prevState) => ({
+                    ...prevState,
+                    step: "next",
+                }));
+                setTimeout(() => {
                     navigator("/dashboard");
-                }
+                }, 2000);
             }
         } catch (error) {
             console.log(error);
@@ -92,10 +95,7 @@ const CourseRegister = () => {
                                 <FileUploadInput
                                     type={"image"}
                                     title={"NIC"}
-                                    allowedExtension={[
-                                        "jpg",
-                                        "png",
-                                    ]}
+                                    allowedExtension={["jpg", "png", "JPEG"]}
                                     value={formik.values.nic_document || ""}
                                     getValue={(value) =>
                                         formik.setFieldValue(
@@ -121,6 +121,18 @@ const CourseRegister = () => {
                                     errorMsg={formik.errors.document}
                                 />
                             </Typography>
+
+                            {success && (
+                                <Alert severity="success">{success}</Alert>
+                            )}
+
+                            {error && (
+                                <>
+                                    <Alert severity="error">
+                                        {errorHandle(error)}
+                                    </Alert>
+                                </>
+                            )}
 
                             <Box textAlign="center" mt={2} mb={2}>
                                 <LoadingButtonComponent

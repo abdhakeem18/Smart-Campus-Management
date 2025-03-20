@@ -8,19 +8,27 @@ import * as Yup from "yup";
 import API from "@/config/Api";
 import AppContext from "@/config/AppContext";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
+import { errorHandle } from "@/components/common/helper";
 
 const Register = () => {
     const [contextData, setContextData] = useContext(AppContext);
     const [registered, setRegistered] = useState(false);
     const navigate = useNavigate();
-    const { apiCall, loading, apiError } = API("auth");
+    const [success, setSuccess] = useState("");
+
+    const { apiCall, loading, error } = API("auth");
 
     async function registerSubmit(values) {
         try {
+            setSuccess("");
             const response = await apiCall("/register", "POST", values);
 
             if (response?.success) {
-                await navigate("/login");
+                setSuccess(response?.message);
+
+                setTimeout(() => {
+                    navigate("/login");
+                }, 2000);
             }
         } catch (error) {
             console.log(error);
@@ -158,7 +166,17 @@ const Register = () => {
                                 }
                                 classes={"mt-3"}
                             />
+                            {success && (
+                                <Alert severity="success">{success}</Alert>
+                            )}
 
+                            {error && (
+                                <>
+                                    <Alert severity="error">
+                                        {errorHandle(error)}
+                                    </Alert>
+                                </>
+                            )}
                             <Box textAlign="center" mt={2} mb={2}>
                                 <LoadingButtonComponent
                                     label={"Sign Up"}

@@ -29,7 +29,7 @@ const FileUploadInput = ({
         const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
         if (type === "image") {
             if (!allowedExtensions.includes(fileExtension)) {
-                setError("Only image files (JPG, PNG, GIF, WEBP) are allowed.");
+                setError("Only image files (JPG, JPEG, PNG) are allowed.");
                 setFile(null);
                 setPreview(null);
                 return;

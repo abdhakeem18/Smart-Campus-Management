@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
     Button,
     Typography,
@@ -8,18 +9,24 @@ import {
     InputAdornment,
     FormControl,
     IconButton,
+    Alert,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Auth from "@/layouts/Auth";
+import API from "@/config/api";
+import LoadingButtonComponent from "@/components/buttons/LoadingButton";
+import { errorHandle } from "@/components/common/helper";
 
 const ResetPassword = () => {
-    const [otp, setOtp] = useState("");
-    const [loader, setLoader] = useState(false);
-    const [nextButton, setNextButton] = useState(true);
-    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConPassword, setShowConPassword] = useState(false);
+    const [typingTimeout, setTypingTimeout] = useState(null);
+    const navigate = useNavigate();
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [success, setSuccess] = useState("");
+    const { apiCall, loading, error } = API("auth");
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowConPassword = () =>
@@ -29,12 +36,51 @@ const ResetPassword = () => {
         event.preventDefault();
     };
 
-    const passwordMatch = (input) => {
-        confirmPassword = input.target.value;
+    const handSubmit = async () => {
+        setSuccess("");
 
-        if (confirmPassword === password) {
-            console.log("seet");
+        const response = await apiCall(
+            "/reset-password/{token}",
+            "POST",
+            {
+                password: password,
+                password_confirmation: confirmPassword
+            },
+        );
+
+        if (response?.success) {
+            setSuccess(response?.message);
+
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
         }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (typingTimeout) {
+                clearTimeout(typingTimeout);
+            }
+        };
+    }, [typingTimeout]);
+
+    const handleInputChange = async (event) => {
+        const value = event.target.value;
+
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+        }
+
+        const newTypingTimeout = setTimeout(() => {
+            if (event.target.name === "password") {
+                setPassword(value);
+            } else {
+                setConfirmPassword(value);
+            }
+        }, 1000);
+
+        setTypingTimeout(newTypingTimeout);
     };
 
     return (
@@ -61,6 +107,8 @@ const ResetPassword = () => {
                             fullWidth
                             margin="normal"
                             size="small"
+                            onChange={handleInputChange}
+                            required
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
@@ -87,9 +135,9 @@ const ResetPassword = () => {
                         <InputLabel
                             size="small"
                             htmlFor="outlined-adornment-confirm-password"
-                            sx={{marginTop: "10px"}}
+                            sx={{ marginTop: "10px" }}
                         >
-                           Confirm Password
+                            Confirm Password
                         </InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-confirm-password"
@@ -97,6 +145,7 @@ const ResetPassword = () => {
                             name="confirm-password"
                             label="Confirm Password"
                             fullWidth
+                            onChange={handleInputChange}
                             sx={{ marginTop: "10px" }}
                             size="small"
                             endAdornment={
@@ -117,16 +166,23 @@ const ResetPassword = () => {
                                 </InputAdornment>
                             }
                         />
+                        {success && <Alert severity="success">{success}</Alert>}
+
+                        {error && (
+                            <>
+                                <Alert severity="error">{errorHandle(error)}</Alert>
+                            </>
+                        )}
 
                         <Box textAlign="center" mt={2} mb={2}>
-                            <Button
+                            <LoadingButtonComponent
+                                label={"Reset Password"}
                                 variant="contained"
-                                color="primary"
-                                fullWidth
-                                disabled={nextButton}
-                            >
-                                Reset password
-                            </Button>
+                                loading={loading}
+                                cls={"my-3"}
+                                fullWidth={true}
+                                onClick={handSubmit}
+                            />
                         </Box>
                     </FormControl>
                 </>

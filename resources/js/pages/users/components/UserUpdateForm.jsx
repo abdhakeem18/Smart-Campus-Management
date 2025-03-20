@@ -9,6 +9,7 @@ import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 import SelectInput from "@/components/inputs/SelectInput";
 import { Typography, Box, Alert } from "@mui/material";
 import FileUploadInput from "@/components/inputs/FileUploadInput";
+import { errorHandle } from "@/components/common/helper";
 
 const UserForm = (props) => {
     const { closeModal, btnLabel, data, updateUserTable } = props;
@@ -32,7 +33,7 @@ const UserForm = (props) => {
             if (response?.success) {
                 setSuccess(response?.message);
                 updateUserTable(true);
-                
+
                 setTimeout(() => {
                     closeModal();
                 }, 3000);
@@ -66,8 +67,6 @@ const UserForm = (props) => {
 
     return (
         <form onSubmit={formik.handleSubmit} className="user-form">
-            {success && <Alert severity="success">{success}</Alert>}
-            {error && <Alert severity="error">{error?.message}</Alert>}
             <TextInput
                 label="Full Name"
                 value={formik.values.name || ""}
@@ -96,6 +95,16 @@ const UserForm = (props) => {
                 classes={""}
             />
 
+            {/* <SelectInput
+                label="courses"
+                value={formik.values.course || ""}
+                getValue={(value) => formik.setFieldValue("course", value)}
+                data={userType}
+                error={Boolean(formik.errors.course)}
+                errorMsg={formik.errors.course}
+                classes={"my-3"}
+            /> */}
+
             <TextInput
                 label="Phone Number"
                 type="number"
@@ -120,6 +129,13 @@ const UserForm = (props) => {
             </Typography>
 
             <br />
+            {success && <Alert severity="success">{success}</Alert>}
+
+            {error && (
+                <>
+                    <Alert severity="error">{errorHandle(error)}</Alert>
+                </>
+            )}
             <Box textAlign="center" mt={2} mb={2}>
                 <LoadingButtonComponent
                     label={btnLabel}

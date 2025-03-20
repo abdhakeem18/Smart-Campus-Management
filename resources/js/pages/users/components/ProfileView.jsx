@@ -12,52 +12,41 @@ import {
     Box,
     Avatar,
     Stack,
+    Alert
 } from "@mui/material";
 import { FileDownload, School, AttachFile } from "@mui/icons-material";
+import LoadingButtonComponent from "@/components/buttons/LoadingButton";
+import API from "@/config/api";
+import { errorHandle } from "@/components/common/helper";
 
 // Mock API Call function (replace with actual API request)
-const fetchStudentDetails = async () => {
-    return {
-        name: "John Doe",
-        id: "12345",
-        email: "john@example.com",
-        attachments: ["attachment1.pdf", "attachment2.jpg"],
-        courses: ["Math 101", "Science 202", "History 303"],
-    };
-};
 
-function ProfileView({ data }) {
-    const [isAdmin, setIsAdmin] = useState(true); // Assume admin status (this can be set via context or from login)
-    const [studentData, setStudentData] = useState(null);
+function ProfileView({ data, updateUserTable, closeModal }) {
+    const { apiCall, loading, error } = API("admin");
+    const [success, setSuccess] = useState("");
 
-    useEffect(() => {
-        if (isAdmin) {
-            // Fetch student data only if the user is an admin
-            fetchStudentDetails().then((data) => setStudentData(data));
+    const onApprove = async () => {
+        setSuccess("");
+        const response = await apiCall(`/user/approval/${data?.id}`, "PUT", {});
+
+        if (response?.success) {
+            setSuccess(response?.message);
+            updateUserTable(true);
+            setTimeout(() => {
+                closeModal();
+            }, 2000);
         }
-    }, [isAdmin]);
+    };
 
-    if (!isAdmin) {
-        return (
-            <Typography
-                variant="h6"
-                color="error"
-                align="center"
-                sx={{ padding: 3 }}
-            >
-                You are not authorized to view this page.
-            </Typography>
-        );
-    }
-
-    if (!studentData) {
+    if (!data) {
         return (
             <Typography variant="h6" align="center">
                 Loading student data...
             </Typography>
         );
     }
-    console.log(data);
+    const profileImagePath = `/storage/images/student`;
+
     return (
         <Box>
             {/* Main Paper */}
@@ -99,7 +88,7 @@ function ProfileView({ data }) {
                                     color="textSecondary"
                                 >
                                     <strong> Student ID: </strong>
-                                    {data?.students &&
+                                    {(data?.students).length > 0 &&
                                         data?.students[0]["register_num"]}
                                 </Typography>
                                 <Typography
@@ -133,100 +122,146 @@ function ProfileView({ data }) {
                     <AttachFile sx={{ marginRight: 1 }} />
                     Attachments
                 </Typography>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                        <Card
-                            sx={{
-                                borderRadius: 2,
-                                transition: "transform 0.3s",
-                                "&:hover": { transform: "scale(1.05)" },
-                            }}
-                        >
-                            <CardContent>
-                                <Typography
-                                    variant="body1"
-                                    color="primary"
-                                    gutterBottom
-                                >
-                                    NIC Document
-                                </Typography>
-                                <Button
-                                    variant="outlined"
-                                    fullWidth
-                                    href={`/attachments/${
-                                        data?.students &&
-                                        data?.students[0]["nic_document"]
-                                    }`}
-                                    target="_blank"
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <FileDownload sx={{ marginRight: 1 }} />
-                                    {data?.students &&
-                                        data?.students[0]["nic_document"]}
-                                </Button>
-                            </CardContent>
-                        </Card>
+                {(data?.students).length > 0 && (
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <Card
+                                sx={{
+                                    borderRadius: 2,
+                                    transition: "transform 0.3s",
+                                    "&:hover": { transform: "scale(1.05)" },
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography
+                                        variant="body1"
+                                        color="primary"
+                                        gutterBottom
+                                    >
+                                        NIC Document
+                                    </Typography>
+                                    <Button
+                                        variant="outlined"
+                                        fullWidth
+                                        href={`${profileImagePath}/nic/${
+                                            (data?.students).length > 0 &&
+                                            data?.students[0]["nic_document"]
+                                        }`}
+                                        target="_blank"
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <FileDownload sx={{ marginRight: 1 }} />
+                                        {(data?.students).length > 0 &&
+                                            data?.students[0]["nic_document"]}
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Card
+                                sx={{
+                                    borderRadius: 2,
+                                    transition: "transform 0.3s",
+                                    "&:hover": { transform: "scale(1.05)" },
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography
+                                        variant="body1"
+                                        color="primary"
+                                        gutterBottom
+                                    >
+                                        User Document
+                                    </Typography>
+                                    <Button
+                                        variant="outlined"
+                                        fullWidth
+                                        href={`${profileImagePath}/documnet/${
+                                            (data?.students).length > 0 &&
+                                            data?.students[0]["document"]
+                                        }`}
+                                        target="_blank"
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <FileDownload sx={{ marginRight: 1 }} />
+                                        {(data?.students).length > 0 &&
+                                            data?.students[0]["document"]}
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Card
-                            sx={{
-                                borderRadius: 2,
-                                transition: "transform 0.3s",
-                                "&:hover": { transform: "scale(1.05)" },
-                            }}
-                        >
-                            <CardContent>
-                                <Typography
-                                    variant="body1"
-                                    color="primary"
-                                    gutterBottom
-                                >
-                                    User Document
-                                </Typography>
-                                <Button
-                                    variant="outlined"
-                                    fullWidth
-                                    href={`/attachments/${
-                                        data?.students &&
-                                        data?.students[0]["document"]
-                                    }`}
-                                    target="_blank"
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <FileDownload sx={{ marginRight: 1 }} />
-                                    {data?.students &&
-                                        data?.students[0]["document"]}
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
+                )}
 
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
 
-                {/* Courses Section */}
                 <Typography variant="h6" color="primary" gutterBottom>
                     <School sx={{ marginRight: 1 }} />
                     Courses Enrolled
                 </Typography>
-                <List sx={{ paddingLeft: 3 }}>
-                    {studentData.courses.map((course, index) => (
-                        <ListItem
-                            key={index}
-                            sx={{ display: "flex", alignItems: "center" }}
-                        >
-                            <Typography variant="body1" sx={{ marginRight: 1 }}>
-                                <strong>{course}</strong>
-                            </Typography>
-                        </ListItem>
-                    ))}
-                </List>
+                {(data?.students).length > 0 && (
+                    <List sx={{ paddingLeft: 3 }} key={"1"}>
+                        {data?.students[0].courses.map((course, index) => (
+                            <>
+                                <ListItem
+                                    key={course.course_code}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Typography
+                                        variant="body1"
+                                        sx={{ marginRight: 1 }}
+                                    >
+                                        <strong>Code: </strong>
+                                        {course.course_code}
+                                    </Typography>
+                                </ListItem>
+                                <ListItem
+                                    key={course.course_name}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Typography
+                                        variant="body1"
+                                        sx={{ marginRight: 1 }}
+                                    >
+                                        <strong>Name: </strong>
+                                        {course.course_name}
+                                    </Typography>
+                                </ListItem>
+                            </>
+                        ))}
+                    </List>
+                )}
+                {success && <Alert severity="success">{success}</Alert>}
+
+                {error && (
+                    <>
+                        <Alert severity="error">{errorHandle(error)}</Alert>
+                    </>
+                )}
+                {!data?.is_active && (data?.students).length > 0 && (
+                    <Box textAlign="center" mt={2} mb={2}>
+                        <LoadingButtonComponent
+                            label={"Approve"}
+                            variant="contained"
+                            loading={loading}
+                            cls={"my-3"}
+                            fullWidth={true}
+                            onClick={onApprove}
+                        />
+                    </Box>
+                )}
             </Paper>
         </Box>
     );

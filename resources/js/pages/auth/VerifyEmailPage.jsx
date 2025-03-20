@@ -6,6 +6,7 @@ import Auth from "@/layouts/Auth";
 import AppContext from "@/config/AppContext";
 import API from "@/config/Api";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import { errorHandle } from "@/components/common/helper";
 
 const VerifyEmail = () => {
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ const VerifyEmail = () => {
             setTimeout(() => {
                 setContextData((prevState) => ({
                     ...prevState,
-                    step: !response?.data?.students ? "register" : "next",
+                    step: !contextData?.userDetails?.students && response?.userDetails?.role_id === 3 ? "register" : "next",
                 }));
             }, 3000);
         }
@@ -103,6 +104,7 @@ const VerifyEmail = () => {
                             validateChar={validateChar}
                             TextFieldsProps={{ size: "small" }}
                             length={6}
+                            autoFocus
                         />
 
                         <Box textAlign="center" mt={2} mb={2}>
@@ -119,7 +121,7 @@ const VerifyEmail = () => {
                         </Box>
                         {success && <Alert severity="success">{success}</Alert>}
                         {error && (
-                            <Alert severity="error">{error?.message}</Alert>
+                            <Alert severity="error">{errorHandle(error)}</Alert>
                         )}
                     </>
                 )
