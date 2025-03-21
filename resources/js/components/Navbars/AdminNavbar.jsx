@@ -21,6 +21,8 @@ import {
     Divider,
 } from "@mui/material";
 
+import AppointmentNotifications from "./Notification";
+
 import {
     Menu as MenuIcon,
     Search as SearchIcon,
@@ -29,7 +31,7 @@ import {
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
-const Navbar = ({ setOpen, open, scrolled }) => {
+const Navbar = ({ setOpen, open, scrolled, title }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
     const [state, setState] = useState({
@@ -38,9 +40,8 @@ const Navbar = ({ setOpen, open, scrolled }) => {
     const anchor = "right";
     const theme = useTheme();
 
-    const drawerWidth = 280;
+    const drawerWidth = 260;
 
-    const title = "dashbord";
     const AppBar = styled(MuiAppBar, {
         shouldForwardProp: (prop) => prop !== "open",
     })(({ theme }) => ({
@@ -181,6 +182,7 @@ const Navbar = ({ setOpen, open, scrolled }) => {
                             width: "100%",
                         }}
                     >
+                        
                         <InputBase
                             placeholder="Search…"
                             value={searchQuery}
@@ -212,6 +214,7 @@ const Navbar = ({ setOpen, open, scrolled }) => {
 
                 {/* Profile Dropdown */}
                 <Box sx={{ display: "flex", alignItems: "center" }}>
+                <AppointmentNotifications />
                     <IconButton
                         onClick={toggleDrawer(anchor, true)}
                         color="inherit"

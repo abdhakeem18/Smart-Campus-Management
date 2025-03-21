@@ -21,7 +21,6 @@ const Login = () => {
     async function loginSubmit(values) {
         try {
             setSuccess("");
-            // const apiv = API("auth");
             const response = await apiCall("/login", "POST", values);
 
             if (response?.success) {
@@ -36,8 +35,7 @@ const Login = () => {
                         courses: courses.data,
                         step: !response?.data?.email_verified_at
                             ? "verify"
-                            : !response?.data?.students &&
-                                response?.data?.role_id === 3
+                            : (response?.data?.students).length === 0 && response?.data?.role_id === 3
                               ? "register"
                               : "next",
                     }));

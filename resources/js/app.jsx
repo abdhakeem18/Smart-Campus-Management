@@ -12,6 +12,7 @@ import ForgetPassword from "@/pages/auth/ForgetPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import CourseRegister from "@/pages/auth/CourseRegister";
 import Courses from "@/pages/course";
+import '../css/app.scss';
 
 import {
     BrowserRouter as Router,

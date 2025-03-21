@@ -17,7 +17,7 @@ export default function SchedulePage() {
     const [events, setEvents] = useState([]);
     const [updateCalendar, setUpdateCalender] = useState(true);
 
-    async function getEvents() {
+    async function fetchEvents() {
         let response = await apiCall("/schedules");
         if (response?.success) {
             let eventsList = [];
@@ -40,13 +40,13 @@ export default function SchedulePage() {
 
     useEffect(() => {
         if(updateCalendar && role) {
-            getEvents();
+            fetchEvents();
             setUpdateCalender(false);
         }
     }, [updateCalendar, role]);
 
     return (
-        <AdminLayout>
+        <AdminLayout title={"Schedule"}>
             <FullCalendarView
                 setSelectedEvent={setSelectedEvent}
                 setOpenModal={setOpenModal}

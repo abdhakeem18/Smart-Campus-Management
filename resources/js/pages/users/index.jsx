@@ -98,7 +98,7 @@ const Users = () => {
     }
 
     return (
-        <AdminLayout>
+        <AdminLayout title={"Users"}>
             <Paper
                 className="user-table border-4"
                 sx={{ width: "100%", overflow: "hidden", boxShadow: 0 }}

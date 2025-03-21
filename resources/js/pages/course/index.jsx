@@ -90,7 +90,7 @@ const Courses = () => {
     }
 
     return (
-        <AdminLayout>
+        <AdminLayout title={"Courses"}>
             <Paper
                 className="user-table border-4"
                 sx={{ width: "100%", overflow: "hidden", boxShadow: 0 }}

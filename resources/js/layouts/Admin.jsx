@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbars/AdminNavbar";
 import { Box, Container } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
-const AdminLayout = ({ children, dashboard = false }) => {
+const AdminLayout = ({ children, dashboard = false, title }) => {
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -44,7 +44,7 @@ const AdminLayout = ({ children, dashboard = false }) => {
             <Box sx={{ display: "flex" }}>
                 <CssBaseline />
 
-                <Navbar setOpen={setOpen} open={open} scrolled={scrolled} />
+                <Navbar setOpen={setOpen} open={open} scrolled={scrolled} title={title}/>
                 <Sidebar setOpen={setOpen} open={open} scrolled={scrolled} />
                 {dashboard ? (
                     children 

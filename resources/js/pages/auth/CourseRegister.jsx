@@ -15,7 +15,7 @@ const CourseRegister = () => {
     const [contextData, setContextData] = useContext(AppContext);
     const [registered, setRegistered] = useState(false);
     const [success, setSuccess] = useState("");
-    const { apiCall, loading, apiError } = API(
+    const { apiCall, loading, error } = API(
         contextData?.roles[contextData?.userDetails?.role_id],
     );
 
@@ -30,11 +30,12 @@ const CourseRegister = () => {
 
             if (response?.success) {
                 setSuccess(response?.message);
-                setContextData((prevState) => ({
-                    ...prevState,
-                    step: "next",
-                }));
+               
                 setTimeout(() => {
+                    setContextData((prevState) => ({
+                        ...prevState,
+                        step: "next",
+                    }));
                     navigator("/dashboard");
                 }, 2000);
             }
@@ -95,7 +96,7 @@ const CourseRegister = () => {
                                 <FileUploadInput
                                     type={"image"}
                                     title={"NIC"}
-                                    allowedExtension={["jpg", "png", "JPEG"]}
+                                    allowedExtension={["jpg", "png", "jpeg"]}
                                     value={formik.values.nic_document || ""}
                                     getValue={(value) =>
                                         formik.setFieldValue(

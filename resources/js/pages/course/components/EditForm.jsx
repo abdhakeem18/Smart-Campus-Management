@@ -15,26 +15,20 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import TextareaInput from "@/components/inputs/TextareaInput";
 
-const CourseEditForm = (props) => {
-    const { closeModal, btnLabel, data, updateUserTable } = props;
+const CourseAddForm = (props) => {
+    const { closeModal, btnLabel, data, updateCourseTable } = props;
     const { apiCall, loading, error } = API("admin");
     const [success, setSuccess] = useState("");
     const modalRef = useRef(null);
 
-    const userType = [
-        { id: 1, name: "Admin" },
-        { id: 2, name: "Staff" },
-        { id: 3, name: "Student" },
-    ];
-
     async function handleSubmit(values) {
         try {
             setSuccess("");
-            const response = await apiCall("/users", "POST", values);
+            const response = await apiCall("/courses", "PUT", values);
 
             if (response?.success) {
                 setSuccess(response?.message);
-                updateUserTable(true);
+                updateCourseTable(true);
                 setTimeout(() => {
                     closeModal();
                 }, 2000);
@@ -48,16 +42,17 @@ const CourseEditForm = (props) => {
         enableReinitialize: true,
         initialValues: {
             course_name: "",
-            course_id: "",
+            course_code: "",
             start_date: "",
+            credits: 100,
             end_date: "",
             description: "",
-            is_active: 1,
+            status: 1,
         },
 
         validationSchema: Yup.object({
             course_name: Yup.string().required("Required"),
-            course_id: Yup.string().required("Required"),
+            course_code: Yup.string().required("Required"),
             start_date: Yup.string().required("Required"),
             end_date: Yup.string().required("Required"),
         }),
@@ -69,7 +64,8 @@ const CourseEditForm = (props) => {
 
     return (
         <Box ref={modalRef}>
-            <form onSubmit={formik.handleSubmit} className="user-form">
+            <form onSubmit={formik.handleSubmit} className="course-form">
+                {console.log(formik?.errors)}
                 <TextInput
                     label="Course Name"
                     value={formik.values.course_name || ""}
@@ -80,10 +76,10 @@ const CourseEditForm = (props) => {
                 />
                 <TextInput
                     label="Course ID"
-                    value={formik.values.course_id || ""}
-                    getValue={(value) => formik.setFieldValue("course_ID", value)}
-                    error={Boolean(formik.errors.course_ID)}
-                    errorMsg={formik.errors.course_ID}
+                    value={formik.values.course_code || ""}
+                    getValue={(value) => formik.setFieldValue("course_code", value)}
+                    error={Boolean(formik.errors.course_code)}
+                    errorMsg={formik.errors.course_code}
                     classes={"mt-4"}
                 />
 
@@ -176,4 +172,4 @@ const CourseEditForm = (props) => {
     );
 };
 
-export default CourseEditForm;
+export default CourseAddForm;
