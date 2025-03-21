@@ -38,7 +38,7 @@ export default function EventModal(props) {
     const data = [];
 
     const handleClose = () => setOpenModal(false);
-    const list = { Type: ["Reservation", "Event", "Equipment"] };
+    const list = { Type: ["Reservation", "Event"] };
     const [feildList, setFieldList] = useState([list]);
 
     async function fetchData() {
@@ -85,18 +85,6 @@ export default function EventModal(props) {
                     data.push({ Course: courseList });
                 }
             } else if (value === 2) {
-                // showInput("Event");
-            } else if (value === 3) {
-                const type1Block = { Block: ["E1", "E2", "E3", "E4", "E6"] };
-                let blockIndex = data.findIndex((item) =>
-                    item.hasOwnProperty("Block"),
-                );
-                if (blockIndex !== -1) {
-                    data[blockIndex] = { ...data[blockIndex], ...type1Block };
-                } else {
-                    data.push(type1Block);
-                }
-
                 const Equipments = {
                     Equipment: [
                         "Microphones",
@@ -109,7 +97,10 @@ export default function EventModal(props) {
                     item.hasOwnProperty("Equipment"),
                 );
                 if (equipmentIndex !== -1) {
-                    data[equipmentIndex] = { ...data[equipmentIndex], ...Equipments };
+                    data[equipmentIndex] = {
+                        ...data[equipmentIndex],
+                        ...Equipments,
+                    };
                 } else {
                     data.push(Equipments);
                 }
@@ -132,6 +123,21 @@ export default function EventModal(props) {
                 } else {
                     data.push({ Subject: subjects });
                 }
+            }
+        } else if (name === "Subject") {
+            const Equipments = {
+                Equipment: ["Microphones", "Speakers", "Laptops", "Projectors"],
+            };
+            const equipmentIndex = data.findIndex((item) =>
+                item.hasOwnProperty("Equipment"),
+            );
+            if (equipmentIndex !== -1) {
+                data[equipmentIndex] = {
+                    ...data[equipmentIndex],
+                    ...Equipments,
+                };
+            } else {
+                data.push(Equipments);
             }
         }
 
@@ -174,7 +180,7 @@ export default function EventModal(props) {
                         value={formik.values[formikName] || ""}
                         label={name}
                         name={name}
-                        required
+                        required={name === "Equipment" ? false : true}
                         onChange={(e) => {
                             formik.setFieldValue(formikName, e.target.value);
                             handleChange(e);
@@ -195,8 +201,7 @@ export default function EventModal(props) {
                                 {formik.errors[formikName]}
                             </FormHelperText>
                         )}
-                </FormControl>,
-                index === 0 ? <div className="col-md-6 col-12"></div> : "",
+                </FormControl>
             );
         });
 
@@ -229,12 +234,12 @@ export default function EventModal(props) {
             description: Yup.string().required("Description is required"),
         }),
 
-        onSubmit: (values) => {
-            handleSubmit(values);
+        onSubmit: (values, actions) => {
+            handleSubmit(values, actions);
         },
     });
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, { resetForm }) => {
         setSuccess("");
         const response = await apiCall("/schedules", "POST", values);
 
@@ -243,9 +248,16 @@ export default function EventModal(props) {
 
             setTimeout(() => {
                 setUpdateCalender(true);
+                resetAllData();
+                resetForm();
                 setOpenModal(false);
             }, 2000);
         }
+    };
+
+    const resetAllData = () => {
+        setFieldList([list]);
+        setSuccess("");
     };
 
     useEffect(() => {
@@ -277,6 +289,7 @@ export default function EventModal(props) {
                     <Typography id="modal-title" variant="h6" sx={{ mb: 2 }}>
                         Create New Schedule
                     </Typography>
+                    {formik?.errors && console.log(formik.errors)}
                     <form onSubmit={formik.handleSubmit}>
                         <TextInput
                             label="Title"
@@ -414,6 +427,20 @@ export default function EventModal(props) {
                             </DemoContainer>
                         </LocalizationProvider>
                         {selectFeilds}
+                        {formik.values.type === 2 && (
+                            <TextInput
+                                id="location"
+                                label="Location"
+                                name="location"
+                                classes={" mt-3"}
+                                value={formik.values.location || ""}
+                                getValue={(value) =>
+                                    formik.setFieldValue("location", value)
+                                }
+                                placeholder=""
+                            />
+                        )}
+
                         <TextareaInput
                             id="description"
                             label="Description"
