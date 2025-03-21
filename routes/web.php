@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ResourceController;
@@ -40,6 +41,9 @@ Route::middleware(['is_admin'])->group(function () {
     Route::get('/events', [EventController::class, 'index'])->name('event.view');
     Route::get('/users', [UserController::class, 'view'])->name('users.view');
 });
+
+Route::get('/courses', [CourseController::class, 'view'])->name('course.view');
+
 
 
 Route::get('/logout', function () {

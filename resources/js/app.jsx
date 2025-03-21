@@ -11,6 +11,7 @@ import VerifyEmail from "@/pages/auth/VerifyEmailPage";
 import ForgetPassword from "@/pages/auth/ForgetPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import CourseRegister from "@/pages/auth/CourseRegister";
+import Courses from "@/pages/course";
 
 import {
     BrowserRouter as Router,
@@ -70,6 +71,8 @@ function App() {
                                     element={<SchedulePage />}
                                 />
                                 <Route path="/users" element={<Users />} />
+
+                                <Route path="/courses" element={<Courses />} />
                             </>
 
                             {/* <Route path="/profile" element={<Profile />} /> */}
