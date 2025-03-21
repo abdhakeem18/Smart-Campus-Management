@@ -34,7 +34,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 
-// Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
+Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
 
 Route::middleware(['is_admin'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.view');
