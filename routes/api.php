@@ -45,11 +45,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('student')->middleware('is_user')->group(function () {
         Route::post('/course-registration', [StudentController::class, 'store']);
         Route::resource('messages', MessageController::class);
-        Route::get('schedules', [ScheduleController::class, 'index']); 
+        Route::resource('schedules', ScheduleController::class)->names([
+            'index' => 'staff.schedules.index',
+        ]);
     });
 
     Route::prefix('staff')->middleware('is_staff')->group(function () {
-        Route::resource('schedules', ScheduleController::class);
+        Route::resource('schedules', ScheduleController::class)->names([
+            'index' => 'staff.schedules.index',
+            'create' => 'staff.schedules.create',
+            'store' => 'staff.schedules.store',
+            'show' => 'staff.schedules.show',
+            'edit' => 'staff.schedules.edit',
+            'update' => 'staff.schedules.update',
+            'destroy' => 'staff.schedules.destroy',
+        ]);
         Route::resource('messages', MessageController::class);
     });
 });
