@@ -33,7 +33,7 @@ class StoreSubjectRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     if ($value) {
                         $user = \App\Models\User::find($value);
-                        if (!$user || $user->role_id != 3) {
+                        if (!$user || $user->role_id != 2) {
                             $fail('The selected lecturer is not valid or does not have the required role.');
                         }
                     }

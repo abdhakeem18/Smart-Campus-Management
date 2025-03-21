@@ -32,7 +32,7 @@ class StoreScheduleRequest extends FormRequest
             'end_time'=>'required',
             'type'=>'required|int',
             'user_id'=> 'nullable|exists:users,id',
-            'course_id'=>'required|int|exists:users,id',
+            'course_id'=>'nullable|int|exists:users,id',
             'subject_id'=>'nullable|exists:subjects,id',
             'block_id'=>'nullable|exists:blocks,id',
         ];
