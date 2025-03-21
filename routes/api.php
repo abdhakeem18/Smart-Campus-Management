@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/course-registration', [StudentController::class, 'store']);
         Route::resource('messages', MessageController::class);
         Route::resource('schedules', ScheduleController::class)->names([
-            'index' => 'staff.schedules.index',
+            'index' => 'student.schedules.index',
         ]);
     });
 
