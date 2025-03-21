@@ -20,11 +20,21 @@ const EventDialog = ({ selectedEvent, setSelectedEvent }) => {
                 {selectedEvent && (
                     <Typography>
                         📅 <strong>Start:</strong>{" "}
-                        {selectedEvent.start.toLocaleString()} <br />
+                        {selectedEvent?.start
+                            ? new Date(selectedEvent.start).toLocaleString()
+                            : "N/A"}
+                        <br />
                         🕒 <strong>End:</strong>{" "}
-                        {selectedEvent.end.toLocaleString()}
+                        {selectedEvent?.end
+                            ? new Date(selectedEvent.end).toLocaleString()
+                            : "N/A"}
                     </Typography>
                 )}
+
+                {selectedEvent &&
+                    console.log(" => ", selectedEvent.end)}
+                {selectedEvent &&
+                    console.log("Type of Start:", typeof selectedEvent.end)}
             </DialogContent>
         </Dialog>
     );

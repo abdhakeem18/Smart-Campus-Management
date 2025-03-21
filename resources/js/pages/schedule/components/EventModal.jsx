@@ -10,7 +10,7 @@ import {
     Select,
     MenuItem,
     FormHelperText,
-    Alert
+    Alert,
 } from "@mui/material";
 import TextInput from "@/components/inputs/TextInput";
 import { useFormik } from "formik";
@@ -27,7 +27,8 @@ import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 import { errorHandle } from "@/components/common/helper";
 
 export default function EventModal(props) {
-    const { openModal, setOpenModal, selectDate, role } = props;
+    const { openModal, setOpenModal, selectDate, role, setUpdateCalender } =
+        props;
     const [selectFeilds, setSelectFeilds] = useState("");
     const [courses, setCourses] = useState([]);
     const isMobile = useMediaQuery("(max-width:600px)");
@@ -61,7 +62,7 @@ export default function EventModal(props) {
         if (name === "Type") {
             if (value === 1) {
                 const type1Block = { Block: ["E1", "E2", "E3", "E4", "E6"] };
-                const blockIndex = data.findIndex((item) =>
+                let blockIndex = data.findIndex((item) =>
                     item.hasOwnProperty("Block"),
                 );
                 if (blockIndex !== -1) {
@@ -84,24 +85,33 @@ export default function EventModal(props) {
                     data.push({ Course: courseList });
                 }
             } else if (value === 2) {
-                const type2Block = { block: ["B1", "B2", "B3"] };
-                const blockIndex = data.findIndex((item) =>
-                    item.hasOwnProperty("block"),
-                );
-                if (blockIndex !== -1) {
-                    data[blockIndex] = { ...data[blockIndex], ...type2Block };
-                } else {
-                    data.push(type2Block);
-                }
+                // showInput("Event");
             } else if (value === 3) {
-                const type3Block = { block: ["C1", "C2", "C3", "C4"] };
-                const blockIndex = data.findIndex((item) =>
-                    item.hasOwnProperty("block"),
+                const type1Block = { Block: ["E1", "E2", "E3", "E4", "E6"] };
+                let blockIndex = data.findIndex((item) =>
+                    item.hasOwnProperty("Block"),
                 );
                 if (blockIndex !== -1) {
-                    data[blockIndex] = { ...data[blockIndex], ...type3Block };
+                    data[blockIndex] = { ...data[blockIndex], ...type1Block };
                 } else {
-                    data.push(type3Block);
+                    data.push(type1Block);
+                }
+
+                const Equipments = {
+                    Equipment: [
+                        "Microphones",
+                        "Speakers",
+                        "Laptops",
+                        "Projectors",
+                    ],
+                };
+                const equipmentIndex = data.findIndex((item) =>
+                    item.hasOwnProperty("Equipment"),
+                );
+                if (equipmentIndex !== -1) {
+                    data[equipmentIndex] = { ...data[equipmentIndex], ...Equipments };
+                } else {
+                    data.push(Equipments);
                 }
             }
         } else if (name === "Course") {
@@ -225,7 +235,6 @@ export default function EventModal(props) {
     });
 
     const handleSubmit = async (values) => {
-     
         setSuccess("");
         const response = await apiCall("/schedules", "POST", values);
 
@@ -233,6 +242,7 @@ export default function EventModal(props) {
             setSuccess(response?.message);
 
             setTimeout(() => {
+                setUpdateCalender(true);
                 setOpenModal(false);
             }, 2000);
         }
@@ -293,7 +303,7 @@ export default function EventModal(props) {
                                         <DemoItem label="Start Date">
                                             <MobileDatePicker
                                                 defaultValue={dayjs(
-                                                    formik?.values?.startDate,
+                                                    formik?.values?.date,
                                                 )}
                                                 minDate={dayjs()}
                                                 sx={{
@@ -302,7 +312,7 @@ export default function EventModal(props) {
                                                 size="small"
                                                 onChange={(newValue) =>
                                                     formik.setFieldValue(
-                                                        "startDate",
+                                                        "date",
                                                         newValue,
                                                     )
                                                 }
