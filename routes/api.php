@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Student\StudentController;
 
 /*
@@ -44,15 +45,23 @@ Route::prefix('student')->middleware(['auth:sanctum','is_user'])->group(function
     Route::post('/verify', [AuthController::class, 'verify']);
     Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
     Route::post('/course-registration', [StudentController::class, 'store']);
+    Route::resource('messages', MessageController::class);
+    Route::get('schedules', [ScheduleController::class, 'index']);
+
+
 });
 
 Route::prefix('staff')->middleware(['auth:sanctum', 'is_staff'])->group(function () {
     Route::post('/verify', [AuthController::class, 'verify']);
     Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
+    Route::resource('messages', MessageController::class);
+
 });
 
 Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->group(function () {
     Route::resource('schedules', ScheduleController::class);
+    Route::resource('messages', MessageController::class);
+
 
 });
 
@@ -63,6 +72,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'verified', 'is_admin'])->gr
     Route::resource('subjects', SubjectController::class);
     Route::resource('blocks', BlockController::class);
     Route::resource('schedules', ScheduleController::class);
+    Route::resource('messages', MessageController::class);
     Route::put('/user/approval/{id}', [UserController::class, 'approval']);
     Route::put('/schecdule/approval/{id}', [ScheduleController::class, 'approval']);
 });

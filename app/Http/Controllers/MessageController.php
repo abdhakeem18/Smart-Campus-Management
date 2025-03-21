@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Api\BaseController;
 use App\Models\Message;
 use App\Http\Requests\StoreMessageRequest;
 use App\Http\Requests\UpdateMessageRequest;
 
-class MessageController extends Controller
+
+class MessageController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $messages = Message::all();
+        $this->sendSuccess($messages, 'Successfully Fetched Records.');
     }
 
     /**
