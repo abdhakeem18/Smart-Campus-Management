@@ -37,6 +37,7 @@ Route::get('/events', [EventController::class, 'index'])->name('event.view');
 
 Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
 
+
 Route::get('/users', [UserController::class, 'view'])->name('users.view');
 
 

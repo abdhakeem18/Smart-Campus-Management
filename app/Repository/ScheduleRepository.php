@@ -51,7 +51,6 @@ class ScheduleRepository{
     {
 
         $data = Schedule::where('date', $request->date)
-        ->where('block_id', $request->block_id)
         ->where(function ($query) use ($request) {
             $query->whereBetween('start_time', [
                 Carbon::parse($request->start_time)->format('H:i:s'),
