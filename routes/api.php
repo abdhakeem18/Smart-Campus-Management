@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\ScheduleController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Student\StudentController;
 
 /*
@@ -56,6 +57,7 @@ Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->gr
 });
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'verified', 'is_admin'])->group(function () {
+    Route::resource('staffs', StaffController::class);
     Route::resource('users', UserController::class);
     Route::resource('courses', CourseController::class);
     Route::resource('subjects', SubjectController::class);
