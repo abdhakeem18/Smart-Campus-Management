@@ -27,8 +27,8 @@ class ScheduleRepository{
         $data->title = $request->title;
         $data->description = $request->description;
         $data->date = Carbon::parse($request->date)->format('Y-m-d') ;
-        $data->start_time = Carbon::parse($request->start_time)->format('h:i') ;
-        $data->end_time = Carbon::parse($request->end_time)->format('h:i') ;
+        $data->start_time = Carbon::parse($request->start_time)->format('H:i:s') ;
+        $data->end_time = Carbon::parse($request->end_time)->format('H:i:s') ;
         $data->status = auth()->user()->role_id == 1 ? 1 : 0;
         $data->type = $request->type;
         $data->user_id = $request->user_id;
