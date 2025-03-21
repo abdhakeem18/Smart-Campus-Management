@@ -41,25 +41,18 @@ Route::get('/courses', [CourseController::class,'index']);
 Route::get('/student/{id}/courses', [StudentController::class,'courses']);
 
 
-Route::prefix('student')->middleware(['auth:sanctum','is_user'])->group(function () {
-    Route::post('/verify', [AuthController::class, 'verify']);
-    Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
-    Route::post('/course-registration', [StudentController::class, 'store']);
-    Route::resource('messages', MessageController::class);
-    Route::get('schedules', [ScheduleController::class, 'index']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('student')->middleware('is_user')->group(function () {
+        Route::post('/course-registration', [StudentController::class, 'store']);
+        Route::resource('messages', MessageController::class);
+        Route::get('schedules', [ScheduleController::class, 'index']); 
+    });
 
-
+    Route::prefix('staff')->middleware('is_staff')->group(function () {
+        Route::resource('schedules', ScheduleController::class);
+        Route::resource('messages', MessageController::class);
+    });
 });
-
-Route::prefix('staff')->middleware(['auth:sanctum', 'is_staff'])->group(function () {
-    Route::post('/verify', [AuthController::class, 'verify']);
-    Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
-    Route::resource('schedules', ScheduleController::class);
-    Route::resource('messages', MessageController::class);
-
-
-});
-
 Route::prefix('admin')->middleware(['auth:sanctum', 'verified', 'is_admin'])->group(function () {
     Route::resource('staffs', StaffController::class);
     Route::resource('users', UserController::class);
