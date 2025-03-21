@@ -13,11 +13,11 @@ class ScheduleRepository{
 
     public function getAll()
     {
-        if(auth()->user()->role_id == 1){
+        // if(auth()->user()->role_id == 1){
             $data = Schedule::all();
-        }else{
-            $data = Schedule::where('user_id', auth()->user()->id)->get();
-        }
+        // }else{
+        //     $data = Schedule::where('user_id', auth()->user()->id)->get();
+        // }
         return $data;
     }
 
