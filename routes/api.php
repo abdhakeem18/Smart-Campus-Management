@@ -33,6 +33,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::resource('/roles', RoleController::class);
 Route::post('/reset-password/{token}', [AuthController::class,'resetPassword']);
 Route::post('/verify', [AuthController::class, 'verify']);
+Route::post('/forget-password', [AuthController::class, 'forgetPassword']);
 Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
 Route::get('/courses', [CourseController::class,'index']);
 Route::get('/student/{id}/courses', [StudentController::class,'courses']);
@@ -50,7 +51,6 @@ Route::prefix('staff')->middleware(['auth:sanctum', 'is_staff'])->group(function
 });
 
 Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->group(function () {
-
     Route::resource('schedules', ScheduleController::class);
 
 });
