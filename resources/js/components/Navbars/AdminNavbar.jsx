@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
     styled,
     Toolbar,
@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 
 import AppointmentNotifications from "./Notification";
+import AppContext from "@/config/AppContext";
 
 import {
     Menu as MenuIcon,
@@ -30,10 +31,13 @@ import {
     Logout,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import API from "@/config/Api";
 
 const Navbar = ({ setOpen, open, scrolled, title }) => {
+    const [contextData, setContextData] = useContext(AppContext);
     const [searchQuery, setSearchQuery] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
+    const { apiCall, loading, error } = API("web");
     const [state, setState] = useState({
         right: false,
     });
@@ -72,6 +76,21 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
 
     const handleDrawerOpen = () => {
         setOpen(true);
+    };
+
+    const handleLogout = async () => {
+        setSuccess("");
+        const response = await apiCall("/logout");
+        
+        localStorage.removeItem("user-data");
+        if (response?.success) {
+            setSuccess(response?.message);
+
+            setTimeout(() => {
+                
+                navigator("/login");
+            }, 2000);
+        }
     };
 
     const handleSearchChange = (e) => {
@@ -182,7 +201,6 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
                             width: "100%",
                         }}
                     >
-                        
                         <InputBase
                             placeholder="Search…"
                             value={searchQuery}
@@ -214,7 +232,7 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
 
                 {/* Profile Dropdown */}
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                <AppointmentNotifications />
+                    <AppointmentNotifications />
                     <IconButton
                         onClick={toggleDrawer(anchor, true)}
                         color="inherit"
@@ -274,7 +292,10 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
                                                     component="div"
                                                     variant="h5"
                                                 >
-                                                    Live From Space
+                                                    {
+                                                        contextData?.userDetails
+                                                            ?.name
+                                                    }
                                                 </Typography>
                                                 <Typography
                                                     variant="subtitle1"
@@ -283,20 +304,14 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
                                                         color: "text.secondary",
                                                     }}
                                                 >
-                                                    Mac Miller
+                                                    {
+                                                        contextData?.userDetails
+                                                            ?.email
+                                                    }
                                                 </Typography>
                                             </CardContent>
                                         </Box>
                                     </Card>
-                                </ListItem>
-
-                                <ListItem key={"profile"} disablePadding>
-                                    <ListItemButton>
-                                        <ListItemIcon>
-                                            <Person />
-                                        </ListItemIcon>
-                                        <ListItemText primary={"profile"} />
-                                    </ListItemButton>
                                 </ListItem>
 
                                 <ListItem>
@@ -304,7 +319,8 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
                                         variant="contained"
                                         color="error"
                                         fullWidth
-                                        sx={{marginTop: "20px"}}
+                                        sx={{ marginTop: "20px" }}
+                                        onClick={handleLogout}
                                     >
                                         Logout
                                     </Button>
