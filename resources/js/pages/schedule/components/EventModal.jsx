@@ -10,7 +10,7 @@ import {
     Select,
     MenuItem,
     FormHelperText,
-    Alert
+    Alert,
 } from "@mui/material";
 import TextInput from "@/components/inputs/TextInput";
 import { useFormik } from "formik";
@@ -27,7 +27,8 @@ import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 import { errorHandle } from "@/components/common/helper";
 
 export default function EventModal(props) {
-    const { openModal, setOpenModal, selectDate, role } = props;
+    const { openModal, setOpenModal, selectDate, role, setUpdateCalender } =
+        props;
     const [selectFeilds, setSelectFeilds] = useState("");
     const [courses, setCourses] = useState([]);
     const isMobile = useMediaQuery("(max-width:600px)");
@@ -37,7 +38,7 @@ export default function EventModal(props) {
     const data = [];
 
     const handleClose = () => setOpenModal(false);
-    const list = { Type: ["Reservation", "Event", "Equipment"] };
+    const list = { Type: ["Reservation", "Event"] };
     const [feildList, setFieldList] = useState([list]);
 
     async function fetchData() {
@@ -61,7 +62,7 @@ export default function EventModal(props) {
         if (name === "Type") {
             if (value === 1) {
                 const type1Block = { Block: ["E1", "E2", "E3", "E4", "E6"] };
-                const blockIndex = data.findIndex((item) =>
+                let blockIndex = data.findIndex((item) =>
                     item.hasOwnProperty("Block"),
                 );
                 if (blockIndex !== -1) {
@@ -84,24 +85,24 @@ export default function EventModal(props) {
                     data.push({ Course: courseList });
                 }
             } else if (value === 2) {
-                const type2Block = { block: ["B1", "B2", "B3"] };
-                const blockIndex = data.findIndex((item) =>
-                    item.hasOwnProperty("block"),
+                const Equipments = {
+                    Equipment: [
+                        "Microphones",
+                        "Speakers",
+                        "Laptops",
+                        "Projectors",
+                    ],
+                };
+                const equipmentIndex = data.findIndex((item) =>
+                    item.hasOwnProperty("Equipment"),
                 );
-                if (blockIndex !== -1) {
-                    data[blockIndex] = { ...data[blockIndex], ...type2Block };
+                if (equipmentIndex !== -1) {
+                    data[equipmentIndex] = {
+                        ...data[equipmentIndex],
+                        ...Equipments,
+                    };
                 } else {
-                    data.push(type2Block);
-                }
-            } else if (value === 3) {
-                const type3Block = { block: ["C1", "C2", "C3", "C4"] };
-                const blockIndex = data.findIndex((item) =>
-                    item.hasOwnProperty("block"),
-                );
-                if (blockIndex !== -1) {
-                    data[blockIndex] = { ...data[blockIndex], ...type3Block };
-                } else {
-                    data.push(type3Block);
+                    data.push(Equipments);
                 }
             }
         } else if (name === "Course") {
@@ -122,6 +123,21 @@ export default function EventModal(props) {
                 } else {
                     data.push({ Subject: subjects });
                 }
+            }
+        } else if (name === "Subject") {
+            const Equipments = {
+                Equipment: ["Microphones", "Speakers", "Laptops", "Projectors"],
+            };
+            const equipmentIndex = data.findIndex((item) =>
+                item.hasOwnProperty("Equipment"),
+            );
+            if (equipmentIndex !== -1) {
+                data[equipmentIndex] = {
+                    ...data[equipmentIndex],
+                    ...Equipments,
+                };
+            } else {
+                data.push(Equipments);
             }
         }
 
@@ -164,7 +180,7 @@ export default function EventModal(props) {
                         value={formik.values[formikName] || ""}
                         label={name}
                         name={name}
-                        required
+                        required={name === "Equipment" ? false : true}
                         onChange={(e) => {
                             formik.setFieldValue(formikName, e.target.value);
                             handleChange(e);
@@ -185,8 +201,7 @@ export default function EventModal(props) {
                                 {formik.errors[formikName]}
                             </FormHelperText>
                         )}
-                </FormControl>,
-                index === 0 ? <div className="col-md-6 col-12"></div> : "",
+                </FormControl>
             );
         });
 
@@ -219,13 +234,12 @@ export default function EventModal(props) {
             description: Yup.string().required("Description is required"),
         }),
 
-        onSubmit: (values) => {
-            handleSubmit(values);
+        onSubmit: (values, actions) => {
+            handleSubmit(values, actions);
         },
     });
 
-    const handleSubmit = async (values) => {
-     
+    const handleSubmit = async (values, { resetForm }) => {
         setSuccess("");
         const response = await apiCall("/schedules", "POST", values);
 
@@ -233,9 +247,17 @@ export default function EventModal(props) {
             setSuccess(response?.message);
 
             setTimeout(() => {
+                setUpdateCalender(true);
+                resetAllData();
+                resetForm();
                 setOpenModal(false);
             }, 2000);
         }
+    };
+
+    const resetAllData = () => {
+        setFieldList([list]);
+        setSuccess("");
     };
 
     useEffect(() => {
@@ -267,6 +289,7 @@ export default function EventModal(props) {
                     <Typography id="modal-title" variant="h6" sx={{ mb: 2 }}>
                         Create New Schedule
                     </Typography>
+                    {formik?.errors && console.log(formik.errors)}
                     <form onSubmit={formik.handleSubmit}>
                         <TextInput
                             label="Title"
@@ -293,7 +316,7 @@ export default function EventModal(props) {
                                         <DemoItem label="Start Date">
                                             <MobileDatePicker
                                                 defaultValue={dayjs(
-                                                    formik?.values?.startDate,
+                                                    formik?.values?.date,
                                                 )}
                                                 minDate={dayjs()}
                                                 sx={{
@@ -302,7 +325,7 @@ export default function EventModal(props) {
                                                 size="small"
                                                 onChange={(newValue) =>
                                                     formik.setFieldValue(
-                                                        "startDate",
+                                                        "date",
                                                         newValue,
                                                     )
                                                 }
@@ -404,6 +427,20 @@ export default function EventModal(props) {
                             </DemoContainer>
                         </LocalizationProvider>
                         {selectFeilds}
+                        {formik.values.type === 2 && (
+                            <TextInput
+                                id="location"
+                                label="Location"
+                                name="location"
+                                classes={" mt-3"}
+                                value={formik.values.location || ""}
+                                getValue={(value) =>
+                                    formik.setFieldValue("location", value)
+                                }
+                                placeholder=""
+                            />
+                        )}
+
                         <TextareaInput
                             id="description"
                             label="Description"

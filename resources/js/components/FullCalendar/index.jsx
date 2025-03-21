@@ -52,9 +52,10 @@ const FullCalendarView = ({
                                     color: "#fff",
                                 }}
                             >
-                                <strong>{eventInfo.event.title}</strong> <br />
+                                <strong>Title: {eventInfo.event.title}</strong> <br />
+                                <p>Type: {eventInfo.event.extendedProps.type}</p>
                                 <small>
-                                    {console.log('eventInfo.event.start => ', eventInfo.event.start)}
+                                    {/* {console.log('eventInfo.event.start => ', eventInfo.event.start, "---", eventInfo.event.end)} */}
                                         {eventInfo.event.start.toLocaleTimeString(
                                             [],
                                             {

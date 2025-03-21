@@ -44,7 +44,7 @@ class ScheduleController extends BaseController
     {
         $result=$this->service->saveSchedule($request);
         if(!$result){
-            return $this->sendError('Schedule Time Slot Already Booked', 500, ["error" => $request->all()]);
+            return $this->sendError('Schedule Time Slot Already Booked', 422, ["error" => "Schedule Time Slot Already Booked"]);
         }
         return  $this->sendSuccess($result,'Schedule Created successfully.');
     }
