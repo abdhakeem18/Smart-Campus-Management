@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Student\StudentController;
 
@@ -39,6 +40,8 @@ Route::post('/forget-password', [AuthController::class, 'forgetPassword']);
 Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
 Route::get('/courses', [CourseController::class,'index']);
 Route::get('/student/{id}/courses', [StudentController::class,'courses']);
+
+Route::get('/count', [DashboardController::class,'index']);
 
 
 Route::prefix('student')->middleware(['auth:sanctum','is_user'])->group(function () {
