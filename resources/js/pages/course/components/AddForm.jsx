@@ -47,24 +47,19 @@ const CourseAddForm = (props) => {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            name: "",
-            email: "",
-            password: "",
-            password_confirmation: "",
-            mobile: "",
-            role_id: "",
-            nic: "",
-            image: "",
+            course_name: "",
+            course_id: "",
+            start_date: "",
+            end_date: "",
+            description: "",
             is_active: 1,
         },
 
         validationSchema: Yup.object({
-            name: Yup.string().required("Required"),
-            email: Yup.string().required("Required"),
-            mobile: Yup.string().required("Required"),
-            nic: Yup.string().required("Required"),
-            password: Yup.string().required("Required"),
-            password_confirmation: Yup.string().required("Required"),
+            course_name: Yup.string().required("Required"),
+            course_id: Yup.string().required("Required"),
+            start_date: Yup.string().required("Required"),
+            end_date: Yup.string().required("Required"),
         }),
 
         onSubmit: (values) => {
@@ -81,6 +76,14 @@ const CourseAddForm = (props) => {
                     getValue={(value) => formik.setFieldValue("course_name", value)}
                     error={Boolean(formik.errors.course_name)}
                     errorMsg={formik.errors.course_name}
+                    classes={"mt-4"}
+                />
+                <TextInput
+                    label="Course ID"
+                    value={formik.values.course_id || ""}
+                    getValue={(value) => formik.setFieldValue("course_ID", value)}
+                    error={Boolean(formik.errors.course_ID)}
+                    errorMsg={formik.errors.course_ID}
                     classes={"mt-4"}
                 />
 

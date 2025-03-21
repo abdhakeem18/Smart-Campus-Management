@@ -1,76 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-
 import { Card, CardContent } from "@mui/material";
 
-const FullCalendarView = ({ setSelectedEvent, setOpen, setSelectedDate }) => {
+const FullCalendarView = ({
+    setSelectedEvent,
+    setOpenModal,
+    setSelectedDate,
+    events
+}) => {
+
     const handleEvent = (info) => {
         setSelectedEvent(info.event);
     };
 
     const handleDate = (info) => {
         setSelectedDate(info.dateStr);
-        setOpen(true);
+        setOpenModal(true);
     };
-
-    const [events, setEvents] = useState([
-        {
-            id: "1",
-            title: "Math Class",
-            start: "2025-03-15T10:00:00",
-            end: "2025-03-15T12:00:00",
-            color: "#4caf50",
-        },
-        {
-            id: "2",
-            title: "Physics Lab",
-            start: "2025-03-16T14:00:00",
-            end: "2025-03-16T16:00:00",
-            color: "#2196f3",
-        },
-        {
-            id: "3",
-            title: "Basketball Practice",
-            start: "2025-03-17T16:00:00",
-            end: "2025-03-17T18:00:00",
-            color: "#ff9800",
-        },
-        {
-            id: "4",
-            title: "Basketball Practice2",
-            start: "2025-03-17T16:00:00",
-            end: "2025-03-20T18:00:00",
-            color: "#ff9800",
-        },
-        {
-            id: "4",
-            title: "Basketball Practice2",
-            start: "2025-03-17T16:00:00",
-            end: "2025-03-17T18:00:00",
-            color: "#ff9800",
-        },
-        {
-            id: "4",
-            title: "Basketball Practice2",
-            start: "2025-03-17T16:00:00",
-            end: "2025-03-17T18:00:00",
-            color: "#ff9800",
-        },
-        {
-            id: "4",
-            title: "Basketball Practice2",
-            start: "2025-03-17T16:00:00",
-            end: "2025-03-17T18:00:00",
-            color: "#ff9800",
-        },
-    ]);
 
     return (
         <>
             <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
                 <CardContent className="schedule-calender">
+                    
                     <FullCalendar
                         plugins={[dayGridPlugin, interactionPlugin]}
                         initialView="dayGridMonth"
@@ -100,13 +54,14 @@ const FullCalendarView = ({ setSelectedEvent, setOpen, setSelectedDate }) => {
                             >
                                 <strong>{eventInfo.event.title}</strong> <br />
                                 <small>
-                                    {eventInfo.event.start.toLocaleTimeString(
-                                        [],
-                                        {
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                        },
-                                    )}
+                                    {console.log('eventInfo.event.start => ', eventInfo.event.start)}
+                                        {eventInfo.event.start.toLocaleTimeString(
+                                            [],
+                                            {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            },
+                                        )}
                                 </small>
                             </div>
                         )}
