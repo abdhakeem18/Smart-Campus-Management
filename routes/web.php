@@ -32,18 +32,28 @@ Route::get('/dashboard', function () {
 
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::middleware(['is_user'])->group(function () {
+    Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
+});
 
-
-Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
+Route::middleware(['is_staff'])->group(function () {
+    Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
+});
 
 Route::middleware(['is_admin'])->group(function () {
+    Route::get('/', function () {
+        return view('index');
+    });
+    
+    Route::get('/dashboard', function () {
+        return view('index');
+    });
+    Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.view');
     Route::get('/events', [EventController::class, 'index'])->name('event.view');
     Route::get('/users', [UserController::class, 'view'])->name('users.view');
+    Route::get('/courses', [CourseController::class, 'view'])->name('course.view');
 });
-
-Route::get('/courses', [CourseController::class, 'view'])->name('course.view');
-
 
 
 Route::get('/logout', function () {
@@ -53,7 +63,6 @@ Route::get('/logout', function () {
     // Optionally invalidate the session
     request()->session()->invalidate();
     request()->session()->regenerateToken();
-
 })->name('logout');
 
 require __DIR__ . '/auth.php';

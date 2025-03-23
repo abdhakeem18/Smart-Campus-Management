@@ -71,6 +71,7 @@ const ForgetPassword = () => {
                     </>
                 ) : (
                     <>
+                    <p style={{textAlign: "center"}}>You can get the reset password link from this page.</p>
                         <form onSubmit={formik.handleSubmit}>
                             <TextInput
                                 label="Email"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import AdminLayout from "@/layouts/Admin";
+import PageLayout from "@/layouts/Page";
 import FullCalendarView from "@/components/FullCalendar";
 import EventDialog from "./components/EventDialog";
 import EventModal from "./components/EventModal";
@@ -17,7 +17,7 @@ export default function SchedulePage() {
     const [events, setEvents] = useState([]);
     const [updateCalendar, setUpdateCalender] = useState(true);
 
-    async function getEvents() {
+    async function fetchEvents() {
         let response = await apiCall("/schedules");
         if (response?.success) {
             let eventsList = [];
@@ -40,13 +40,13 @@ export default function SchedulePage() {
 
     useEffect(() => {
         if(updateCalendar && role) {
-            getEvents();
+            fetchEvents();
             setUpdateCalender(false);
         }
     }, [updateCalendar, role]);
 
     return (
-        <AdminLayout>
+        <PageLayout title={"Schedule"}>
             <FullCalendarView
                 setSelectedEvent={setSelectedEvent}
                 setOpenModal={setOpenModal}
@@ -66,6 +66,6 @@ export default function SchedulePage() {
                 role={role}
                 setUpdateCalender={setUpdateCalender}
             />
-        </AdminLayout>
+        </PageLayout>
     );
 }

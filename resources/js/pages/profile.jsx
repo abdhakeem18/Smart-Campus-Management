@@ -2,12 +2,12 @@ import * as React from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
-import AdminLayout from "@/layouts/Admin";
+import PageLayout from "@/layouts/Page";
 import MyProfile from "./components/MyProfile";
 
 export default function JoyOrderDashboardTemplate() {
     return (
-        <AdminLayout>
+        <PageLayout>
             <CssVarsProvider disableTransitionOnChange>
                 <CssBaseline />
                 <Box sx={{ display: "flex", minHeight: "100dvh" }}>
@@ -35,6 +35,6 @@ export default function JoyOrderDashboardTemplate() {
                     </Box>
                 </Box>
             </CssVarsProvider>
-        </AdminLayout>
+        </PageLayout>
     );
 }

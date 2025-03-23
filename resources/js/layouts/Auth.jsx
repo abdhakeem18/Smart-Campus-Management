@@ -15,7 +15,11 @@ const Auth = (props) => {
     const { content, type, rightSection = true } = props;
 
     useEffect(() => {
-        if(contextData) window.localStorage.setItem("user-data", JSON.stringify(contextData));
+        if (contextData)
+            window.localStorage.setItem(
+                "user-data",
+                JSON.stringify(contextData),
+            );
     }, [contextData]);
 
     return (
@@ -43,7 +47,7 @@ const Auth = (props) => {
                                 fontWeight="bold"
                                 gutterBottom
                             >
-                                We are The Lotus Team
+                                SDP PROJECT
                             </Typography>
                         </Box>
 
@@ -72,12 +76,16 @@ const Auth = (props) => {
                                     fontWeight="bold"
                                     gutterBottom
                                 >
-                                    We are more than just a company
+                                    Welcome to the Smart Campus Management
+                                    System
                                 </Typography>
                                 <Typography variant="body2">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua.
+                                    Our system is designed to enhance campus
+                                    operations, offering streamlined event
+                                    management, equipment booking, and real-time
+                                    scheduling for students and staff. We aim to
+                                    provide an intuitive and efficient platform
+                                    for managing daily campus activities.
                                 </Typography>
                             </Box>
                         </Card>

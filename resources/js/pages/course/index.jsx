@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AdminLayout from "@/layouts/Admin";
+import PageLayout from "@/layouts/Page";
 import {
     Button,
     Paper,
@@ -53,13 +53,14 @@ const Courses = () => {
             let courseList = [];
             (response?.data).map((course) => {
                 courseList.push({
+                    id: course.id,
                     course_code: course?.course_code,
                     course_name: course?.course_name,
                     start_date: course?.start_date,
                     end_date: course?.end_date,
+                    description : course?.description
                 });
             });
-            console.log(courseList);
 
             setCourses(courseList);
         }
@@ -78,19 +79,13 @@ const Courses = () => {
     }, [updateCourseTable]);
 
     async function handleAction(action, selectedRow) {
-        if (action === "Edit" || action === "View") {
-            const response = await apiCall(`/users/${selectedRow.id}`);
-
-            if (response?.success) {
-                if (action === "Edit")
-                    showModal("Update New User", response?.data, "update-user");
-                else showModal("User Details", response?.data, "user-details");
-            }
-        }
+        if (action === "Edit") 
+            showModal("Update Course", selectedRow, "update-course");
+        
     }
 
     return (
-        <AdminLayout>
+        <PageLayout title={"Courses"}>
             <Paper
                 className="user-table border-4"
                 sx={{ width: "100%", overflow: "hidden", boxShadow: 0 }}
@@ -122,22 +117,22 @@ const Courses = () => {
                     <CourseAddForm
                         data={modalOptions.data}
                         closeModal={resetModalOptions}
-                        btnLabel={modalOptions.data?.id ? "Update" : "Add"}
+                        btnLabel={"Add"}
                         updateCourseTable={setUpdateCourseTable}
                     />
                 ) : null}
 
-                {/* {modalOptions.formName === "update-user" ? (
-                    <UserUpdateForm
+                {modalOptions.formName === "update-course" ? (
+                    <CourseEditForm
                         data={modalOptions.data}
                         closeModal={resetModalOptions}
-                        btnLabel={modalOptions.data?.id ? "Update" : "Add"}
+                        btnLabel={"Update"}
                         updateCourseTable={setUpdateCourseTable}
                     />
-                ) : null} */}
+                ) : null}
 
             </ModalComponent>
-        </AdminLayout>
+        </PageLayout>
     );
 };
 

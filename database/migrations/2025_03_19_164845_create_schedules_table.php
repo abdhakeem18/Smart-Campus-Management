@@ -19,7 +19,7 @@ return new class extends Migration
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
             $table->integer('status')->default(0);
-            $table->integer('type')->default(0);
+            $table->integer('type')->default(0); //Event or Reservation
             $table->string('location')->nullable();
             $table->string('equipment_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();

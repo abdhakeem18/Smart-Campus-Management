@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
     styled,
     Toolbar,
@@ -21,26 +21,32 @@ import {
     Divider,
 } from "@mui/material";
 
+import AppointmentNotifications from "./Notification";
+import AppContext from "@/config/AppContext";
+
 import {
     Menu as MenuIcon,
     Search as SearchIcon,
     Person,
     Logout,
 } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import API from "@/config/Api";
 
-const Navbar = ({ setOpen, open, scrolled }) => {
+const Navbar = ({ setOpen, open, scrolled, title }) => {
+    const [contextData, setContextData] = useContext(AppContext);
     const [searchQuery, setSearchQuery] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
+    const { apiCall, loading, error } = API("web");
+    const navigate = useNavigate();
     const [state, setState] = useState({
         right: false,
     });
     const anchor = "right";
     const theme = useTheme();
 
-    const drawerWidth = 280;
+    const drawerWidth = 260;
 
-    const title = "dashbord";
     const AppBar = styled(MuiAppBar, {
         shouldForwardProp: (prop) => prop !== "open",
     })(({ theme }) => ({
@@ -71,6 +77,16 @@ const Navbar = ({ setOpen, open, scrolled }) => {
 
     const handleDrawerOpen = () => {
         setOpen(true);
+    };
+
+    const handleLogout = async () => {
+        const response = await apiCall("/logout");
+
+        localStorage.removeItem("user-data");
+
+        setTimeout(() => {
+            navigate("/login");
+        }, 2000);
     };
 
     const handleSearchChange = (e) => {
@@ -212,6 +228,7 @@ const Navbar = ({ setOpen, open, scrolled }) => {
 
                 {/* Profile Dropdown */}
                 <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <AppointmentNotifications />
                     <IconButton
                         onClick={toggleDrawer(anchor, true)}
                         color="inherit"
@@ -271,7 +288,10 @@ const Navbar = ({ setOpen, open, scrolled }) => {
                                                     component="div"
                                                     variant="h5"
                                                 >
-                                                    Live From Space
+                                                    {
+                                                        contextData?.userDetails
+                                                            ?.name
+                                                    }
                                                 </Typography>
                                                 <Typography
                                                     variant="subtitle1"
@@ -280,20 +300,14 @@ const Navbar = ({ setOpen, open, scrolled }) => {
                                                         color: "text.secondary",
                                                     }}
                                                 >
-                                                    Mac Miller
+                                                    {
+                                                        contextData?.userDetails
+                                                            ?.email
+                                                    }
                                                 </Typography>
                                             </CardContent>
                                         </Box>
                                     </Card>
-                                </ListItem>
-
-                                <ListItem key={"profile"} disablePadding>
-                                    <ListItemButton>
-                                        <ListItemIcon>
-                                            <Person />
-                                        </ListItemIcon>
-                                        <ListItemText primary={"profile"} />
-                                    </ListItemButton>
                                 </ListItem>
 
                                 <ListItem>
@@ -301,7 +315,8 @@ const Navbar = ({ setOpen, open, scrolled }) => {
                                         variant="contained"
                                         color="error"
                                         fullWidth
-                                        sx={{marginTop: "20px"}}
+                                        sx={{ marginTop: "20px" }}
+                                        onClick={handleLogout}
                                     >
                                         Logout
                                     </Button>

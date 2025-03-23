@@ -1,4 +1,4 @@
-$theme: #fb6340;
+$theme: #041c1c;
 $theme2: #ff212e;
 $yellow: #ffff4e;
 $green: green;
@@ -156,6 +156,7 @@ input:-webkit-autofill {
 }
 
 .cu-modal-form {
-    height: 100%;
+    height: auto;
+    max-height: 95%;
     overflow-y: scroll;
 }

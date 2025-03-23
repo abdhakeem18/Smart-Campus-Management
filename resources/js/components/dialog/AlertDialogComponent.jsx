@@ -5,7 +5,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import TextInput from "@/components/inputs/TextInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -45,8 +44,6 @@ export default function AlertDialog(props) {
                 onClose={closeDialog}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                fullScreen={type === "Schedule" ? true : false}
-                // in={props.open}
             >
                 <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
                 <DialogContent>

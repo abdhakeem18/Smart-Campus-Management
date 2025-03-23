@@ -14,7 +14,7 @@ import {
     Stack,
     Alert
 } from "@mui/material";
-import { FileDownload, School, AttachFile } from "@mui/icons-material";
+import { FileDownload, School, AttachFile, RemoveRedEye } from "@mui/icons-material";
 import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 import API from "@/config/api";
 import { errorHandle } from "@/components/common/helper";
@@ -45,7 +45,7 @@ function ProfileView({ data, updateUserTable, closeModal }) {
             </Typography>
         );
     }
-    const profileImagePath = `/storage/images/student`;
+    const storePath = `/storage/images/student`;
 
     return (
         <Box>
@@ -63,7 +63,7 @@ function ProfileView({ data, updateUserTable, closeModal }) {
                     <Grid item sm={6}>
                         <Stack alignItems="center">
                             <Avatar
-                                src={data?.image}
+                                src={`${storePath}/profile/${data?.image}`}
                                 alt="Preview"
                                 sx={{
                                     width: 150,
@@ -143,7 +143,7 @@ function ProfileView({ data, updateUserTable, closeModal }) {
                                     <Button
                                         variant="outlined"
                                         fullWidth
-                                        href={`${profileImagePath}/nic/${
+                                        href={`${storePath}/nic/${
                                             (data?.students).length > 0 &&
                                             data?.students[0]["nic_document"]
                                         }`}
@@ -153,7 +153,7 @@ function ProfileView({ data, updateUserTable, closeModal }) {
                                             alignItems: "center",
                                         }}
                                     >
-                                        <FileDownload sx={{ marginRight: 1 }} />
+                                        <RemoveRedEye sx={{ marginRight: 1 }} />
                                         {(data?.students).length > 0 &&
                                             data?.students[0]["nic_document"]}
                                     </Button>
@@ -179,7 +179,7 @@ function ProfileView({ data, updateUserTable, closeModal }) {
                                     <Button
                                         variant="outlined"
                                         fullWidth
-                                        href={`${profileImagePath}/documnet/${
+                                        href={`${storePath}/documnet/${
                                             (data?.students).length > 0 &&
                                             data?.students[0]["document"]
                                         }`}
@@ -189,7 +189,7 @@ function ProfileView({ data, updateUserTable, closeModal }) {
                                             alignItems: "center",
                                         }}
                                     >
-                                        <FileDownload sx={{ marginRight: 1 }} />
+                                        <RemoveRedEye sx={{ marginRight: 1 }} />
                                         {(data?.students).length > 0 &&
                                             data?.students[0]["document"]}
                                     </Button>
@@ -210,7 +210,7 @@ function ProfileView({ data, updateUserTable, closeModal }) {
                         {data?.students[0].courses.map((course, index) => (
                             <>
                                 <ListItem
-                                    key={course.course_code}
+                                    key={index}
                                     sx={{
                                         display: "flex",
                                         alignItems: "center",

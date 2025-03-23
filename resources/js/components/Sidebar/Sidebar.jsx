@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import {
     styled,
@@ -22,18 +22,54 @@ import {
     AssignmentTurnedIn,
     BarChart,
     ChevronLeft,
+    PushPin,
+    Subject,
 } from "@mui/icons-material";
+import AppContext from "@/config/AppContext";
 
 export default function Sidebar({ setOpen, open, scrolled }) {
+    const [contextData, setContextData] = useContext(AppContext);
     const drawerWidth = 240;
 
     const menuList = [
-        { name: "Dashboard", icon: <Dashboard />, link: "/dashboard" },
-        { name: "Events", icon: <Event />, link: "/events" },
-        { name: "Schedules", icon: <Schedule />, link: "/schedule" },
-        { name: "Users", icon: <People />, link: "/users" },
-        { name: "Courses", icon: <School />, link: "/courses" },
-        { name: "Reports & Analytics", icon: <BarChart />, link: "/reports" },
+        {
+            name: "Dashboard",
+            icon: <Dashboard />,
+            link: "/dashboard",
+            permission: [1, 2],
+        },
+        { name: "Events", icon: <Event />, link: "/events", permission: [1] },
+        {
+            name: "Reservations",
+            icon: <PushPin />,
+            link: "/Reservations",
+            permission: [1],
+        },
+        {
+            name: "Schedules",
+            icon: <Schedule />,
+            link: "/schedule",
+            permission: [1, 2, 3],
+        },
+        { name: "Users", icon: <People />, link: "/users", permission: [1] },
+        {
+            name: "Courses",
+            icon: <School />,
+            link: "/courses",
+            permission: [1],
+        },
+        {
+            name: "subjects",
+            icon: <Subject />,
+            link: "/Subjects",
+            permission: [1],
+        },
+        {
+            name: "Reports & Analytics",
+            icon: <BarChart />,
+            link: "/reports",
+            permission: [1],
+        },
     ];
 
     const openedMixin = (theme) => ({
@@ -114,61 +150,64 @@ export default function Sidebar({ setOpen, open, scrolled }) {
             </DrawerHeader>
             <Divider />
             <List>
-                {menuList.map((menuItem, index) => (
-                    <ListItem
-                        key={index}
-                        disablePadding
-                        sx={{ display: "block" }}
-                    >
-                            <ListItemButton
-                                component={Link}
-                                to={menuItem.link}
-                                sx={[
-                                    {
-                                        minHeight: 48,
-                                        px: 2.5,
-                                    },
-                                    open
-                                        ? {
-                                              justifyContent: "initial",
-                                          }
-                                        : {
-                                              justifyContent: "center",
-                                          },
-                                ]}
+                {menuList.map(
+                    (menuItem, index) =>
+                        (menuItem.permission).includes(contextData?.userDetails?.role_id) && (
+                            <ListItem
+                                key={index}
+                                disablePadding
+                                sx={{ display: "block" }}
                             >
-                                <ListItemIcon
+                                <ListItemButton
+                                    component={Link}
+                                    to={menuItem.link}
                                     sx={[
                                         {
-                                            minWidth: 0,
-                                            justifyContent: "center",
+                                            minHeight: 48,
+                                            px: 2.5,
                                         },
                                         open
                                             ? {
-                                                  mr: 3,
+                                                  justifyContent: "initial",
                                               }
                                             : {
-                                                  mr: "auto",
+                                                  justifyContent: "center",
                                               },
                                     ]}
                                 >
-                                    {menuItem.icon}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={menuItem.name}
-                                    sx={[
-                                        open
-                                            ? {
-                                                  opacity: 1,
-                                              }
-                                            : {
-                                                  opacity: 0,
-                                              },
-                                    ]}
-                                />
-                            </ListItemButton>
-                    </ListItem>
-                ))}
+                                    <ListItemIcon
+                                        sx={[
+                                            {
+                                                minWidth: 0,
+                                                justifyContent: "center",
+                                            },
+                                            open
+                                                ? {
+                                                      mr: 3,
+                                                  }
+                                                : {
+                                                      mr: "auto",
+                                                  },
+                                        ]}
+                                    >
+                                        {menuItem.icon}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={menuItem.name}
+                                        sx={[
+                                            open
+                                                ? {
+                                                      opacity: 1,
+                                                  }
+                                                : {
+                                                      opacity: 0,
+                                                  },
+                                        ]}
+                                    />
+                                </ListItemButton>
+                            </ListItem>
+                        ),
+                )}
             </List>
         </Drawer>
     );

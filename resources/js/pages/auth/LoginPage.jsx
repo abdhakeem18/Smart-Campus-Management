@@ -21,11 +21,9 @@ const Login = () => {
     async function loginSubmit(values) {
         try {
             setSuccess("");
-            // const apiv = API("auth");
             const response = await apiCall("/login", "POST", values);
 
             if (response?.success) {
-                const courses = await apiCall("/courses", "GET");
 
                 setSuccess(response?.message);
 
@@ -33,18 +31,16 @@ const Login = () => {
                     setContextData((prevState) => ({
                         ...prevState,
                         userDetails: response.data,
-                        courses: courses.data,
                         step: !response?.data?.email_verified_at
                             ? "verify"
-                            : !response?.data?.students &&
-                                response?.data?.role_id === 3
+                            : (response?.data?.students).length === 0 && response?.data?.role_id === 3
                               ? "register"
                               : "next",
                     }));
                 }, 2000);
             }
         } catch (error) {
-            console.log(apiError);
+            console.log(error);
         }
     }
 

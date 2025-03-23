@@ -268,6 +268,7 @@ export default function CommonTable({
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleActionClose}
+                key={"action-part"}
             >
                 <MenuItem onClick={() => handleAction("Edit", selectedRow)}>
                     Edit
@@ -276,7 +277,7 @@ export default function CommonTable({
                     Delete
                 </MenuItem>
                 {tableType === "user"
-                    ? extMenuItems.map((value) => {
+                    ? extMenuItems.map((value, index) => {
                           return (
                               <MenuItem
                                   key={value}

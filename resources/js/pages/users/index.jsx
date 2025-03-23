@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AdminLayout from "@/layouts/Admin";
+import PageLayout from "@/layouts/Page";
 import {
     Button,
     Paper,
@@ -98,7 +98,7 @@ const Users = () => {
     }
 
     return (
-        <AdminLayout>
+        <PageLayout title={"Users"}>
             <Paper
                 className="user-table border-4"
                 sx={{ width: "100%", overflow: "hidden", boxShadow: 0 }}
@@ -154,7 +154,7 @@ const Users = () => {
                     />
                 ) : null}
             </ModalComponent>
-        </AdminLayout>
+        </PageLayout>
     );
 };
 
