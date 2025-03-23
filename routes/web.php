@@ -23,6 +23,10 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('/', function () {
+    return view('index');
+});
+
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware(['is_user'])->group(function () {
@@ -31,10 +35,6 @@ Route::middleware(['is_user'])->group(function () {
 
 Route::middleware(['is_staff'])->group(function () {
 
-    Route::get('/', function () {
-        return view('index');
-    });
-
     Route::get('/dashboard', function () {
         return view('index');
     });
@@ -42,9 +42,6 @@ Route::middleware(['is_staff'])->group(function () {
 });
 
 Route::middleware(['is_admin'])->group(function () {
-    Route::get('/', function () {
-        return view('index');
-    });
 
     Route::get('/dashboard', function () {
         return view('index');

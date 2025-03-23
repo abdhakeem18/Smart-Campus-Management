@@ -65,7 +65,6 @@ const CourseAddForm = (props) => {
     return (
         <Box ref={modalRef}>
             <form onSubmit={formik.handleSubmit} className="course-form">
-                {console.log(formik?.errors)}
                 <TextInput
                     label="Course Name"
                     value={formik.values.course_name || ""}

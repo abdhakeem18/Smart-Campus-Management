@@ -31,10 +31,6 @@ const EventDialog = ({ selectedEvent, setSelectedEvent }) => {
                     </Typography>
                 )}
 
-                {selectedEvent &&
-                    console.log(" => ", selectedEvent.end)}
-                {selectedEvent &&
-                    console.log("Type of Start:", typeof selectedEvent.end)}
             </DialogContent>
         </Dialog>
     );

@@ -13,7 +13,7 @@ import ResetPassword from "@/pages/auth/ResetPassword";
 import CourseRegister from "@/pages/auth/CourseRegister";
 import Courses from "@/pages/course";
 import Subjects from "@/pages/subject";
-import '../css/app.scss';
+import "../css/app.scss";
 
 import {
     BrowserRouter as Router,
@@ -63,7 +63,17 @@ function App() {
                         <Routes>
                             {/* Page collection */}
                             <>
-                                <Route path="/" element={<Dashboard />} />
+                                <Route
+                                    path="/"
+                                    element={
+                                        contextData?.userDetails?.role_id ===
+                                        3 ? (
+                                            <SchedulePage />
+                                        ) : (
+                                            <Dashboard />
+                                        )
+                                    }
+                                />
                                 <Route
                                     path="/dashboard"
                                     element={<Dashboard />}
@@ -76,9 +86,11 @@ function App() {
 
                                 <Route path="/courses" element={<Courses />} />
 
-                                <Route path="/subjects" element={<Subjects />} />
+                                <Route
+                                    path="/subjects"
+                                    element={<Subjects />}
+                                />
                             </>
-
 
                             <Route path="/login" element={<Login />} />
                             <Route path="/register" element={<Register />} />

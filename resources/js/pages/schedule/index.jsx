@@ -21,7 +21,6 @@ export default function SchedulePage() {
         let response = await apiCall("/schedules");
         if (response?.success) {
             let eventsList = [];
-            console.log(response.data);
 
             (response?.data).map((value, index) => {
                 eventsList.push({
