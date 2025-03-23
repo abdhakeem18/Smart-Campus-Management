@@ -20,7 +20,7 @@ class IsUser
         }
         return response()->json([
             'success' => false,
-            'message' => 'You Dont have a Permission',
+            'message' => 'You Dont have a Permission student',
             'data' => null,
         ], 401); 
 

@@ -1,9 +1,19 @@
-import React, { useState } from "react";
-import { Badge, IconButton, Popover, Typography, Box } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import {
+    Badge,
+    IconButton,
+    Popover,
+    Typography,
+    Box,
+    Alert,
+} from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AlertDialog from "../dialog/AlertDialogComponent";
+import API from "@/config/Api";
+import AppContext from "@/config/AppContext";
 
 const AppointmentNotifications = () => {
+    const [contextData, setContextData] = useContext(AppContext);
     const [alertOptions, setAlertOptions] = useState({
         open: false,
         data: {},
@@ -14,7 +24,8 @@ const AppointmentNotifications = () => {
     ]);
 
     const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedAppointment, setSelectedAppointment] = useState(null);
+    const role = contextData?.roles[contextData?.userDetails?.role_id];
+    const { apiCall, error } = API(role);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -37,6 +48,18 @@ const AppointmentNotifications = () => {
     const unreadAppointments = appointments.filter(
         (appointment) => !appointment.isRead,
     );
+
+    const fetchNotifications = async () => {
+        const response = await apiCall("/messages");
+
+        // console.log(response);
+    };
+
+    useEffect(() => {
+        if(role) {
+            fetchNotifications();
+        }
+    }, [role]);
 
     return (
         <div>
@@ -99,7 +122,9 @@ const AppointmentNotifications = () => {
                 <AlertDialog
                     title={"Announcement"}
                     open={alertOptions.open}
-                    desc={"Scholarship Applications Now Open<br>We are pleased to announce that applications for the 2025 Academic Scholarships are now open! This is a fantastic opportunity for eligible students to receive financial assistance for their studies."}
+                    desc={
+                        "Scholarship Applications Now Open<br>We are pleased to announce that applications for the 2025 Academic Scholarships are now open! This is a fantastic opportunity for eligible students to receive financial assistance for their studies."
+                    }
                     data={alertOptions.data}
                     type={`${alertOptions.type}`}
                     closeDialog={() =>

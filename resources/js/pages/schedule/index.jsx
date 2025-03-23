@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import AdminLayout from "@/layouts/Admin";
+import PageLayout from "@/layouts/Page";
 import FullCalendarView from "@/components/FullCalendar";
 import EventDialog from "./components/EventDialog";
 import EventModal from "./components/EventModal";
@@ -46,7 +46,7 @@ export default function SchedulePage() {
     }, [updateCalendar, role]);
 
     return (
-        <AdminLayout title={"Schedule"}>
+        <PageLayout title={"Schedule"}>
             <FullCalendarView
                 setSelectedEvent={setSelectedEvent}
                 setOpenModal={setOpenModal}
@@ -66,6 +66,6 @@ export default function SchedulePage() {
                 role={role}
                 setUpdateCalender={setUpdateCalender}
             />
-        </AdminLayout>
+        </PageLayout>
     );
 }

@@ -30,7 +30,7 @@ import {
     Person,
     Logout,
 } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import API from "@/config/Api";
 
 const Navbar = ({ setOpen, open, scrolled, title }) => {
@@ -38,6 +38,7 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
     const { apiCall, loading, error } = API("web");
+    const navigate = useNavigate();
     const [state, setState] = useState({
         right: false,
     });
@@ -79,18 +80,13 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
     };
 
     const handleLogout = async () => {
-        setSuccess("");
         const response = await apiCall("/logout");
-        
-        localStorage.removeItem("user-data");
-        if (response?.success) {
-            setSuccess(response?.message);
 
-            setTimeout(() => {
-                
-                navigator("/login");
-            }, 2000);
-        }
+        localStorage.removeItem("user-data");
+
+        setTimeout(() => {
+            navigate("/login");
+        }, 2000);
     };
 
     const handleSearchChange = (e) => {

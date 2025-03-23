@@ -1,7 +1,7 @@
 // Content.jsx
 import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
-import AdminLayout from "@/layouts/Admin";
+import PageLayout from "@/layouts/Page";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import RegularCard from "@/components/cards/regulerCard";
@@ -37,7 +37,7 @@ const Dashboard = () => {
     });
 
     return (
-        <AdminLayout dashboard={true} title={"Dashboard"}>
+        <PageLayout dashboard={true} title={"Dashboard"}>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
                 <div className="min-height-300 bg-primary-cu position-absolute w-100 position-top-left"></div>
@@ -59,7 +59,7 @@ const Dashboard = () => {
                     </Typography>
                 </Typography>
             </Box>
-        </AdminLayout>
+        </PageLayout>
     );
 };
 

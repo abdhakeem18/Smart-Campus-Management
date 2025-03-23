@@ -76,8 +76,6 @@ function App() {
                                 <Route path="/courses" element={<Courses />} />
                             </>
 
-                            {/* <Route path="/profile" element={<Profile />} /> */}
-                            {/* Auth Collection */}
 
                             <Route path="/login" element={<Login />} />
                             <Route path="/register" element={<Register />} />

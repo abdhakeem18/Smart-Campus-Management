@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbars/AdminNavbar";
 import { Box, Container } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
-const AdminLayout = ({ children, dashboard = false, title }) => {
+const PageLayout = ({ children, dashboard = false, title }) => {
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -64,4 +64,4 @@ const AdminLayout = ({ children, dashboard = false, title }) => {
     );
 };
 
-export default AdminLayout;
+export default PageLayout;

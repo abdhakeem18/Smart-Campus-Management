@@ -24,7 +24,7 @@ const CourseAddForm = (props) => {
     async function handleSubmit(values) {
         try {
             setSuccess("");
-            const response = await apiCall("/courses", "PUT", values);
+            const response = await apiCall(`/courses/${data?.id}`, "PUT", values);
 
             if (response?.success) {
                 setSuccess(response?.message);
@@ -37,16 +37,16 @@ const CourseAddForm = (props) => {
             console.log(error);
         }
     }
-
+    
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            course_name: "",
-            course_code: "",
-            start_date: "",
+            course_name: data?.course_name,
+            course_code: data?.course_code,
+            start_date: data?.start_date,
             credits: 100,
-            end_date: "",
-            description: "",
+            end_date: data?.end_date,
+            description: data?.description,
             status: 1,
         },
 

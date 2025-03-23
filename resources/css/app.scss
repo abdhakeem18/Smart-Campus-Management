@@ -156,6 +156,7 @@ input:-webkit-autofill {
 }
 
 .cu-modal-form {
-    height: 100%;
+    height: auto;
+    max-height: 95%;
     overflow-y: scroll;
 }
