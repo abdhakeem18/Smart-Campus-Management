@@ -1,23 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Message;
 use App\Http\Requests\StoreMessageRequest;
 use App\Http\Requests\UpdateMessageRequest;
-
+use App\Repository\MessageRepository;
+use App\Services\MessageService;
 
 class MessageController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
+    protected $service;
+    protected $repository;
+
+    public function __construct(MessageService $service,MessageRepository $repository)
+    {
+        $this->repository = $repository;
+        $this->service = $service;
+    }
+
     public function index()
     {
-        $messages = Message::all();
-      
-        $this->sendSuccess($messages, 'Successfully Fetched Records.');
+       
+        $result = $this->repository->getAll()->load('schedule.course','schedule.user','schedule.subject','schedule.block','message_status');
+        return $this->sendSuccess($result, 'Successfully Fetched Rocords.');
+        
     }
 
     /**
@@ -57,7 +68,7 @@ class MessageController extends BaseController
      */
     public function update(UpdateMessageRequest $request, Message $message)
     {
-       $this-
+        //
     }
 
     /**

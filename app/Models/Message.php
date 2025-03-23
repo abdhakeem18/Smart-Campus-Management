@@ -12,4 +12,11 @@ class Message extends Model
         'schedule_id',
         'message'
     ];
+
+    public function message_status(){
+        return $this->hasOne(MessageStatus::class, 'meggase_id','id')->where('user_id', auth()->id());
+    }
+    public function schedule(){
+        return $this->hasOne(Schedule::class, 'id','schedule_id');
+    }
 }
