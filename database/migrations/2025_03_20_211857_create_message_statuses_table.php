@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('message_statuses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('meggase_id');
+            $table->unsignedBigInteger('message_id');
             $table->integer('status')->default(0);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('meggase_id')->references('id')->on('messages')->onDelete('cascade');
+            $table->foreign('message_id')->references('id')->on('messages')->onDelete('cascade');
             $table->timestamps();
         });
     }

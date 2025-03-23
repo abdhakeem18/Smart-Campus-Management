@@ -66,9 +66,11 @@ class MessageController extends BaseController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMessageRequest $request, Message $message)
+    public function update(UpdateMessageRequest $request, $id)
     {
-        //
+        $result = $this->repository->update($id);
+        return $this->sendSuccess($result, 'Successfully Updted Rocords.');
+
     }
 
     /**
