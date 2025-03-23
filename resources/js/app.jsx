@@ -12,6 +12,7 @@ import ForgetPassword from "@/pages/auth/ForgetPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import CourseRegister from "@/pages/auth/CourseRegister";
 import Courses from "@/pages/course";
+import Subjects from "@/pages/subject";
 import '../css/app.scss';
 
 import {
@@ -74,6 +75,8 @@ function App() {
                                 <Route path="/users" element={<Users />} />
 
                                 <Route path="/courses" element={<Courses />} />
+
+                                <Route path="/subjects" element={<Subjects />} />
                             </>
 
 

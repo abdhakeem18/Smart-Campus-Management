@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ResourceController;
@@ -22,14 +23,6 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-
-Route::get('/dashboard', function () {
-    return view('index');
-});
-
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware(['is_user'])->group(function () {
@@ -37,6 +30,14 @@ Route::middleware(['is_user'])->group(function () {
 });
 
 Route::middleware(['is_staff'])->group(function () {
+
+    Route::get('/', function () {
+        return view('index');
+    });
+
+    Route::get('/dashboard', function () {
+        return view('index');
+    });
     Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
 });
 
@@ -44,7 +45,7 @@ Route::middleware(['is_admin'])->group(function () {
     Route::get('/', function () {
         return view('index');
     });
-    
+
     Route::get('/dashboard', function () {
         return view('index');
     });
@@ -53,6 +54,7 @@ Route::middleware(['is_admin'])->group(function () {
     Route::get('/events', [EventController::class, 'index'])->name('event.view');
     Route::get('/users', [UserController::class, 'view'])->name('users.view');
     Route::get('/courses', [CourseController::class, 'view'])->name('course.view');
+    Route::get('/subjects', [SubjectController::class, 'view'])->name('subject.view');
 });
 
 

@@ -210,7 +210,7 @@ function ProfileView({ data, updateUserTable, closeModal }) {
                         {data?.students[0].courses.map((course, index) => (
                             <>
                                 <ListItem
-                                    key={index}
+                                    key={"course" + index}
                                     sx={{
                                         display: "flex",
                                         alignItems: "center",
