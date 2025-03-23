@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Student\MessageController as StudentMessageController;
 use App\Http\Controllers\Student\StudentController;
 
 /*
@@ -48,7 +49,8 @@ Route::prefix('student')->middleware(['auth:sanctum','is_user'])->group(function
     Route::post('/verify', [AuthController::class, 'verify']);
     Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
     Route::post('/course-registration', [StudentController::class, 'store']);
-    Route::resource('messages', MessageController::class);
+    Route::get('messages', [StudentMessageController::class,'index']);
+    Route::put('message/status/{id}', [StudentMessageController::class,'update']);
     Route::get('schedules', [ScheduleController::class, 'index']);
     Route::get('courses', [CourseController::class, 'index']);
 
