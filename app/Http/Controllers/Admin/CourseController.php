@@ -81,6 +81,10 @@ class CourseController extends BaseController
      */
     public function destroy(Course $course)
     {
-        //
+        if(!$course){
+            return $this->sendError('Course not found', 404, ["error" => "Course not found"]);  
+        }
+        $course->delete();
+        return  $this->sendSuccess([$course],'Course deleted successfully.');
     }
 }

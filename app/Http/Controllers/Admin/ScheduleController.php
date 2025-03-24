@@ -83,7 +83,11 @@ class ScheduleController extends BaseController
      */
     public function destroy(Schedule $schedule)
     {
-        //
+        if(!$schedule){
+            return $this->sendError('Schedule not found', 404, ["error" => "Schedule not found"]);  
+        }
+        $schedule->delete();
+        return  $this->sendSuccess([$schedule],'Schedule deleted successfully.');
     }
 
     public function approval($id)
