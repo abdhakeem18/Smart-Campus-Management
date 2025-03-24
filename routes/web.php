@@ -25,9 +25,9 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('home');
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware(['is_user'])->group(function () {
     Route::get('/schedule', [ResourceController::class, 'view'])->name('schedule.view');

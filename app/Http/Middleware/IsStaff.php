@@ -27,7 +27,7 @@ class IsStaff
         }
 
         if(auth()->check() ){
-            return redirect()->route('/');
+            return redirect()->route('home');
         }else{
             return redirect()->route('login');
         }
