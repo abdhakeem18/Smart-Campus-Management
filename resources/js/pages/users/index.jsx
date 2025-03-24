@@ -46,7 +46,7 @@ const Users = () => {
 
     const [users, setUsers] = useState([]);
     const [updateUserTable, setUpdateUserTable] = useState(true);
-    const { apiCall, loading, apiError } = API("admin");
+    const { apiCall, loading, error } = API("admin");
 
     async function fetchUsers() {
         const response = await apiCall("/users");
@@ -73,7 +73,7 @@ const Users = () => {
     }
 
     useEffect(() => {
-        console.log(updateUserTable);
+
         if (updateUserTable) {
             fetchUsers();
 

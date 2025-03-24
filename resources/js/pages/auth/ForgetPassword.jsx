@@ -10,7 +10,7 @@ import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
 
 const ForgetPassword = () => {
     const navigate = useNavigate();
-    const { apiCall, loading, apiError } = API("auth");
+    const { apiCall, loading, error } = API("auth");
     const [linkSend, setLinkSend] = useState(false);
 
     async function forgetPassSubmit(values) {
@@ -25,7 +25,7 @@ const ForgetPassword = () => {
                 setLinkSend(true);
             }
         } catch (error) {
-            console.log(apiError);
+            console.log(error);
         }
     }
 

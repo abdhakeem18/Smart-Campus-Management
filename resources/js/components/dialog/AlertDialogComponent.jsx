@@ -18,10 +18,7 @@ export default function AlertDialog(props) {
         closeDialog,
         handleConfirm,
         desc,
-        reasonField,
-        inputLable,
-        type,
-        data,
+        confirmBtn,
     } = props;
     // console.log('data12 => ', data);
 
@@ -42,6 +39,7 @@ export default function AlertDialog(props) {
     return (
         <>
             {/* {console.log("checkoutKeys12 => ", checkoutKeys)} */}
+
             <Dialog
                 open={open}
                 onClose={closeDialog}
@@ -51,17 +49,18 @@ export default function AlertDialog(props) {
                 <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        <Typography
-                            component="div"
-                            variant="body1"
-                            color="textSecondary"
-                        >
-                            {...desc}
-                        </Typography>
+                        <div>{desc}</div>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={closeDialog}>Cancel</Button>
+                    {confirmBtn ? (
+                        <>
+                            <Button onClick={handleConfirm(true)}>Confirm</Button>
+                            <Button onClick={handleConfirm(false)}>Reject</Button>
+                        </>
+                    ) : (
+                        <Button onClick={closeDialog}>Cancel</Button>
+                    )}
                 </DialogActions>
             </Dialog>
         </>

@@ -16,7 +16,7 @@ class MessageController extends BaseController
     public function index()
     {
         $messages = Message::all();
-      
+
         $this->sendSuccess($messages, 'Successfully Fetched Records.');
     }
 

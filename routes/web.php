@@ -30,7 +30,7 @@ Route::get('/', function () {
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware(['is_user'])->group(function () {
-    Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
+    Route::get('/schedule', [ResourceController::class, 'view'])->name('schedule.view');
 });
 
 Route::middleware(['is_staff'])->group(function () {
@@ -38,7 +38,7 @@ Route::middleware(['is_staff'])->group(function () {
     Route::get('/dashboard', function () {
         return view('index');
     });
-    Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
+    Route::get('/schedule', [ResourceController::class, 'view'])->name('schedule.view');
 });
 
 Route::middleware(['is_admin'])->group(function () {
@@ -46,12 +46,12 @@ Route::middleware(['is_admin'])->group(function () {
     Route::get('/dashboard', function () {
         return view('index');
     });
-    Route::get('/schedule', [ResourceController::class, 'index'])->name('schedule.view');
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.view');
-    Route::get('/events', [EventController::class, 'index'])->name('event.view');
+    Route::get('/schedule', [ResourceController::class, 'view'])->name('schedule.view');
+    Route::get('/events', [EventController::class, 'view'])->name('event.view');
     Route::get('/users', [UserController::class, 'view'])->name('users.view');
     Route::get('/courses', [CourseController::class, 'view'])->name('course.view');
     Route::get('/subjects', [SubjectController::class, 'view'])->name('subject.view');
+    Route::get('/reservations', [ResourceController::class, 'view'])->name('eeservation.view');
 });
 
 

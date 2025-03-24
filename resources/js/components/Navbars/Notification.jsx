@@ -6,6 +6,10 @@ import {
     Typography,
     Box,
     Avatar,
+    Card,
+    CardHeader,
+    CardContent,
+    Divider,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AlertDialog from "../dialog/AlertDialogComponent";
@@ -17,7 +21,7 @@ const AppointmentNotifications = () => {
     const [alertOptions, setAlertOptions] = useState({
         open: false,
         data: {},
-        type: "delete",
+        type: "notification",
     });
     const [appointments, setAppointments] = useState([
         { id: 1, title: "Scholarship Applications Now Open", isRead: false },
@@ -126,13 +130,13 @@ const AppointmentNotifications = () => {
                                             backgroundColor: "#bbdefb",
                                         },
                                     }}
-                                    onClick={() =>
+                                    onClick={(value) => {
                                         setAlertOptions({
                                             open: true,
                                             data: appointment,
-                                            type: "accept",
-                                        })
-                                    }
+                                        });
+                                        handleMarkAsRead(appointment.id);
+                                    }}
                                 >
                                     <Badge
                                         color="primary"
@@ -149,7 +153,9 @@ const AppointmentNotifications = () => {
                                                 height: 45,
                                                 mr: 2,
                                             }}
-                                        >N</Avatar>
+                                        >
+                                            N
+                                        </Avatar>
                                     </Badge>
 
                                     {/* Message Content */}
@@ -184,15 +190,49 @@ const AppointmentNotifications = () => {
                 <AlertDialog
                     title={"Announcement"}
                     open={alertOptions.open}
-                    desc="Scholarship Applications Now Open We are pleased to announce that applications for the 2025 Academic Scholarships are now open! This is a fantastic opportunity for eligible students to receive financial assistance for their studies."
+                    desc={
+                        <>
+                            <Typography variant="body1" component={"div"}>
+                                <Card sx={{ maxWidth: 345 }}>
+                                    <CardHeader
+                                        avatar={
+                                            <Avatar aria-label="recipe">
+                                                R
+                                            </Avatar>
+                                        }
+                                        title="Shrimp and Chorizo Paella"
+                                        subheader="September 14, 2016"
+                                    />
+                                    <CardContent>
+                                        <Typography component={"h4"}>
+                                            {appointments[0]["title"]}
+                                        </Typography>
+                                        <Divider sx={{ my: 2 }} />
+
+                                        <Typography
+                                            variant="body2"
+                                            sx={{ color: "text.secondary" }}
+                                        >
+                                            Education is the key to success, and
+                                            a scholarship can open doors to
+                                            endless opportunities! Whether
+                                            you're pursuing higher studies,
+                                            excelling in academics, or
+                                            showcasing your talents,
+                                            scholarships provide financial
+                                            support to help you achieve your
+                                            dreams.
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Typography>
+                        </>
+                    }
                     data={alertOptions.data}
                     type={`${alertOptions.type}`}
                     closeDialog={() =>
                         setAlertOptions({ open: false, data: {} })
                     }
-                    handleConfirm={(value) => {
-                        setAlertOptions({ open: false, data: {} });
-                    }}
                 />
             )}
         </div>

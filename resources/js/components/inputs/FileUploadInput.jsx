@@ -39,7 +39,6 @@ const FileUploadInput = ({
             setPreview(URL.createObjectURL(selectedFile));
         }
         if (type === "pdf") {
-            console.log(type);
             if (!allowedExtensions.includes(fileExtension)) {
                 setError("Only PDF files are allowed.");
                 setFile(null);
