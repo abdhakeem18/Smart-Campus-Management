@@ -70,7 +70,12 @@ class ScheduleController extends BaseController
      */
     public function update(UpdateScheduleRequest $request, Schedule $schedule)
     {
-        //
+        // dd($request);
+        $result=$this->service->updateSchedule($request ,$schedule);
+        if(!$result){
+            return $this->sendError('Schedule Time Slot Already Booked', 422, ["error" => "Schedule Time Slot Already Booked"]);
+        }
+        return  $this->sendSuccess($result,'Schedule updated successfully.');
     }
 
     /**

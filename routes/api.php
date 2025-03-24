@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttandanceController;
 use App\Http\Controllers\Admin\BlockController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -62,6 +63,9 @@ Route::prefix('student')->middleware(['auth:sanctum','is_user'])->group(function
 Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->group(function () {
     Route::resource('schedules', ScheduleController::class);
     Route::resource('messages', MessageController::class);
+    Route::get('courses', [CourseController::class, 'index']);
+    Route::resource('attendance', AttandanceController::class);
+    Route::get('student/attendance/{id}', [AttandanceController::class, 'getByStudentId']);
 
 
 });

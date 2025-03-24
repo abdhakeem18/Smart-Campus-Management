@@ -13,11 +13,11 @@ class ScheduleRepository{
 
     public function getAll()
     {
-        // if(auth()->user()->role_id == 1){
+        if(auth()->user()->role_id == 1){
             $data = Schedule::all();
-        // }else{
-        //     $data = Schedule::where('user_id', auth()->user()->id)->get();
-        // }
+        }else{
+            $data = Schedule::where('user_id', auth()->user()->id)->get();
+        }
         return $data;
     }
 
@@ -47,34 +47,60 @@ class ScheduleRepository{
         return $data;
     }
 
-    public function checkExist($request)
+    public function checkExist($request, $schedule = null)
     {
+        $data = Schedule::query(); // Missing semicolon fixed
 
-        $data = Schedule::where('date', $request->date)
-         ->where('block_id', $request->block_id)
-        ->where(function ($query) use ($request) {
-            $query->whereBetween('start_time', [
-                Carbon::parse($request->start_time)->format('H:i:s'),
-                Carbon::parse($request->end_time)->format('H:i:s')
-            ])
-            ->orWhereBetween('end_time', [
-                Carbon::parse($request->start_time)->format('H:i:s'),
-                Carbon::parse($request->end_time)->format('H:i:s')
-            ])
-            ->orWhere(function ($query) use ($request) {
-                $query->where('start_time', '<=', Carbon::parse($request->start_time)->format('H:i:s'))
-                      ->where('end_time', '>=', Carbon::parse($request->end_time)->format('H:i:s'));
+        if ($schedule) {
+            $data->where('id', '!=', $schedule->id);
+        }
+
+        $data->where('date', $request->date)
+            ->where('block_id', $request->block_id)
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('start_time', [
+                    Carbon::parse($request->start_time)->format('H:i:s'),
+                    Carbon::parse($request->end_time)->format('H:i:s')
+                ])
+                ->orWhereBetween('end_time', [
+                    Carbon::parse($request->start_time)->format('H:i:s'),
+                    Carbon::parse($request->end_time)->format('H:i:s')
+                ])
+                ->orWhere(function ($query) use ($request) {
+                    $query->where('start_time', '<=', Carbon::parse($request->start_time)->format('H:i:s'))
+                        ->where('end_time', '>=', Carbon::parse($request->end_time)->format('H:i:s'));
+                });
             });
-        })
-        ->count();
-        return $data;
+
+        return $data->count(); // Ensure count() result is returned
     }
+
 
     public function update($id)
     {
         $data = Schedule::find($id);
         $data->status = 1;
         $data->save();
+        return $data;
+    }
+
+
+    public function updateSchedule($id,$request)
+    {
+        $data = Schedule::find($id);
+        $data->title = $request->title;
+        $data->description = $request->description;
+        $data->date = Carbon::parse($request->date)->format('Y-m-d') ;
+        $data->start_time = Carbon::parse($request->start_time)->format('H:i:s') ;
+        $data->end_time = Carbon::parse($request->end_time)->format('H:i:s') ;
+        $data->status = auth()->user()->role_id == 1 ? 1 : 0;
+        $data->save();
+
+        $message = new Message();
+        $message->schedule_id = $data->id;   
+        $message->message = $data->description;   
+        $message->save();
+        
         return $data;
     }
 
