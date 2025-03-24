@@ -23,18 +23,21 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-})->name('home');
+
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware(['is_user'])->group(function () {
+    Route::get('/', function () {
+        return view('index');
+    })->name('home');
     Route::get('/schedule', [ResourceController::class, 'view'])->name('schedule.view');
 });
 
 Route::middleware(['is_staff'])->group(function () {
-
+    Route::get('/', function () {
+        return view('index');
+    })->name('home');
     Route::get('/dashboard', function () {
         return view('index');
     });
@@ -42,7 +45,9 @@ Route::middleware(['is_staff'])->group(function () {
 });
 
 Route::middleware(['is_admin'])->group(function () {
-
+    Route::get('/', function () {
+        return view('index');
+    })->name('home');
     Route::get('/dashboard', function () {
         return view('index');
     });

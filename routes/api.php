@@ -43,10 +43,10 @@ Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode'])
 Route::get('/courses', [CourseController::class, 'index']);
 Route::get('/student/{id}/courses', [StudentController::class, 'courses']);
 
-Route::get('/count', [DashboardController::class, 'index']);
 
 
 Route::prefix('student')->middleware(['auth:sanctum', 'is_user'])->group(function () {
+    Route::get('/count', [DashboardController::class, 'index']);
     Route::post('/verify', [AuthController::class, 'verify']);
     Route::post('/resend/verify', [AuthController::class, 'resendVerificationCode']);
     Route::post('/course-registration', [StudentController::class, 'store']);
@@ -59,8 +59,10 @@ Route::prefix('student')->middleware(['auth:sanctum', 'is_user'])->group(functio
 
 
 Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->group(function () {
+    Route::get('/count', [DashboardController::class, 'index']);
+
     Route::resource('schedules', ScheduleController::class);
-    Route::resource('messages', MessageController::class);
+    Route::resource('messages', StudentMessageController::class);
     Route::get('courses', [CourseController::class, 'index']);
     Route::resource('attendance', AttandanceController::class);
     Route::get('student/attendance/{id}', [AttandanceController::class, 'getByStudentId']);
@@ -69,13 +71,14 @@ Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->gr
 });
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'verified', 'is_admin'])->group(function () {
+    Route::get('/count', [DashboardController::class, 'index']);
     Route::resource('staffs', StaffController::class);
     Route::resource('users', UserController::class);
     Route::resource('courses', CourseController::class);
     Route::resource('subjects', SubjectController::class);
     Route::resource('blocks', BlockController::class);
     Route::resource('schedules', ScheduleController::class);
-    Route::resource('messages', MessageController::class);
+    Route::resource('messages', StudentMessageController::class);
     Route::put('/user/approval/{id}', [UserController::class, 'approval']);
     Route::put('/schecdule/approval/{id}', [ScheduleController::class, 'approval']);
 });
