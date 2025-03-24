@@ -18,11 +18,15 @@ class IsUser
         if (auth()->check() && auth()->user()->role_id == 3) {
             return $next($request);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'You Dont have a Permission student',
-            'data' => null,
-        ], 401); 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You Dont have a Permission admin',
+                'data' => null,
+            ], 401); 
+        }
+
+        return redirect()->route('login');
 
        
     }

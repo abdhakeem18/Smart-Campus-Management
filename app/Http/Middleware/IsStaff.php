@@ -18,10 +18,14 @@ class IsStaff
         if (auth()->check() && auth()->user()->role_id == 2) {
             return $next($request);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'You Dont have a Permission staff',
-            'data' => null,
-        ], 401); 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You Dont have a Permission admin',
+                'data' => null,
+            ], 401); 
+        }
+
+        return redirect()->route('login');
     }
 }
