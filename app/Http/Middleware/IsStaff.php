@@ -26,6 +26,10 @@ class IsStaff
             ], 401); 
         }
 
-        return redirect()->route('login');
+        if(auth()->check() ){
+            return redirect()->route('/');
+        }else{
+            return redirect()->route('login');
+        }
     }
 }
