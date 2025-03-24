@@ -280,14 +280,19 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
                             >
                                 {contextData?.userDetails?.name}
                             </Typography>
-                            <Typography variant="body2" sx={{ fontSize: 14 }}>
-                                <School />{" "}
-                                {
-                                    contextData?.userDetails?.students[0][
-                                        "courses"
-                                    ][0].course_name
-                                }
-                            </Typography>
+                            {contextData?.userDetails?.role_id && (
+                                <Typography
+                                    variant="body2"
+                                    sx={{ fontSize: 14 }}
+                                >
+                                    <School />{" "}
+                                    {
+                                        contextData?.userDetails?.students[0][
+                                            "courses"
+                                        ][0].course_name
+                                    }
+                                </Typography>
+                            )}
                             <Typography
                                 variant="body2"
                                 color="text.secondary"
