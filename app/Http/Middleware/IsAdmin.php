@@ -26,8 +26,8 @@ class IsAdmin
                 'data' => null,
             ], 401); 
         }
-        
-        return redirect()->route('home');
+
+        return redirect()->route('login');
      
     }
 }
