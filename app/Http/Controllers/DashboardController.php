@@ -25,7 +25,7 @@ class DashboardController extends BaseController
       $coursecount = Course::whereIn('id', $subjectCourseIds)->count(); // Count matching courses
       $staffCount = User::where('role_id', 2)->count(); 
       $studentcount = User::where('role_id', 3)->count();
-      $subjectcount = Subject::count(); 
+      $subjectcount = auth()->user()->role_id == 1 ? Schedule::count() : Subject::where('user_id', auth()->id())->count(); 
       $schedulecount = auth()->user()->role_id == 1 ? Schedule::count() : Schedule::where('user_id', auth()->id())->count(); 
       $startOfMonth = Carbon::now()->startOfMonth()->startOfDay(); // "2024-05-01 00:00:00"
       $endOfMonth = Carbon::now()->endOfMonth()->endOfDay();       // "2024-05-31 23:59:59"
@@ -42,8 +42,6 @@ class DashboardController extends BaseController
           ->orderBy('label')
           ->get();
       
-
-
 
      return $this->sendSuccess([
          'coursecount' => $coursecount,
