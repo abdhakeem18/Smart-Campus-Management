@@ -12,7 +12,7 @@ class CourseRepository{
 
     public function getAll()
     {
-    
+    dd(auth()->user()->role_id);
         if(auth()->user()->role_id == 1 ){
             $data = Course::all();
         }elseif(auth()->user()->role_id == 2){
