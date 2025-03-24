@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import PageLayout from "@/layouts/Page";
-import { Button, Paper, Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 import CommonTable from "@/components/tables/CommonTable";
 import API from "@/config/api";
 import ModalComponent from "@/components/modals/Modal";
 import UpdateReservation from "./components/EditForm";
 import ViewReservation from "./components/ViewForm";
+import AppContext from "@/config/AppContext";
 
 const columns = [
     { id: "id", label: "ID", minWidth: 100 },
@@ -18,6 +19,7 @@ const columns = [
 ];
 
 const Reservation = () => {
+    const [contextData, setContextData] = useContext(AppContext);
     const [modalOptions, setModalOptions] = useState({
         open: false,
         title: "",
@@ -46,7 +48,8 @@ const Reservation = () => {
     const [reservations, setReservations] = useState([]);
     const [success, setSuccess] = useState(null);
     const [udateReservationTable, setUpdateReservationTable] = useState(true);
-    const { apiCall, loading, error } = API("admin");
+    const role = contextData?.roles[contextData?.userDetails?.role_id];
+    const { apiCall, loading, error } = API(role);
 
     async function fetchReservations() {
         let response = await apiCall("/schedules");
@@ -108,7 +111,7 @@ const Reservation = () => {
     }
 
     useEffect(() => {
-        if (udateReservationTable) {
+        if (udateReservationTable, role) {
             fetchReservations();
 
             setUpdateReservationTable(false);
@@ -117,7 +120,7 @@ const Reservation = () => {
                 fetchReservations();
             };
         }
-    }, [udateReservationTable]);
+    }, [udateReservationTable, role]);
 
     async function handleAction(action, selectedRow) {
         if (action === "Edit") {

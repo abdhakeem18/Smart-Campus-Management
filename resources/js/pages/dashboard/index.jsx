@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 import RegularCard from "@/components/cards/regulerCard";
 import LineChart from "@/components/charts/LineChart";
 import PieChart from "@/components/charts/pieChart";
+import API from "@/config/Api";
+import AppContext from "@/config/AppContext";
 
 const Skeleton = styled("div")(({ theme, height }) => ({
     backgroundColor: theme.palette.action.hover,
@@ -16,6 +18,7 @@ const Skeleton = styled("div")(({ theme, height }) => ({
 }));
 
 const Dashboard = () => {
+    const [contextData, setContextData] = useContext(AppContext);
     const DrawerHeader = styled("div")(({ theme }) => ({
         display: "flex",
         alignItems: "center",
@@ -24,8 +27,12 @@ const Dashboard = () => {
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
     }));
+    const role = contextData?.roles[contextData?.userDetails?.role_id];
+    const { apiCall, loading, error } = API(role);
+    const [counts , setCounts] = useState(null);
+
     const [chartData, setChartData] = useState({
-        labels: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        labels: [1, 0, 0, 0, 0, 0, 0, 0, 0],
         datasets: [
             {
                 label: "Shipment",
@@ -36,26 +43,42 @@ const Dashboard = () => {
         ],
     });
 
+    const fetchDashbord = async () => {
+        try {
+            const response = await apiCall("/count");
+
+            if(response?.success) {
+                setCounts(response?.data);
+            }
+        } catch (error) {
+            console.log('error => ', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchDashbord();
+    }, []);
+
     return (
         <PageLayout dashboard={true} title={"Dashboard"}>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
                 <div className="min-height-300 bg-primary-cu position-absolute w-100 position-top-left"></div>
                 <Typography
-                    sx={{ marginBottom: 2, marginTop: "50px", zIndex: 10 }}
+                    sx={{ marginBottom: 2, marginTop: "20px", zIndex: 10 }}
                     component={"div"}
                     className="container-fluid py-4 row"
                 >
-                    <RegularCard />
+                    <RegularCard counts={counts}/>
 
                     <Typography component={"div"} className="col-6 z-1 mt-4">
                         <LineChart
-                            cardName="Total Shipments"
+                            cardName="Total Attendance"
                             chartData={chartData}
                         />
                     </Typography>
                     <Typography component={"div"} className="col-6 z-1 mt-4">
-                        <PieChart cardName="Charts" />
+                        <PieChart cardName="Charts" counts={counts} />
                     </Typography>
                 </Typography>
             </Box>

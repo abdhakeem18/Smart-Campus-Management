@@ -38,12 +38,17 @@ export default function Sidebar({ setOpen, open, scrolled }) {
             link: "/dashboard",
             permission: [1, 2],
         },
-        { name: "Events", icon: <Event />, link: "/events", permission: [1] },
+        {
+            name: "Events",
+            icon: <Event />,
+            link: "/events",
+            permission: [1, 2],
+        },
         {
             name: "Reservations",
             icon: <PushPin />,
             link: "/Reservations",
-            permission: [1],
+            permission: [1, 2],
         },
         {
             name: "Schedules",
@@ -152,7 +157,9 @@ export default function Sidebar({ setOpen, open, scrolled }) {
             <List>
                 {menuList.map(
                     (menuItem, index) =>
-                        (menuItem.permission).includes(contextData?.userDetails?.role_id) && (
+                        menuItem.permission.includes(
+                            contextData?.userDetails?.role_id,
+                        ) && (
                             <ListItem
                                 key={index}
                                 disablePadding

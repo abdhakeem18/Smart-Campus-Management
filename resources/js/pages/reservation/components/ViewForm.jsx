@@ -186,7 +186,7 @@ function ViewReservation({ onApprove, data, loading, success, error }) {
                         <Alert severity="error">{errorHandle(error)}</Alert>
                     </>
                 )}
-                {data?.status === "Pending" && (
+                {(data?.status === "Pending" && data?.user.role_id === 1) && (
                     <Box textAlign="left" mb={5}>
                         <LoadingButtonComponent
                             label={"Approve"}

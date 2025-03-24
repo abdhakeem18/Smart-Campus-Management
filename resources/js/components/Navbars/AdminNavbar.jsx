@@ -79,8 +79,10 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
     const handleLogout = async () => {
         const response = await apiCall("/logout");
 
-        localStorage.removeItem("user-data");
-
+        setContextData((prevState) => ({
+            ...prevState,
+            userDetails: [],
+        }));
         setTimeout(() => {
             navigate("/login");
         }, 2000);
@@ -190,13 +192,13 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
 
                 {/* Profile Dropdown */}
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <AppointmentNotifications scrolled={scrolled}/>
+                    <AppointmentNotifications scrolled={scrolled} />
                     <IconButton
                         onClick={toggleDrawer(anchor, true)}
                         color="inherit"
                         aria-label="profile"
                     >
-                        <Avatar>{contextData?.userDetails?.name}</Avatar>
+                        <Avatar>A</Avatar>
                     </IconButton>
                 </Box>
             </Toolbar>

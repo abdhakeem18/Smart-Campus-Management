@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import PageLayout from "@/layouts/Page";
 import { Paper, Typography } from "@mui/material";
 import CommonTable from "@/components/tables/CommonTable";
@@ -7,6 +7,7 @@ import ModalComponent from "@/components/modals/Modal";
 import UpdateEvent from "./components/EditForm";
 import ViewEvent from "./components/ViewForm";
 import AlertDialog from "@/components/dialog/AlertDialogComponent";
+import AppContext from "@/config/AppContext";
 
 const columns = [
     { id: "id", label: "ID", minWidth: 100 },
@@ -19,6 +20,7 @@ const columns = [
 ];
 
 const EventPage = () => {
+    const [contextData, setContextData] = useContext(AppContext);
     const [modalOptions, setModalOptions] = useState({
         open: false,
         title: "",
@@ -51,7 +53,8 @@ const EventPage = () => {
     const [events, setEvents] = useState([]);
     const [success, setSuccess] = useState(null);
     const [udateEventTable, setUpdateEventTable] = useState(true);
-    const { apiCall, loading, error } = API("admin");
+    const role = contextData?.roles[contextData?.userDetails?.role_id];
+    const { apiCall, loading, error } = API(role);
 
     async function fetchEvents() {
         let response = await apiCall("/schedules");
@@ -112,7 +115,7 @@ const EventPage = () => {
     }
 
     useEffect(() => {
-        if (udateEventTable) {
+        if (udateEventTable && role) {
             fetchEvents();
 
             setUpdateEventTable(false);
@@ -121,7 +124,7 @@ const EventPage = () => {
                 fetchEvents();
             };
         }
-    }, [udateEventTable]);
+    }, [udateEventTable, role]);
 
     async function handleAction(action, selectedRow) {
         if (action === "Edit") {

@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
-export default function pieChart({ cardName, cardValue, cardAction, chartData }) {
+export default function pieChart({ cardName, cardValue, counts }) {
     return (
         <Card className="p-2 flex-fill">
             <CardContent>
@@ -32,9 +32,10 @@ export default function pieChart({ cardName, cardValue, cardAction, chartData })
                 series={[
                     {
                         data: [
-                            { id: 0, value: 10, label: "series A" },
-                            { id: 1, value: 15, label: "series B" },
-                            { id: 2, value: 20, label: "series C" },
+                            { id: 0, value: counts?.studentcount, label: "Students" },
+                            { id: 1, value: counts?.staffCount, label: "Staffs" },
+                            { id: 2, value: counts?.coursecount, label: "Course" },
+                            { id: 3, value: counts?.subjectcount, label: "Subjects" },
                         ],
                     },
                 ]}

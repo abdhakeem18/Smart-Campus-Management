@@ -24,7 +24,6 @@ const Login = () => {
             const response = await apiCall("/login", "POST", values);
 
             if (response?.success) {
-
                 setSuccess(response?.message);
 
                 setTimeout(() => {
@@ -33,7 +32,8 @@ const Login = () => {
                         userDetails: response.data,
                         step: !response?.data?.email_verified_at
                             ? "verify"
-                            : (response?.data?.students).length === 0 && response?.data?.role_id === 3
+                            : (response?.data?.students).length === 0 &&
+                                response?.data?.role_id === 3
                               ? "register"
                               : "next",
                     }));

@@ -43,7 +43,9 @@ function App() {
             );
         }
 
-        setContextData(defaultContextValue);
+        setTimeout(() => {
+            setContextData(defaultContextValue);
+        }, '2000');
     }, []);
 
     function redirectTo(path) {
