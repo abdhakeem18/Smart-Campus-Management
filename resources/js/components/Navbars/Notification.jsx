@@ -5,7 +5,7 @@ import {
     Popover,
     Typography,
     Box,
-    Alert,
+    Avatar,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AlertDialog from "../dialog/AlertDialogComponent";
@@ -52,11 +52,11 @@ const AppointmentNotifications = () => {
     const fetchNotifications = async () => {
         const response = await apiCall("/messages");
 
-        // console.log(response);
+        console.log(response);
     };
 
     useEffect(() => {
-        if(role) {
+        if (role) {
             fetchNotifications();
         }
     }, [role]);
@@ -80,37 +80,99 @@ const AppointmentNotifications = () => {
                     horizontal: "center",
                 }}
             >
-                <Box sx={{ p: 2 }}>
-                    <Typography variant="h6">Announcement</Typography>
+                <Box
+                    sx={{
+                        p: 2,
+                        maxHeight: "400px",
+                        overflowY: "auto",
+                        width: "100%",
+                    }}
+                >
+                    <Typography variant="h6" sx={{ mb: 2 }}>
+                        Notifications
+                    </Typography>
+
                     {appointments.length === 0 ? (
-                        <Typography variant="body2" color="text.secondary">
-                            No appointments yet
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ textAlign: "center" }}
+                        >
+                            No new notifications
                         </Typography>
                     ) : (
-                        <Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1,
+                            }}
+                        >
                             {appointments.map((appointment) => (
                                 <Box
                                     key={appointment.id}
                                     sx={{
-                                        p: 1,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        p: 1.5,
+                                        borderRadius: 2,
                                         backgroundColor: appointment.isRead
-                                            ? "lightgray"
-                                            : "white",
-                                        marginBottom: "10px",
+                                            ? "#fff"
+                                            : "#e3f2fd",
+                                        boxShadow: 1,
                                         cursor: "pointer",
-                                        borderRadius: 1,
+                                        transition: "all 0.3s",
+                                        "&:hover": {
+                                            backgroundColor: "#bbdefb",
+                                        },
                                     }}
-                                    onClick={() => {
+                                    onClick={() =>
                                         setAlertOptions({
                                             open: true,
                                             data: appointment,
                                             type: "accept",
-                                        });
-                                    }}
+                                        })
+                                    }
                                 >
-                                    <Typography variant="body2">
-                                        {appointment.title}
-                                    </Typography>
+                                    <Badge
+                                        color="primary"
+                                        variant={
+                                            appointment.isRead
+                                                ? "standard"
+                                                : "dot"
+                                        }
+                                        overlap="circular"
+                                    >
+                                        <Avatar
+                                            sx={{
+                                                width: 45,
+                                                height: 45,
+                                                mr: 2,
+                                            }}
+                                        >N</Avatar>
+                                    </Badge>
+
+                                    {/* Message Content */}
+                                    <Box sx={{ flex: 1 }}>
+                                        <Typography
+                                            variant="body1"
+                                            sx={{
+                                                fontWeight: appointment.isRead
+                                                    ? "normal"
+                                                    : "bold",
+                                            }}
+                                        >
+                                            {appointment.title}
+                                        </Typography>
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                        >
+                                            {new Date(
+                                                appointment.timestamp,
+                                            ).toLocaleTimeString()}
+                                        </Typography>
+                                    </Box>
                                 </Box>
                             ))}
                         </Box>
@@ -122,9 +184,7 @@ const AppointmentNotifications = () => {
                 <AlertDialog
                     title={"Announcement"}
                     open={alertOptions.open}
-                    desc={
-                        "Scholarship Applications Now Open<br>We are pleased to announce that applications for the 2025 Academic Scholarships are now open! This is a fantastic opportunity for eligible students to receive financial assistance for their studies."
-                    }
+                    desc="Scholarship Applications Now Open We are pleased to announce that applications for the 2025 Academic Scholarships are now open! This is a fantastic opportunity for eligible students to receive financial assistance for their studies."
                     data={alertOptions.data}
                     type={`${alertOptions.type}`}
                     closeDialog={() =>

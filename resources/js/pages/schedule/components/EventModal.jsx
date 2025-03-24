@@ -289,7 +289,6 @@ export default function EventModal(props) {
                     <Typography id="modal-title" variant="h6" sx={{ mb: 2 }}>
                         Create New Schedule
                     </Typography>
-                    {formik?.errors && console.log(formik.errors)}
                     <form onSubmit={formik.handleSubmit}>
                         <TextInput
                             label="Title"

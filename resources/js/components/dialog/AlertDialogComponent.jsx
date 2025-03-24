@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Typography,
+} from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -48,9 +51,14 @@ export default function AlertDialog(props) {
                 <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        <p dangerouslySetInnerHTML={{ __html: desc }} />
+                        <Typography
+                            component="div"
+                            variant="body1"
+                            color="textSecondary"
+                        >
+                            {...desc}
+                        </Typography>
                     </DialogContentText>
-                    
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeDialog}>Cancel</Button>

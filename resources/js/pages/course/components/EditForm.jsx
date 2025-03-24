@@ -15,7 +15,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import TextareaInput from "@/components/inputs/TextareaInput";
 
-const CourseAddForm = (props) => {
+const CourseEditForm = (props) => {
     const { closeModal, btnLabel, data, updateCourseTable } = props;
     const { apiCall, loading, error } = API("admin");
     const [success, setSuccess] = useState("");
@@ -65,7 +65,6 @@ const CourseAddForm = (props) => {
     return (
         <Box ref={modalRef}>
             <form onSubmit={formik.handleSubmit} className="course-form">
-                {console.log(formik?.errors)}
                 <TextInput
                     label="Course Name"
                     value={formik.values.course_name || ""}
@@ -172,4 +171,4 @@ const CourseAddForm = (props) => {
     );
 };
 
-export default CourseAddForm;
+export default CourseEditForm;

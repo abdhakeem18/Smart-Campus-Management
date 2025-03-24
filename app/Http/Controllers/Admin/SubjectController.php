@@ -24,6 +24,11 @@ class SubjectController extends BaseController
         $this->service = $service;
     }
 
+    public function view()
+    {
+        return view("index");
+    }
+
 
     public function index()
     {
