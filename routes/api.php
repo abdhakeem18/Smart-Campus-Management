@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttandanceController;
 use App\Http\Controllers\Admin\BlockController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -61,6 +62,10 @@ Route::prefix('staff')->middleware(['auth:sanctum', 'verified', 'is_staff'])->gr
     Route::resource('schedules', ScheduleController::class);
     Route::resource('messages', MessageController::class);
     Route::get('courses', [CourseController::class, 'index']);
+    Route::resource('attendance', AttandanceController::class);
+    Route::get('student/attendance/{id}', [AttandanceController::class, 'getByStudentId']);
+
+
 });
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'verified', 'is_admin'])->group(function () {

@@ -57,7 +57,7 @@ class MessageController extends BaseController
      */
     public function update(UpdateMessageRequest $request, Message $message)
     {
-        //    
+      
     }
 
     /**

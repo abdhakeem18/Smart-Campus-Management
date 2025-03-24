@@ -18,4 +18,8 @@ class Subject extends Model
     public function lecture(){
         return $this->hasOne(User::class,'id','lecturer_id');
     }
+
+    public function courses(){
+        return $this->hasMany(Course::class, 'id', 'course_id');
+    }
 }

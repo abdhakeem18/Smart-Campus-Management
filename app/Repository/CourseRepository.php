@@ -3,6 +3,7 @@ namespace App\Repository;
 
 use App\Models\Course;
 use App\Models\Student;
+use App\Models\Subject;
 use Carbon\Carbon;
 
 class CourseRepository{
@@ -11,8 +12,12 @@ class CourseRepository{
 
     public function getAll()
     {
-        if(auth()->user()->role_id == 1 && auth()->user()->role_id == 2){
+    dd(auth()->user()->role_id);
+        if(auth()->user()->role_id == 1 ){
             $data = Course::all();
+        }elseif(auth()->user()->role_id == 2){
+            $subject = Subject::where('lecturer_id', auth()->user()->id)->distinct()->first();
+            $data = $subject->courses;
         }else{
             $student = Student::where('user_id', auth()->user()->id)->first();
             $data = $student->courses;

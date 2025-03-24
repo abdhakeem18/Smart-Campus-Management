@@ -29,6 +29,13 @@ class ScheduleService extends BaseService{
         return $this->repository->store($request);
     }
 
-  
+    public function updateSchedule(Request $request,$schedule){
+        $exit = $this->repository->checkExist($request,$schedule);
+        if($exit > 0){
+           return false;
+        }
+        return $this->repository->updateSchedule($schedule->id,$request);
+    }
+
 
 }
