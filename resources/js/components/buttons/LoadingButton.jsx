@@ -11,12 +11,14 @@ export default function LoadingButtonComponent(props) {
     size = "medium",
     cls = "",
     fullWidth = false,
+    color = "primary"
   } = props;
   return (
     <LoadingButton
       loading={loading}
       variant={variant}
       type={type}
+      color={color}
       fullWidth={fullWidth}
       disableElevation
       onClick={onClick}

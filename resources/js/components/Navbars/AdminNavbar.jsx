@@ -10,14 +10,9 @@ import {
     InputBase,
     AppBar as MuiAppBar,
     SwipeableDrawer,
-    ListItemButton,
-    ListItemText,
-    Card,
-    CardContent,
     Avatar,
     Button,
     useTheme,
-    ListItemIcon,
     Divider,
 } from "@mui/material";
 
@@ -27,8 +22,10 @@ import AppContext from "@/config/AppContext";
 import {
     Menu as MenuIcon,
     Search as SearchIcon,
-    Person,
     Logout,
+    Email,
+    Phone,
+    School,
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import API from "@/config/Api";
@@ -259,69 +256,77 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
                     >
                         <Box
                             sx={{
-                                width: drawerWidth,
+                                width: 320,
+                                p: 3,
+                                textAlign: "center",
+                                position: "relative",
                             }}
                             role="presentation"
-                            onClick={toggleDrawer(anchor, false)}
-                            onKeyDown={toggleDrawer(anchor, false)}
                         >
-                            <List>
-                                <ListItem key={"profile-card"}>
-                                    <Card sx={{ display: "flex" }}>
-                                        <Avatar
-                                            alt="Travis Howard"
-                                            src="/static/images/avatar/2.jpg"
-                                        />
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                flexDirection: "column",
-                                            }}
-                                        >
-                                            <CardContent
-                                                sx={{
-                                                    flex: "1 0 auto",
-                                                    padding: "0px 0px 0px 10px",
-                                                }}
-                                            >
-                                                <Typography
-                                                    component="div"
-                                                    variant="h5"
-                                                >
-                                                    {
-                                                        contextData?.userDetails
-                                                            ?.name
-                                                    }
-                                                </Typography>
-                                                <Typography
-                                                    variant="subtitle1"
-                                                    component="div"
-                                                    sx={{
-                                                        color: "text.secondary",
-                                                    }}
-                                                >
-                                                    {
-                                                        contextData?.userDetails
-                                                            ?.email
-                                                    }
-                                                </Typography>
-                                            </CardContent>
-                                        </Box>
-                                    </Card>
-                                </ListItem>
+                            <Avatar
+                                sx={{
+                                    width: 100,
+                                    height: 100,
+                                    mb: 2,
+                                    mx: "auto",
+                                }}
+                            >
+                                P
+                            </Avatar>
 
-                                <ListItem>
-                                    <Button
-                                        variant="contained"
-                                        color="error"
-                                        fullWidth
-                                        sx={{ marginTop: "20px" }}
-                                        onClick={handleLogout}
-                                    >
-                                        Logout
-                                    </Button>
-                                </ListItem>
-                            </List>
+                            <Typography
+                                variant="h6"
+                                sx={{ fontWeight: "bold" }}
+                            >
+                                {contextData?.userDetails?.name}
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontSize: 14 }}>
+                                <School />{" "}
+                                {
+                                    contextData?.userDetails?.students[0][
+                                        "courses"
+                                    ][0].course_name
+                                }
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ mb: 2 }}
+                            >
+                                Welcome to the Smart Campus Management System
+                            </Typography>
+
+                            <Divider sx={{ my: 2 }} />
+
+                            <Typography variant="body2" sx={{ fontSize: 14 }}>
+                                <Email /> {contextData?.userDetails?.email}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ mt: 1, fontSize: 14 }}
+                            >
+                                <Phone color="error" />{" "}
+                                {contextData?.userDetails?.mobile}
+                            </Typography>
+
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: 2,
+                                    mt: 3,
+                                }}
+                            >
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    fullWidth
+                                    sx={{ marginTop: "20px" }}
+                                    onClick={handleLogout}
+                                >
+                                    <Logout /> Logout
+                                </Button>
+                            </Box>
                         </Box>
                     </SwipeableDrawer>
                 </React.Fragment>

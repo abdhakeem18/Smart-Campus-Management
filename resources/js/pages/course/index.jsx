@@ -44,7 +44,7 @@ const Courses = () => {
 
     const [courses, setCourses] = useState([]);
     const [updateCourseTable, setUpdateCourseTable] = useState(true);
-    const { apiCall, loading, apiError } = API("admin");
+    const { apiCall, loading, error } = API("admin");
 
     async function fetchCourses() {
         const response = await apiCall("/courses");

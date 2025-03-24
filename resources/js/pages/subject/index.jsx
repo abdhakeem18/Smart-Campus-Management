@@ -43,7 +43,7 @@ const Subjects = () => {
     const [courses, setCourses] = useState([]);
     const [staffs, setStaffs] = useState([]);
     const [udateSubjectTable, setUpdateSubjectTable] = useState(true);
-    const { apiCall, loading, apiError } = API("admin");
+    const { apiCall, loading, error } = API("admin");
 
     async function fetchSubjects() {
         const course_details = await apiCall("/courses");

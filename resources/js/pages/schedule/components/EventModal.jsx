@@ -27,7 +27,7 @@ import LoadingButtonComponent from "@/components/buttons/LoadingButton";
 import { errorHandle } from "@/components/common/helper";
 
 export default function EventModal(props) {
-    const { openModal, setOpenModal, selectDate, role, setUpdateCalender } =
+    const { openModal, setOpenModal, selectDate, role, setUpdateCalender, contextData } =
         props;
     const [selectFeilds, setSelectFeilds] = useState("");
     const [courses, setCourses] = useState([]);
@@ -217,7 +217,7 @@ export default function EventModal(props) {
             start_time: "",
             end_time: "",
             type: "",
-            user_id: "",
+            user_id: contextData?.userDetails?.id,
             course_id: "",
             subject_id: "",
             block_id: "",
@@ -356,8 +356,7 @@ export default function EventModal(props) {
                                                     "start_time",
                                                     formattedTime,
                                                 );
-
-                                                // If End Time is before Start Time, reset End Time
+                                                
                                                 if (
                                                     formik?.values?.end_time &&
                                                     newValue &&
@@ -401,7 +400,6 @@ export default function EventModal(props) {
                                                     formattedTime,
                                                 );
 
-                                                // If Start Time is after End Time, reset End Time
                                                 if (
                                                     formik?.values
                                                         ?.start_time &&

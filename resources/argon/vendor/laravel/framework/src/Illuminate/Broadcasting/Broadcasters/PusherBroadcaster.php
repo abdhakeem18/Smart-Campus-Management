@@ -4,7 +4,7 @@ namespace Illuminate\Broadcasting\Broadcasters;
 
 use Illuminate\Broadcasting\BroadcastException;
 use Illuminate\Support\Arr;
-use Pusher\ApiErrorException;
+use Pusher\errorException;
 use Pusher\Pusher;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -122,7 +122,7 @@ class PusherBroadcaster extends Broadcaster
             $this->pusher->trigger(
                 $this->formatChannels($channels), $event, $payload, $parameters
             );
-        } catch (ApiErrorException $e) {
+        } catch (errorException $e) {
             throw new BroadcastException(
                 sprintf('Pusher error: %s.', $e->getMessage())
             );

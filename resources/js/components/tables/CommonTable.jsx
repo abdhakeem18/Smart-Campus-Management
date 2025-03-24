@@ -167,6 +167,8 @@ export default function CommonTable({
                 return "info";
             case "Cancel":
                 return "error";
+            case "Completed":
+                return "success";
             default:
                 return "default";
         }
@@ -270,13 +272,7 @@ export default function CommonTable({
                 onClose={handleActionClose}
                 key={"action-part"}
             >
-                <MenuItem onClick={() => handleAction("Edit", selectedRow)}>
-                    Edit
-                </MenuItem>
-                <MenuItem onClick={() => handleAction("Delete", selectedRow)}>
-                    Delete
-                </MenuItem>
-                {tableType === "user"
+                {extMenuItems
                     ? extMenuItems.map((value, index) => {
                           return (
                               <MenuItem
@@ -290,6 +286,12 @@ export default function CommonTable({
                           );
                       })
                     : ""}
+                <MenuItem onClick={() => handleAction("Edit", selectedRow)}>
+                    Edit
+                </MenuItem>
+                <MenuItem onClick={() => handleAction("Delete", selectedRow)}>
+                    Delete
+                </MenuItem>
             </Menu>
         </StyledPaper>
     );

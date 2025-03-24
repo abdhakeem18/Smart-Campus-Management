@@ -16,7 +16,7 @@ class MessageController extends BaseController
     public function index()
     {
         $messages = Message::all();
-      
+
         $this->sendSuccess($messages, 'Successfully Fetched Records.');
     }
 
@@ -57,7 +57,7 @@ class MessageController extends BaseController
      */
     public function update(UpdateMessageRequest $request, Message $message)
     {
-       $this-
+        //    
     }
 
     /**

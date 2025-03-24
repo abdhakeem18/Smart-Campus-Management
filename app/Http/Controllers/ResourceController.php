@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ResourceController extends Controller
 {
-    public function index() {
+    public function view() {
         return view("index");
     }
 }

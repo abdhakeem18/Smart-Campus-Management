@@ -13,6 +13,9 @@ import ResetPassword from "@/pages/auth/ResetPassword";
 import CourseRegister from "@/pages/auth/CourseRegister";
 import Courses from "@/pages/course";
 import Subjects from "@/pages/subject";
+import Reservation from "@/pages/reservation";
+import EventPage from "@/pages/event";
+
 import "../css/app.scss";
 
 import {
@@ -31,6 +34,7 @@ function App() {
         let defaultContextValue = {
             userDetails: true,
             roles: ["auth", "admin", "staff", "student"],
+            equipments: ["Microphones", "Speakers", "Laptops", "Projectors"],
         };
 
         if (window.localStorage.getItem("user-data")) {
@@ -90,6 +94,11 @@ function App() {
                                     path="/subjects"
                                     element={<Subjects />}
                                 />
+                                <Route
+                                    path="/reservations"
+                                    element={<Reservation />}
+                                />
+                                <Route path="/events" element={<EventPage />} />
                             </>
 
                             <Route path="/login" element={<Login />} />
