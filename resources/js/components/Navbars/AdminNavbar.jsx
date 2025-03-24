@@ -186,61 +186,17 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
                         justifyContent: "end",
                         alignItems: "center",
                     }}
-                >
-                    <Box
-                        sx={{
-                            position: "relative",
-                            maxWidth: 400,
-                            width: "100%",
-                        }}
-                    >
-                        <InputBase
-                            placeholder="Search…"
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                            sx={{
-                                backgroundColor: "rgba(255, 255, 255, 0.15)",
-                                borderRadius: 2,
-                                paddingLeft: 2,
-                                paddingRight: 2,
-                                width: "100%",
-                            }}
-                        />
-                        <IconButton
-                            sx={{
-                                position: "absolute",
-                                right: 0,
-                                top: 0,
-                                bottom: 0,
-                                padding: "0.5rem",
-                            }}
-                            onClick={() =>
-                                alert(`Searching for: ${searchQuery}`)
-                            }
-                        >
-                            <SearchIcon />
-                        </IconButton>
-                    </Box>
-                </Box>
+                ></Box>
 
                 {/* Profile Dropdown */}
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <AppointmentNotifications />
+                    <AppointmentNotifications scrolled={scrolled}/>
                     <IconButton
                         onClick={toggleDrawer(anchor, true)}
                         color="inherit"
                         aria-label="profile"
                     >
-                        <img
-                            src="https://randomuser.me/api/portraits/men/45.jpg"
-                            alt="Profile"
-                            style={{
-                                borderRadius: "50%",
-                                width: 40,
-                                height: 40,
-                                objectFit: "cover",
-                            }}
-                        />
+                        <Avatar>{contextData?.userDetails?.name}</Avatar>
                     </IconButton>
                 </Box>
             </Toolbar>
@@ -280,7 +236,7 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
                             >
                                 {contextData?.userDetails?.name}
                             </Typography>
-                            {contextData?.userDetails?.role_id && (
+                            {contextData?.userDetails?.role_id === 3 && (
                                 <Typography
                                     variant="body2"
                                     sx={{ fontSize: 14 }}

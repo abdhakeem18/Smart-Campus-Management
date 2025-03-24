@@ -16,7 +16,7 @@ import AlertDialog from "../dialog/AlertDialogComponent";
 import API from "@/config/Api";
 import AppContext from "@/config/AppContext";
 
-const AppointmentNotifications = () => {
+const AppointmentNotifications = ({scrolled}) => {
     const [contextData, setContextData] = useContext(AppContext);
     const [alertOptions, setAlertOptions] = useState({
         open: false,
@@ -70,7 +70,7 @@ const AppointmentNotifications = () => {
             {/* Notification Icon */}
             <IconButton onClick={handleClick}>
                 <Badge badgeContent={unreadAppointments.length} color="error">
-                    <NotificationsIcon />
+                    <NotificationsIcon sx={{color: scrolled ? "#000" : "#fff"}}/>
                 </Badge>
             </IconButton>
 
