@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('status')->default(0);    
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
+            $table->text("attendance");
             $table->timestamps();
         });
     }
