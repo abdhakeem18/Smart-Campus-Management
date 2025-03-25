@@ -24,6 +24,7 @@ import {
     ChevronLeft,
     PushPin,
     Subject,
+    Checklist
 } from "@mui/icons-material";
 import AppContext from "@/config/AppContext";
 
@@ -55,6 +56,12 @@ export default function Sidebar({ setOpen, open, scrolled }) {
             icon: <Schedule />,
             link: "/schedule",
             permission: [1, 2, 3],
+        },
+        {
+            name: "Attendance",
+            icon: <Checklist />,
+            link: "/attendance",
+            permission: [1, 2],
         },
         { name: "Users", icon: <People />, link: "/users", permission: [1] },
         {

@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, contextData } from "react";
 import PageLayout from "@/layouts/Page";
-import {
-    Button,
-    Paper,
-} from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import CommonTable from "@/components/tables/CommonTable";
 import API from "@/config/api";
 import ModalComponent from "@/components/modals/Modal";
 import CourseAddForm from "./components/AddForm";
 import CourseEditForm from "./components/EditForm";
+import AppContext from "@/config/AppContext";
 
 const columns = [
     { id: "course_code", label: "ID", minWidth: 100 },
@@ -19,6 +17,8 @@ const columns = [
 ];
 
 const Courses = () => {
+    const [contextData, setContextData] = useContext(AppContext);
+
     const [modalOptions, setModalOptions] = useState({
         open: false,
         title: "",
@@ -44,7 +44,8 @@ const Courses = () => {
 
     const [courses, setCourses] = useState([]);
     const [updateCourseTable, setUpdateCourseTable] = useState(true);
-    const { apiCall, loading, error } = API("admin");
+    const role = contextData?.roles[contextData?.userDetails?.role_id];
+    const { apiCall, loading, error } = API(role);
 
     async function fetchCourses() {
         const response = await apiCall("/courses");
@@ -58,7 +59,7 @@ const Courses = () => {
                     course_name: course?.course_name,
                     start_date: course?.start_date,
                     end_date: course?.end_date,
-                    description : course?.description
+                    description: course?.description,
                 });
             });
 
@@ -67,7 +68,7 @@ const Courses = () => {
     }
 
     useEffect(() => {
-        if (updateCourseTable) {
+        if (updateCourseTable && role) {
             fetchCourses();
 
             setUpdateCourseTable(false);
@@ -76,12 +77,11 @@ const Courses = () => {
                 fetchCourses();
             };
         }
-    }, [updateCourseTable]);
+    }, [updateCourseTable, role]);
 
     async function handleAction(action, selectedRow) {
-        if (action === "Edit") 
+        if (action === "Edit")
             showModal("Update Course", selectedRow, "update-course");
-        
     }
 
     return (
@@ -130,7 +130,6 @@ const Courses = () => {
                         updateCourseTable={setUpdateCourseTable}
                     />
                 ) : null}
-
             </ModalComponent>
         </PageLayout>
     );

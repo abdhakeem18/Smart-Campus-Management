@@ -1,5 +1,5 @@
 
 @viteReactRefresh
-@vite(['resources/js/app.jsx', 'resources/css/app.scss'])
+@vite(['resources/js/App.jsx'])
 
 <div id="root"></div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttandanceController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\ProfileController;
@@ -42,6 +43,7 @@ Route::middleware(['is_staff'])->group(function () {
         return view('index');
     });
     Route::get('/schedule', [ResourceController::class, 'view'])->name('schedule.view');
+    Route::get('/attendance', [AttandanceController::class, 'view'])->name('attendance.view');
 });
 
 Route::middleware(['is_admin'])->group(function () {

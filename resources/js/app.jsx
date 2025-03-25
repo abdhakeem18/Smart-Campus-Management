@@ -15,6 +15,7 @@ import Courses from "@/pages/course";
 import Subjects from "@/pages/subject";
 import Reservation from "@/pages/reservation";
 import EventPage from "@/pages/event";
+import AttendancePage from "@/pages/attendance";
 
 import "../css/app.scss";
 
@@ -101,6 +102,8 @@ function App() {
                                     element={<Reservation />}
                                 />
                                 <Route path="/events" element={<EventPage />} />
+
+                                <Route path="/attendance" element={<AttendancePage />} />
                             </>
 
                             <Route path="/login" element={<Login />} />

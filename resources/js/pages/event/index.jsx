@@ -129,7 +129,7 @@ const EventPage = () => {
     async function handleAction(action, selectedRow) {
         if (action === "Edit") {
             if (selectedRow?.status != "Completed") {
-                showModal("Update Event", selectedRow, "update-Event");
+                showModal("Update Event", selectedRow, "update-event");
             } else {
                 setAlertOptions({
                     open: true,

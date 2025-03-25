@@ -32,11 +32,11 @@ const Dashboard = () => {
     const [counts , setCounts] = useState(null);
 
     const [chartData, setChartData] = useState({
-        labels: [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        labels: ["03/02", "03/07", "03/10", "03/20", "03/21", "03/22", "03/27", "03/29", "03/31"],
         datasets: [
             {
-                label: "Shipment",
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                label: "Sechedules",
+                data: [1, 3, 5, 2, 4, 1, 1, 4, 2],
                 backgroundColor: "#fc4454",
                 borderColor: "#fc4454",
             },
