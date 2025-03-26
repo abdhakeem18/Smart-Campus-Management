@@ -16,14 +16,14 @@ import AlertDialog from "../dialog/AlertDialogComponent";
 import API from "@/config/Api";
 import AppContext from "@/config/AppContext";
 
-const AppointmentNotifications = ({scrolled}) => {
+const Notifications = ({scrolled}) => {
     const [contextData, setContextData] = useContext(AppContext);
     const [alertOptions, setAlertOptions] = useState({
         open: false,
         data: {},
         type: "notification",
     });
-    const [appointments, setAppointments] = useState([
+    const [announcements, setAnnouncements] = useState([
         { id: 1, title: "Scholarship Applications Now Open", isRead: false },
     ]);
 
@@ -40,17 +40,17 @@ const AppointmentNotifications = ({scrolled}) => {
     };
 
     const handleMarkAsRead = (id) => {
-        setAppointments((prevAppointments) =>
-            prevAppointments.map((appointment) =>
-                appointment.id === id
-                    ? { ...appointment, isRead: true }
-                    : appointment,
+        setAnnouncements((prevAnnouncements) =>
+            prevAnnouncements.map((announcement) =>
+                announcement.id === id
+                    ? { ...announcement, isRead: true }
+                    : announcement,
             ),
         );
     };
 
-    const unreadAppointments = appointments.filter(
-        (appointment) => !appointment.isRead,
+    const unreadAnnouncements = announcements.filter(
+        (announcement) => !announcement.isRead,
     );
 
     const fetchNotifications = async () => {
@@ -69,7 +69,7 @@ const AppointmentNotifications = ({scrolled}) => {
         <div>
             {/* Notification Icon */}
             <IconButton onClick={handleClick}>
-                <Badge badgeContent={unreadAppointments.length} color="error">
+                <Badge badgeContent={unreadAnnouncements.length} color="error">
                     <NotificationsIcon sx={{color: scrolled ? "#000" : "#fff"}}/>
                 </Badge>
             </IconButton>
@@ -96,7 +96,7 @@ const AppointmentNotifications = ({scrolled}) => {
                         Notifications
                     </Typography>
 
-                    {appointments.length === 0 ? (
+                    {announcements.length === 0 ? (
                         <Typography
                             variant="body2"
                             color="text.secondary"
@@ -112,15 +112,15 @@ const AppointmentNotifications = ({scrolled}) => {
                                 gap: 1,
                             }}
                         >
-                            {appointments.map((appointment) => (
+                            {announcements.map((announcement) => (
                                 <Box
-                                    key={appointment.id}
+                                    key={announcement.id}
                                     sx={{
                                         display: "flex",
                                         alignItems: "center",
                                         p: 1.5,
                                         borderRadius: 2,
-                                        backgroundColor: appointment.isRead
+                                        backgroundColor: announcement.isRead
                                             ? "#fff"
                                             : "#e3f2fd",
                                         boxShadow: 1,
@@ -133,15 +133,15 @@ const AppointmentNotifications = ({scrolled}) => {
                                     onClick={(value) => {
                                         setAlertOptions({
                                             open: true,
-                                            data: appointment,
+                                            data: announcement,
                                         });
-                                        handleMarkAsRead(appointment.id);
+                                        handleMarkAsRead(announcement.id);
                                     }}
                                 >
                                     <Badge
                                         color="primary"
                                         variant={
-                                            appointment.isRead
+                                            announcement.isRead
                                                 ? "standard"
                                                 : "dot"
                                         }
@@ -163,19 +163,19 @@ const AppointmentNotifications = ({scrolled}) => {
                                         <Typography
                                             variant="body1"
                                             sx={{
-                                                fontWeight: appointment.isRead
+                                                fontWeight: announcement.isRead
                                                     ? "normal"
                                                     : "bold",
                                             }}
                                         >
-                                            {appointment.title}
+                                            {announcement.title}
                                         </Typography>
                                         <Typography
                                             variant="caption"
                                             color="text.secondary"
                                         >
                                             {new Date(
-                                                appointment.timestamp,
+                                                announcement.timestamp,
                                             ).toLocaleTimeString()}
                                         </Typography>
                                     </Box>
@@ -205,7 +205,7 @@ const AppointmentNotifications = ({scrolled}) => {
                                     />
                                     <CardContent>
                                         <Typography component={"h4"}>
-                                            {appointments[0]["title"]}
+                                            {announcements[0]["title"]}
                                         </Typography>
                                         <Divider sx={{ my: 2 }} />
 
@@ -239,4 +239,4 @@ const AppointmentNotifications = ({scrolled}) => {
     );
 };
 
-export default AppointmentNotifications;
+export default Notifications;

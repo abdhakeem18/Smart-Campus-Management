@@ -16,7 +16,7 @@ import {
     Divider,
 } from "@mui/material";
 
-import AppointmentNotifications from "./Notification";
+import Notifications from "./Notification";
 import AppContext from "@/config/AppContext";
 
 import {
@@ -192,7 +192,7 @@ const Navbar = ({ setOpen, open, scrolled, title }) => {
 
                 {/* Profile Dropdown */}
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <AppointmentNotifications scrolled={scrolled} />
+                    <Notifications scrolled={scrolled} />
                     <IconButton
                         onClick={toggleDrawer(anchor, true)}
                         color="inherit"
